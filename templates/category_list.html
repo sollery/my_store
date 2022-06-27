@@ -1,0 +1,10 @@
+{% extends '_base.html' %}
+{% block title %}Категории{% endblock title %}
+{% block content %}
+{% for category in category_list %}
+<div>
+    <h2><a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h2>
+</div>
+{% endfor %}
+<p><a href="{% url 'home' %}">Главная</a></p>
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+{% block title %}Поиск{% endblock title %}
+{% block content %}
+<h1>Результаты поиска</h1>
+{% if product_list%}
+  {% for product in product_list %}
+  <div>
+   <h2><a href="{% url 'product_detail' product.id product.slug%}">{{ product.name }}</a></h2>
+  </div>
+  {% endfor %}
+{%else%}
+<h2>Результатов по вашему запросу нет</h2>
+{%endif%}
+<p><a href="{% url 'home' %}">Главная</a></p>
+{% endblock content %}

@@ -1,0 +1,38 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}Your shopping cart{% endblock %}
+{% block content %}
+<h1>Your shopping cart</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Кол-во</th>
+                <th>Цена товара</th>
+                <th>Сумма</th>
+                <th>удалить</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            {% with product=item.product %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.price }}р.</td>
+                <td>{{ item.total_price }}р.</td>
+                <td><a class="btn btn-danger" href="{% url 'cart_remove' product.id%}">Remove</a></td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+            <tr class="total">
+                <td>Сумма</td>
+                <td colspan="4"></td>
+                <td>{{ cart.get_total_price }}р.</td>
+            </tr>
+        </tbody>
+    </table>
+    <p class>
+    <a href="{% url 'product_list' %}" class="button light">Вернуться к товарам</a>
+    <a href="#" class="button">Заказать</a></p>
+{% endblock %}

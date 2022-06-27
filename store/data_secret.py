@@ -1,5 +1,5 @@
 SECRET_KEY = 'django-insecure-^knhue$cf05lzd6@ge9@8#85(^5=twi$)z0-hza!efq69m7q=6'
-PGPASS = '127.0.0.1:5432:shop:ilya:asdwow'
+PGPASS = '127.0.0.1:5432:store:ilya:asdwow'
 
 
 def read_pgpass():

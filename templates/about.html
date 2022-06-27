@@ -1,5 +1,18 @@
 {% extends '_base.html' %}
+{% load auth_extras %}
 {% block title %}Информации{% endblock title %}
 {% block content %}
   <h1>Информации о магазине</h1>
+  {% if user.id == 1 %}
+    <p>hi {{user.email}}</p>
+  {%else%}
+    <p>пошел на хуй {{user.email}}</p>
+  {%endif%}
+  <p><a href="{% url 'home' %}">Главная</a></p>
+<h1>Магазин зэха</h1>
+{% if request.user|has_group:"my_test" %}
+    <p>lalalala</p>
+{%else%}
+    <p>dadada</p>
+{% endif %}
 {% endblock content %}

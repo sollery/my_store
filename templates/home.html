@@ -2,15 +2,10 @@
 {% load static %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-  <h1>Homepage</h1>
-  <img class="products" src="{% static 'images/bg.jpg' %}">
+  <h1>Главная</h1>
   {% if user.is_authenticated %}
     Hi {{ user.email }}!
-    <p><a href="{% url 'account_logout' %}">Выйти</a></p>
   {% else %}
     <p>Вы не авторизованы</p>
-    <a href="{% url 'account_login' %}">Авторизироваться</a>
-    <a href="{% url 'account_signup' %}">Регистрация</a>
   {% endif %}
-  <p><a href="{% url 'about' %}">Инфо</a></p>
 {% endblock content %}

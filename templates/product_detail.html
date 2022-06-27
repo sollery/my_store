@@ -1,0 +1,28 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+ {{ product.name }}
+{% endblock %}
+{% block content %}
+    <div class="product-detail">
+        <img src="{{product.image.url}}" width="300" height="400">
+        <h1>{{ product.name }}</h1>
+          <form action='{% url "cart_add"  product.id %}' method="post">
+                {{ cart_product_form }}
+                {% csrf_token %}
+            <input type="submit" value="Добавить">
+            </form>
+        <p class="price">{{ product.price }}р.</p>
+        {{ product.description|linebreaks }}
+    </div>
+    <div>
+     <h3>Reviews</h3>
+     <ul>
+         {% for review in reviews %}
+            <li>{{ review.review }}</li>
+            <li>({{ review.author }})</li>
+         {% endfor %}
+     </ul>
+ </div>
+<p><a href="{% url 'home' %}">Главная</a></p>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block title %}
+{{category.name}}
+{% endblock %}
+{% block content %}
+<h1>{{category.name}}</h1>
+<div>
+    {%if products%}
+        {% for product in products%}
+            <h2><a href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a></h2>
+        {%endfor%}
+    {%else%}
+        <p>Пустая категория</p>
+    {%endif%}
+    <p><a href="{% url 'home' %}">Главная</a></p>
+</div>
+{% endblock %}
