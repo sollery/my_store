@@ -4,21 +4,23 @@ console.log(elems)
 
 var adds = document.querySelectorAll('#add_basket');
 console.log(adds)
-var el = document.querySelector('.quantity').value;
-console.log(el)
+//const form = new FormData(document.getElementById('form_buying_product'));
+//var el = document.querySelector('.quantity').value;
+//console.log(el)
 //elems.forEach((e) => {
 //    e.onclick= function() {
 //        console.log(e)
 //        e.remove()}
 //    })
+//const url = form.action
 //adds.forEach((e) => {
 //    e.onclick = function() {
 //        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 //        data = {'product_id':e.dataset.product_id,'quantity': el}
 //        console.log(data)
-//        fetch('/',   {
+//        fetch(url,   {
 //               method: 'POST',
-//               body: JSON.stringify(data),
+//               body: JSON.stringify(form),
 //               headers: {
 //                        'X-CSRFToken': csrftoken,
 //                        'Accept': 'text/html',
@@ -28,6 +30,7 @@ console.log(el)
 //                .catch(error => console.log(error));
 //    }
 //})
+
 
 buttons.forEach((e) => {
     e.onclick = function() {

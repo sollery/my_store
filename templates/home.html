@@ -8,49 +8,36 @@
   {% else %}
     <p>Вы не авторизованы</p>
   {% endif %}
-    <div class="section-top">
-        <img src="{% static 'images/my_bg.jpg' %}" class="img-responsive">
-    </div>
-    <div class="section section1">
+<!--    <div class="section-top">-->
+<!--        <img src="{% static 'images/my_bg.jpg' %}" class="img-responsive">-->
+<!--    </div>-->
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="text-center">
-                        Новые поступления
-                    </h1>
+                {% for product in products %}
+                <div class="col-lg-3">
+                    <div class="product-item">
+                        <h4>{{product.name}}</h4>
+                        <p>{{product.description|truncatechars_html:70}}</p>
+                        <div>
+                            {{product.price}}р.
+                        </div>
+                    </div>
+                   <div>
+                  <form id = 'form_buying_product' method="post" action="{% url 'cart_add' product.id %}">
+                            {{ cart_product_form }}
+                            {% csrf_token %}
+                        <div class="form-group">
+                            <button type="submit" id="add_basket" class="btn btn-success btn-buy"
+                                data-product_id = "{{ product.id }}"
+                                data-name ="{{ product.name }}"
+                                data-price ="{{ product.price }}">
+                                Купить
+                            </button>
+                        </div>
+                   </form>
                 </div>
-                {% for product_image in products_images %}
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-    <div class="section section2 phones-container">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="text-center">
-                        Телефоны
-                    </h1>
                 </div>
-                {% for product_image in products_images_phones %}
                 {% endfor %}
-
-            </div>
-        </div>
-    </div>
-    <div class="section section3 laptops-container">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="text-center">
-                        Ноутбуки
-                    </h1>
-                </div>
-                {% for product_image in products_images_laptops %}
-                    {% include 'landing/product_item.html' %}
-                {% endfor %}
-
-            </div>
         </div>
     </div>
 {% endblock %}

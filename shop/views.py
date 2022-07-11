@@ -4,33 +4,19 @@ from django.shortcuts import render, get_object_or_404
 from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
-from cart.cart import Cart
+
 from shop.models import Product, Category,Review
 
 
 def product_detail(request, pk, slug):
-    session_key = request.session.session_key
-    if not session_key:
-        request.session.cycle_key()
-    print(session_key)
+    reviews = Review.objects.filter(Product_id=pk)
+    print(reviews)
     product = get_object_or_404(Product, id=pk, slug=slug)
-    # if request.method == 'POST':
-    #     cart = Cart(request)
-    #     print(cart.session)
-    #     form = CartAddProductForm(request.POST)
-    #     if form.is_valid():
-    #         cd = form.cleaned_data
-    #         print(cd['quantity'])
-    #         cart.add(product=product,quantity=cd['quantity'],update_quantity=cd['update'])
-    #     print('1')
-    # reviews = Review.objects.filter(Product_id=pk)
-    # print(reviews)
-    # # product = get_object_or_404(Product, id=pk, slug=slug)
     cart_product_form = CartAddProductForm()
     return render(request, 'product_detail.html',
     {'product': product,
-    'cart_product_form': cart_product_form})
-
+    'cart_product_form': cart_product_form,
+     'reviews ': reviews})
 
 
 class ProductListView(ListView):
