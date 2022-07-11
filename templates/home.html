@@ -1,11 +1,56 @@
 {% extends '_base.html' %}
 {% load static %}
 {% block title %}Home{% endblock title %}
-{% block content %}
-  <h1>Главная</h1>
+{%block content%}
+ <h1>Главная</h1>
   {% if user.is_authenticated %}
     Hi {{ user.email }}!
   {% else %}
     <p>Вы не авторизованы</p>
   {% endif %}
-{% endblock content %}
+    <div class="section-top">
+        <img src="{% static 'images/my_bg.jpg' %}" class="img-responsive">
+    </div>
+    <div class="section section1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="text-center">
+                        Новые поступления
+                    </h1>
+                </div>
+                {% for product_image in products_images %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="section section2 phones-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="text-center">
+                        Телефоны
+                    </h1>
+                </div>
+                {% for product_image in products_images_phones %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    <div class="section section3 laptops-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="text-center">
+                        Ноутбуки
+                    </h1>
+                </div>
+                {% for product_image in products_images_laptops %}
+                    {% include 'landing/product_item.html' %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

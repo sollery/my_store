@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category, Product, Review
+from .models import Category, Product, Review, ProductImage
+
 
 class ReviewInline(admin.TabularInline):
     model = Review
@@ -20,4 +21,14 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 0
 
+class ProductImageAdmin (admin.ModelAdmin):
+    list_display = [field.name for field in ProductImage._meta.fields]
+
+    class Meta:
+        model = ProductImage
+
+admin.site.register(ProductImage, ProductImageAdmin)

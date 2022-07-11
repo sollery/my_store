@@ -3,6 +3,7 @@
 {% block title %}Your shopping cart{% endblock %}
 {% block content %}
 <h1>Your shopping cart</h1>
+{% csrf_token %}
     <table>
         <thead>
             <tr>
@@ -16,12 +17,15 @@
         <tbody>
             {% for item in cart %}
             {% with product=item.product %}
+
             <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.price }}р.</td>
-                <td>{{ item.total_price }}р.</td>
-                <td><a class="btn btn-danger" href="{% url 'cart_remove' product.id%}">Remove</a></td>
+                <div class = "tdss">
+                    <td>{{ product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}р.</td>
+                    <td>{{ item.total_price }}р.</td>
+                    <td><button id = "button_del" class="btn btn-danger" data-product_id = "{{ product.id }}">Remove</button></td>
+                </div>
             </tr>
             {% endwith %}
             {% endfor %}
@@ -34,5 +38,6 @@
     </table>
     <p class>
     <a href="{% url 'product_list' %}" class="button light">Вернуться к товарам</a>
-    <a href="#" class="button">Заказать</a></p>
+    <a href="{%url 'order_create'%}" class="button">Заказать</a></p>
 {% endblock %}
+
