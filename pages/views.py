@@ -6,6 +6,7 @@ from accounts.models import CustomUser
 from shop.models import Product, ProductImage
 from cart.forms import CartAddProductForm
 
+
 def home(request):
     products = Product.objects.all()[:4]
     cart_product_form = CartAddProductForm()

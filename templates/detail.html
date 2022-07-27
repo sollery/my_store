@@ -1,43 +1,46 @@
 {% extends "_base.html" %}
 {% load static %}
-{% block title %}Your shopping cart{% endblock %}
+{% block title %}Ваша корзина{% endblock %}
 {% block content %}
 <h1>Ваша корзина покупок</h1>
 {% csrf_token %}
-    <table>
+    <table class="table table-bordered ">
         <thead>
             <tr>
-                <th>Товар</th>
-                <th>Кол-во</th>
-                <th>Цена товара</th>
-                <th>Сумма</th>
-                <th>удалить</th>
+                <th scope="col">Товар</th>
+                <th scope="col">Кол-во</th>
+                <th scope="col" >Цена товара</th>
+                <th scope="col" >Сумма</th>
+                <th scope="col" >удалить</th>
             </tr>
         </thead>
         <tbody>
             {% for item in cart %}
             {% with product=item.product %}
-
-            <tr>
-                <div class = "tdss">
-                    <td>{{ product.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.price }}р.</td>
-                    <td>{{ item.total_price }}р.</td>
-                    <td><button id = "button_del" class="btn btn-danger" data-product_id = "{{ product.id }}">Remove</button></td>
-                </div>
+            <tr class = 'product' id="{{product.id}}">
+                    <td><a href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a></td>
+                        <td id="quantity">
+                        <button class="change btn btn-outline-dark minus" data-product_id = "{{ product.id }}"
+                                data-change = "minus">-</button>
+                            <input value = "{{ item.quantity }}">
+                        <button class="change btn btn-outline-dark plus" data-product_id = "{{ product.id }}"
+                                data-change = "plus">+</button>
+                        </td>
+                    <td id = "price">{{ item.price }}р.</td>
+                    <td id = "total_price">{{ item.total_price }} руб.</td>
+                    <td><button class="change btn btn-danger del" data-product_id = "{{ product.id }}"
+                                data-change = "del">удалить</button>
+                    </td>
             </tr>
             {% endwith %}
             {% endfor %}
             <tr class="total">
-                <td>Сумма</td>
+                <td><h3>Сумма заказа:</h3></td>
                 <td colspan="4"></td>
-                <td>{{ cart.get_total_price }}р.</td>
+                <td><h3 id = 'o_sum'>{{ cart.get_total_price }}руб.</h3></td>
             </tr>
         </tbody>
     </table>
-    <p class>
-    <a href="{% url 'product_list' %}" class="button light">Вернуться к товарам</a>
-    <a href="{%url 'order_create'%}" class="button">Заказать</a></p>
+    <a href="{%url 'order_create'%}" class="btn btn-success">Оформить заказ</a>
 {% endblock %}
 

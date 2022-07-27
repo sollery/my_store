@@ -3,8 +3,11 @@
 {% block content %}
 {% for category in category_list %}
 <div>
-    <h2><a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h2>
+    <ul>
+        <li>
+            <h3><a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h3>
+        </li>
+    </ul>
 </div>
 {% endfor %}
-<p><a href="{% url 'home' %}">Главная</a></p>
 {% endblock content %}

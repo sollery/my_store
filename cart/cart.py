@@ -62,4 +62,17 @@ class Cart:
         del self.session[settings.CART_SESSION_ID]
         self.save()
 
+    def plus(self,product):
+        product_id = str(product.id)
+        self.cart[product_id]['quantity'] += 1
+        self.save()
+
+    def minus(self,product):
+        product_id = str(product.id)
+        if self.cart[product_id]['quantity'] > 1:
+            self.cart[product_id]['quantity'] -= 1
+            self.save()
+        else:
+            del self.cart[product_id]
+            self.save()
 

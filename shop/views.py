@@ -14,9 +14,9 @@ def product_detail(request, pk, slug):
     product = get_object_or_404(Product, id=pk, slug=slug)
     cart_product_form = CartAddProductForm()
     return render(request, 'product_detail.html',
-    {'product': product,
-    'cart_product_form': cart_product_form,
-     'reviews ': reviews})
+                  {'product': product,
+                   'cart_product_form': cart_product_form,
+                   'reviews ': reviews})
 
 
 class ProductListView(ListView):

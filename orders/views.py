@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from .models import OrderItem
 from .forms import OrderCreateForm
@@ -9,6 +8,7 @@ def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
+        user_p = request.user
         if form.is_valid():
             order = form.save()
             for item in cart:
@@ -19,7 +19,7 @@ def order_create(request):
             # очистка корзины
             cart.clear()
             return render(request, 'created.html',
-                          {'order': order})
+                          {'order': order,'user_p': user_p})
     else:
         form = OrderCreateForm
     return render(request, 'create.html',

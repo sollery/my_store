@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem
+from .models import Order, OrderItem, PaymentMethod
 
 
 class OrderItemInline(admin.TabularInline):
@@ -13,6 +13,12 @@ class OrderAdmin(admin.ModelAdmin):
                     'created', 'updated']
     list_filter = ['paid', 'created', 'updated']
     inlines = [OrderItemInline]
+
+
+@admin.register(PaymentMethod)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['title']
+
 
 admin.site.register(Order, OrderAdmin)
 # Register your models here.
