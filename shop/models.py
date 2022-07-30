@@ -21,7 +21,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200, db_index=True)
     description = models.TextField(blank=True)
-    price = models.FloatField(default=1)
+    price = models.IntegerField(default=1)
     count = models.PositiveIntegerField('Кол-во товара', default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-lg-6">
                 {% for image_item in product.productimage_set.all %}
-                    <div class="product-image-item">
+                    <div class="product-image">
                         <img src="{{ image_item.image.url }}" class="img-responsive">
                     </div>
                 {% endfor %}
@@ -19,7 +19,7 @@
                 </h1>
                 <div>
                     <p>
-                        <h4>Цена:{{ product.price }}руб.</h4>
+                        <h4>Цена: <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.</h4>
                     </p>
                 </div>
 <!--                <div>-->
@@ -51,18 +51,14 @@
 <!--                      </div>-->
 <!--                </div>-->
                <div>
-                  <form id = 'form_buying_product' method="post" action="{% url 'cart_add' product.id %}">
-                            {{ cart_product_form }}
                             {% csrf_token %}
-                        <div class="form-group">
-                            <button type="submit" id="add_basket" class="btn btn-success btn-buy"
+                        <div>
+                            <button data-change="add" id="add_basket" class=" change btn btn-success btn-buy add"
                                 data-product_id = "{{ product.id }}"
                                 data-name ="{{ product.name }}"
-                                data-price ="{{ product.price }}">
-                                Купить
+                                data-price ="{{ product.price }}">Купить
                             </button>
                         </div>
-                   </form>
                 </div>
             </div>
          </div>

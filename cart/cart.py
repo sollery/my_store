@@ -12,16 +12,13 @@ class Cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, update_quantity=False):
+    def add(self, product):
         """Добавление товара в корзину или обновление его количества."""
         product_id = str(product.id)
         if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
-        if update_quantity:
-            self.cart[product_id]['quantity'] = quantity
-        else:
-            self.cart[product_id]['quantity'] += quantity
+            self.cart[product_id] = {'quantity': 1, 'price': str(product.price)}
         self.save()
+
 
     def save(self):
         # Помечаем сессию как измененную
@@ -43,8 +40,8 @@ class Cart:
         for product in products:
             cart[str(product.id)]['product'] = product
         for item in cart.values():
-            item['price'] = float(item['price'])
-            item['total_price'] = item['price'] * item['quantity']
+            item['price'] = int(float(item['price']))
+            item['total_price'] = int(float(item['price'] * item['quantity']))
             yield item
 
     def __len__(self):
@@ -53,7 +50,7 @@ class Cart:
 
     def get_total_price(self):
         return sum(
-            float(item['price']) * item['quantity']
+            int(float(item['price'])) * item['quantity']
             for item in self.cart.values()
         )
 
@@ -63,11 +60,13 @@ class Cart:
         self.save()
 
     def plus(self,product):
+        #добавление товара в корзине
         product_id = str(product.id)
         self.cart[product_id]['quantity'] += 1
         self.save()
 
     def minus(self,product):
+        # удаление товара в корзине
         product_id = str(product.id)
         if self.cart[product_id]['quantity'] > 1:
             self.cart[product_id]['quantity'] -= 1
@@ -75,4 +74,5 @@ class Cart:
         else:
             del self.cart[product_id]
             self.save()
+
 

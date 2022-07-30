@@ -18,16 +18,16 @@
             {% for item in cart %}
             {% with product=item.product %}
             <tr class = 'product' id="{{product.id}}">
-                    <td><a href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a></td>
+                    <td><a class="badge badge-secondary" href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a></td>
                         <td id="quantity">
                         <button class="change btn btn-outline-dark minus" data-product_id = "{{ product.id }}"
                                 data-change = "minus">-</button>
-                            <input value = "{{ item.quantity }}">
+                            <span id = "quantity{{product.id}}">{{ item.quantity }}</span>
                         <button class="change btn btn-outline-dark plus" data-product_id = "{{ product.id }}"
                                 data-change = "plus">+</button>
                         </td>
-                    <td id = "price">{{ item.price }}р.</td>
-                    <td id = "total_price">{{ item.total_price }} руб.</td>
+                    <td id = "item_price{{product.id}}">{{ item.price }} руб.</td>
+                    <td id ="total_price{{product.id}}">{{ item.total_price }} руб.</td>
                     <td><button class="change btn btn-danger del" data-product_id = "{{ product.id }}"
                                 data-change = "del">удалить</button>
                     </td>
@@ -37,7 +37,7 @@
             <tr class="total">
                 <td><h3>Сумма заказа:</h3></td>
                 <td colspan="4"></td>
-                <td><h3 id = 'o_sum'>{{ cart.get_total_price }}руб.</h3></td>
+                <td><h3><span class = 'total_sum'>{{ cart.get_total_price }}</span> руб.</h3></td>
             </tr>
         </tbody>
     </table>

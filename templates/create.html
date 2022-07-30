@@ -3,29 +3,51 @@
 {% block title %}Заказ{% endblock %}
 
 {% block content %}
-    <h1>Подтверждение заказа</h1>
-    <div class="order-info">
-        <h3>Ваш заказ:</h3>
-        <ul>
-            {% for item in cart %}
-                <li>
-                    {{ item.quantity }} шт. {{ item.product.name }}
-                    <span>{{ item.total_price }} руб.</span>
-                </li>
-            {% endfor %}
-        </ul>
-        <p>Сумма: {{ cart.get_total_price }} руб.</p>
-    </div>
+{% with total_items=cart|length %}
+              {% if cart|length > 0 %}
+        <h1>Подтверждение заказа</h1>
+        <div class="order-info">
+            <h3>Ваш заказ:</h3>
+            <ul>
+                {% for item in cart %}
+                    <li>
+                        {{ item.quantity }} шт. {{ item.product.name }}
+                        <span>{{ item.total_price }} руб.</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <p>Сумма: {{ cart.get_total_price }} руб.</p>
+        </div>
 
-    <form action="." method="post" class="">
-        {{ form.first_name }}
-        {{ form.last_name }}
-        {{ form.email }}
-        {{ form.address }}
-        {{ form.postal_code }}
-        {{ form.city }}
-        {{ form.payment_method }}
-        {% csrf_token %}
-        <p><input type="submit" value="Подтвердить"></p>
-    </form>
+        <form action="." method="post" class="">
+            <div class = "reg">
+                <div class="item">
+                    {{ form.first_name }}
+                </div>
+                <div class="item">
+                    {{ form.last_name }}
+                </div>
+                <div class="item">
+                    {{ form.email }}
+                </div>
+                <div class="item">
+                    {{ form.address }}
+                </div>
+                <div class="item">
+                    {{ form.postal_code }}
+                </div>
+                <div class="item">
+                    {{ form.city }}
+                 </div>
+                <div class="item">
+                    Выберите Способ оплаты: {{ form.payment_method }}
+                </div>
+                {% csrf_token %}
+            </div>
+            <p><input type="submit" value="Подтвердить"></p>
+        </form>
+    {% else %}
+        <p> Вы ничего не добавили в корзину, вернитесь в магазин для добавления товара!!!</p>
+    {% endif %}
+{% endwith %}
 {% endblock %}
