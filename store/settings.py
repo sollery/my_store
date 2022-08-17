@@ -52,7 +52,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 SITE_ID = 1
 
@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'shop.middleware.AjaxMiddleware'
 ]
 
 ROOT_URLCONF = 'store.urls'
@@ -84,6 +85,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
+                'shop.context_processors.get_caterogy_list'
             ],
         },
     },
@@ -145,7 +147,17 @@ STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
 STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 
 CART_SESSION_ID = 'cart'
-
+EMAIL_SUBJECT_PREFIX = '[Zeh-shop]'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_PORT = 465
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST_USER = 'ilushamdmaa@Yandex.ru'
+EMAIL_HOST_PASSWORD = 'retrymaks2021'
+EMAIL_USE_SSL = True
+ADMINS = [
+    ('ilya_adm', 'ilushamdmaa@yandex.ru')
+]
+SERVER_EMAIL = 'ilushamdmaa@yandex.ru'
 STATICFILES_FINDERS = [
  "django.contrib.staticfiles.finders.FileSystemFinder",
  "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -154,7 +166,8 @@ STATICFILES_FINDERS = [
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
+# CELERY_BROKER_URL = "redis://localhost:6379"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(BASE_DIR.joinpath('media'))

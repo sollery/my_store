@@ -1,0 +1,12 @@
+
+
+<div class= "_rew" id = "{{ review.id }}">
+                <input  type="button" value="×" class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}">
+                <p class="info">
+                    от {{ review.author }}
+                    дата {{ review.created_rew }}
+                </p>
+                <p class = "text_com">
+                    Текст: {{ review.review}}
+                </p>
+                </div>

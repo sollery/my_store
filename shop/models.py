@@ -37,14 +37,25 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('product_detail', args=[self.id, self.slug])
 
+    def get_id(self):
+        return str(self.pk)
 
-class Review(models.Model): # new
+
+class Review(models.Model):
     Product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='reviews',)
-    review = models.CharField(max_length=255)
     author = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,)
+    review = models.TextField('Отзыв')
+    active = models.BooleanField(default=True)
+    created_rew = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated_rew = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return self.review
+        return 'Отзыв от {} о {}'.format(self.author, self.Product)
 
 
 class ProductImage(models.Model):

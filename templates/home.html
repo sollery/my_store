@@ -33,29 +33,57 @@
                 <span class="sr-only">Next</span>
               </a>
             </div>
-            <div class="row">
-                {% for product in products %}
-                <div class="col-lg-3">
+            <div class="one"><h1 class = "title-page">Новинки</h1></div>
+            <div class="row product_list">
+                {% for product in page_obj %}
+                <div class="col-lg-3 inf_p">
                     <div class="product-item">
-                        <h4><a class="badge badge-secondary" href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a></h4>
-                        <p class = "info-item">{{product.description|truncatechars_html:50}}</p>
-                            {% for image_item in product.productimage_set.all %}
-                    <div class="product-image-item">
-                        <img src="{{ image_item.image.url }}" class="img-responsive" height="150" width="200">
+                        {% for image_item in product.productimage_set.all %}
+                    <a class="text-decoration-none" href="{% url 'product_detail' product.pk product.slug %}">
+                    <div class="info_image_item info_item">
+                        <img src="{{ image_item.image.url }}"  height="150" width="200">
                     </div>
                             {% endfor %}
-                        <div>
-                            Цена: <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
+                        <div class = "info_item_name">
+                            <h4>{{ product.name }}</h4>
+                        </div>
+                        <div class = "info_item_price">
+                            <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
                             {% csrf_token %}
-                            <button data-change="add" id="add_basket" class=" change btn btn-success btn-buy add"
-                                data-product_id = "{{ product.id }}"
-                                data-name ="{{ product.name }}"
-                                data-price ="{{ product.price }}">Купить
-                            </button>
+                        </div></a>
+                        <div class ="info_item_btn">
+                            {% if product.get_id in cart.cart %}
+                                <a href="{% url 'cart_detail' %}" class="btn btn-info ">в корзине</a>
+                            {% else %}
+                                <button data-change="add" id="add_basket{{ product.id }}" class=" change btn btn-success btn-buy add"
+                                    data-product_id = "{{ product.id }}"
+                                    data-name ="{{ product.name }}"
+                                    data-price ="{{ product.price }}">Купить
+                                </button>
+                                <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="btn btn-info " hidden>в корзине</a>
+                             {%endif%}
                         </div>
                     </div>
                 </div>
+
                 {% endfor %}
         </div>
+<!--            <div id="pagination">-->
+<!--                    <span class="step-links">-->
+<!--                        {% if page_obj.has_previous %}-->
+<!--                            <a class = "page-link" href="?page=1">Начало</a>-->
+<!--                            <a class = "page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>-->
+<!--                        {% endif %}-->
+
+<!--                        <span class="current">-->
+<!--                            стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.-->
+<!--                        </span>-->
+
+<!--                        {% if page_obj.has_next %}-->
+<!--                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>-->
+<!--                            <a class = "page-link" href="?page={{ page_obj.paginator.num_pages }}">Конец</a>-->
+<!--                        {% endif %}-->
+<!--                    </span>-->
+<!--                </div>-->
     </div>
 {% endblock %}

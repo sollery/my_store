@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark fixed-top">
+<nav class="navbar navbar-expand-lg  fixed-top">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -9,27 +9,34 @@
         <a class="nav-link" href="{% url 'home' %}">Главная</a>
       </li>
       <li class="nav-item">
-          {% with total_items=cart|length %}
-              {% if cart|length >= 0 %}
-                  <a class="nav-link"  href="{% url 'cart_detail' %}">
-                       Корзина:
-                        <span id ='quantity_cart'>{{ total_items }}</span> шт.
-                      <span id = 'sum_cart'>{{ cart.get_total_price }}</span> руб.
-                  </a>
-              {% else %}
-                  <a href="{% url 'cart_detail' %}" class="nav-link" >Корзина: 0 шт. 0 руб.</a>
-              {% endif %}
-          {% endwith %}
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'category_list' %}">Категории</a>
+        <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter">Каталог</a>
       </li>
     </ul>
     <ul class="navbar-nav my-2 mt-lg-0">
+        <li class="nav-item">
+          {% with total_items=cart|length %}
+              {% if cart|length >= 0 %}
+                  <a class="nav-link container-focus" data-focus = "focus" href="{% url 'cart_detail' %}">
+                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                          <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                       </svg>
+                      <span id ='quantity_cart'>{{ total_items }}</span> шт.
+                      <span id = 'sum_cart'>{{ cart.get_total_price}}</span> руб.
+
+                  </a>
+              {% else %}
+                  <a href="{% url 'cart_detail' %}" class="nav-link container-focus" >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-basket" viewBox="0 0 16 16">
+                      <path d="M5.757 1.071a.5.5 0 0 1 .172.686L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1v4.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 13.5V9a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h1.217L5.07 1.243a.5.5 0 0 1 .686-.172zM2 9v4.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9H2zM1 7v1h14V7H1zm3 3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                      </svg> 0 шт. 0 руб.
+                  </a>
+              {% endif %}
+          {% endwith %}
+      </li>
        <li>
       <form class="form-inline my-2 my-lg-0" action="{% url 'search_results' %}" method="get">
         <input name = "q" class="form-control mr-sm-2" type="search" placeholder="Поиск по сайту" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" ><i class="bi bi-search"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+        <button class="btn my-2 my-sm-0" type="submit" ><i class="bi bi-search"></i><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 </svg></button>
       </form>
@@ -48,4 +55,55 @@
       </li>
     </ul>
   </div>
+
 </nav>
+ <div class="focus">
+     {% if cart|length %}
+        {% for item in cart %}
+        {% with product=item.product %}
+          <p id="{{product.id}}">{{product.name}} X {{ item.quantity }} шт.</p>
+        {% endwith %}
+        {% endfor %}
+     {%else%}
+        <p>Корзина пуста</p>
+     {%endif%}
+ </div>
+
+<!--Stack Overflow на русском — это сайт вопросов и ответов для программистов. Присоединяйтесь! Регистрация займёт не больше минуты.-->
+
+
+<!--Любой может задать вопрос-->
+
+<!--Любой может ответить-->
+
+<!--Лучшие ответы получают голоса и поднимаются наверх-->
+<!--$('div.container-focus').mouseover(function() {-->
+<!--  $('.container').find('div.focus').each(function() {-->
+<!--    $(this).css('display', 'none');-->
+<!--  });-->
+
+<!--  var focus = $(this).attr('data-focus');-->
+
+<!--  $('.'+focus).css('display', 'block');-->
+<!--});-->
+<!--focus {-->
+<!--  display: none-->
+<!--}-->
+
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+<!--<div class="container">-->
+<!--  <div class="container-focus" data-focus="focus">-->
+<!--    Тут наводим 1-->
+<!--  </div>-->
+<!--  <p class="focus-1">Это показываем 1</p>-->
+
+<!--  <div class="container-focus" data-focus="focus-2">-->
+<!--    Тут наводим 2-->
+<!--  </div>-->
+<!--  <p class="focus-2">Это показываем 2</p>-->
+
+<!--  <div class="container-focus" data-focus="focus-3">-->
+<!--    Тут наводим 3-->
+<!--  </div>-->
+<!--  <p class="focus-3">Это показываем 3</p>-->
+<!--</div>-->

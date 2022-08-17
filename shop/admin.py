@@ -2,8 +2,11 @@ from django.contrib import admin
 from .models import Category, Product, Review, ProductImage
 
 
-class ReviewInline(admin.TabularInline):
-    model = Review
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('author', 'Product', 'created_rew', 'active')
+    list_filter = ('active', 'created_rew', 'updated_rew')
+    search_fields = ('author', 'body')
+admin.site.register(Review, ReviewAdmin)
 
 
 @admin.register(Category)
@@ -14,7 +17,6 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ReviewInline, ]
     list_display = ['name',  'price', 'count', 'created', 'updated']
     list_filter = ['created', 'updated']
     list_editable = ['price', 'count']

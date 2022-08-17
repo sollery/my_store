@@ -4,14 +4,57 @@
 {{category.name}}
 {% endblock %}
 {% block content %}
-<h1>{{category.name}}</h1>
-<div>
+<h1 class = "title-page">{{category.name}}</h1>
+<div class = "container text-center">
     {%if products%}
-        {% for product in products%}
-            <h2><a href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a></h2>
-        {%endfor%}
+    <div class="row">
+        <div class="col-lg-4">
+            <form action="." method="POST" enctype='multipart/form-data'>
+                    <div class = "reg">
+                            {{form}}
+                    </div>
+                    {% csrf_token %}
+                    <div>
+                        <input type="submit" value="фильтровать">
+                    </div>
+            </form>
+        </div>
+        <div class="col-lg-4 product_in_cat">
+            {% for product in products %}
+            <div class="inf_p">
+                    <div class="product-item">
+                        {% for image_item in product.productimage_set.all %}
+                    <a class="text-decoration-none" href="{% url 'product_detail' product.pk product.slug %}">
+                    <div class="info_image_item info_item">
+                        <img src="{{ image_item.image.url }}"  height="100" width="150">
+                    </div>
+                            {% endfor %}
+                        <div class = "info_item_name">
+                            <h4>{{ product.name }}</h4>
+                        </div>
+                        <div class = "info_item_price">
+                            <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
+                            {% csrf_token %}
+                        </div></a>
+                        <div class ="info_item_btn">
+                            {% if product.get_id in cart.cart %}
+                                <a href="{% url 'cart_detail' %}" class="btn btn-info ">в корзине</a>
+                            {% else %}
+                                <button data-change="add" id="add_basket{{ product.id }}" class=" change btn btn-success btn-buy add"
+                                    data-product_id = "{{ product.id }}"
+                                    data-name ="{{ product.name }}"
+                                    data-price ="{{ product.price }}">Купить
+                                </button>
+                                <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="btn btn-info " hidden>в корзине</a>
+                             {%endif%}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+        </div>
     {%else%}
         <p>Пустая категория</p>
     {%endif%}
+</div>
 </div>
 {% endblock %}

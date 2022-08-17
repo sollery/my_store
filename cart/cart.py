@@ -13,12 +13,11 @@ class Cart:
         self.cart = cart
 
     def add(self, product):
-        """Добавление товара в корзину или обновление его количества."""
+        """Добавление товара в корзину"""
         product_id = str(product.id)
         if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 1, 'price': str(product.price)}
+            self.cart[product_id] = {'quantity': 1, 'price': str(product.price),'name':product.name}
         self.save()
-
 
     def save(self):
         # Помечаем сессию как измененную
@@ -44,14 +43,21 @@ class Cart:
             item['total_price'] = int(float(item['price'] * item['quantity']))
             yield item
 
+    # def __next__(self):
+    #     i = 0
+    #     while i <= len(self):
+    #         i+=1
+    #         return self
+    #     else:
+    #         raise StopIteration
+
     def __len__(self):
         """Возвращает общее количество товаров в корзине."""
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
         return sum(
-            int(float(item['price'])) * item['quantity']
-            for item in self.cart.values()
+            int(float(item['price'])) * item['quantity'] for item in self.cart.values()
         )
 
     def clear(self):
@@ -59,8 +65,8 @@ class Cart:
         del self.session[settings.CART_SESSION_ID]
         self.save()
 
-    def plus(self,product):
-        #добавление товара в корзине
+    def plus(self, product):
+        # добавление товара в корзине
         product_id = str(product.id)
         self.cart[product_id]['quantity'] += 1
         self.save()

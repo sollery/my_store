@@ -8,13 +8,15 @@
         <div class="row">
             <div class="col-lg-6">
                 {% for image_item in product.productimage_set.all %}
-                    <div class="product-image">
-                        <img src="{{ image_item.image.url }}" class="img-responsive">
-                    </div>
+                <div class = "image-zoom" >
+                    <img src="{{ image_item.image.url }}" class="img-responsive" height="450" width="400">
+                    <div class="image-zoom-block"></div>
+                </div>
                 {% endfor %}
+                <input class = "hide_rew" id="click-to-hide-2" type="button" value="Показать отзывы">
             </div>
-            <div class="col-lg-6">
-                <h1 class="text-center">
+            <div class="col-lg-6 text-center">
+                <h1>
                     {{ product.name }}
                 </h1>
                 <div>
@@ -22,45 +24,142 @@
                         <h4>Цена: <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.</h4>
                     </p>
                 </div>
-<!--                <div>-->
-<!--                      &lt;!&ndash; Nav tabs &ndash;&gt;-->
-<!--                      <ul class="nav nav-tabs" role="tablist">-->
-<!--                        <li role="presentation" class="active">-->
-<!--                            <a href="#description" aria-controls="home" role="tab" data-toggle="tab">-->
-<!--                                Описание-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li role="presentation">-->
-<!--                            <a href="#delivery" aria-controls="profile" role="tab" data-toggle="tab">-->
-<!--                                Доставка-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>-->
-<!--                        <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>-->
-<!--                      </ul>-->
-
-                      <!-- Tab panes -->
                         <div role="tabpanel" class="tab-pane active" id="description">
-                            {{ product.description }}
+                            <span class="text-center" >{{ product.description }}</span>
                         </div>
-<!--                        <div role="tabpanel" class="tab-pane" id="delivery">-->
-<!--                            <h3>Как мы делаем доставку</h3>-->
-<!--                        </div>-->
-<!--                        <div role="tabpanel" class="tab-pane" id="messages">...</div>-->
-<!--                        <div role="tabpanel" class="tab-pane" id="settings">...</div>-->
-<!--                      </div>-->
-<!--                </div>-->
-               <div>
-                            {% csrf_token %}
-                        <div>
-                            <button data-change="add" id="add_basket" class=" change btn btn-success btn-buy add"
+                <div>
+                        {% csrf_token %}
+                    <div class ="info_item_btn">
+                        {% if product.get_id in cart.cart %}
+                            <a href="{% url 'cart_detail' %}" class="btn btn-info">в корзине</a>
+                        {% else %}
+                            <button data-change="add" id="add_basket{{ product.id }}" class="change btn btn-success btn-buy add"
                                 data-product_id = "{{ product.id }}"
                                 data-name ="{{ product.name }}"
                                 data-price ="{{ product.price }}">Купить
                             </button>
-                        </div>
+                            <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="btn btn-info" hidden>в корзине</a>
+                         {%endif%}
+                    </div>
                 </div>
+
+
             </div>
          </div>
+        <div class="row ">
+            <div class="col-lg-6 comment hide-element wpcraft-box-2 ">
+                <div class = "lst_rew news-list">
+            {% for review in reviews %}
+                {% include 'review-item.html' %}
+            {% endfor %}
+            </div>
+
+<!--                <div id="pagination">-->
+<!--                    <span class="step-links">-->
+<!--                        {% if page_obj.has_previous %}-->
+<!--                            <a class = "page-link" href="?page=1">Начало</a>-->
+<!--                            <a class = "page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>-->
+<!--                        {% endif %}-->
+<!--                        <span class="current">-->
+<!--                            стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.-->
+<!--                        </span>-->
+
+<!--                        {% if page_obj.has_next %}-->
+<!--                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>-->
+<!--                            <a class = "page-link" href="?page={{ page_obj.paginator.num_pages }}">Конец</a>-->
+<!--                        {% endif %}-->
+<!--                    </span>-->
+<!--                </div>-->
+            </div>
+
+            <div class="col-lg-6 frm_rew">
+                {% if user.is_authenticated %}
+                    <h2>Оставить отзыв</h2>
+                    <form action="." method="post">
+                        {{ review_form.as_p }}
+                        {% csrf_token %}
+                        <p><input type="button" data-change="add" value="Добавить отзыв" class="change_rew add add_rew" id="add_rew" data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}"></p>
+                    </form>
+                {%else%}
+                    <div>
+                        <h3>чтобы оставить отзыв надо <a href="{% url 'account_login' %}">Авторизироваться</a> или <a href="{% url 'account_signup' %}">Регистрация</a></h3>
+                     </div>
+                {%endif%}
+            </div>
+        <!--<h1>Отзывы</h1>
+        <div class="row">
+            <div class="col-lg-4">
+            {%for i in reviews %}
+                <span>Автор:{{i.author}}</span>
+                <p>сообщение: {{i.review}}</p>
+            {%endfor%}
+            </div>
+        </div>-->
+        </div>
+        <div id="goTop" style="position: fixed; right: 50px; bottom: 50px; background: deeppink; display: none;">go-Top</div>
     </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+
+        $(document).ready(function () {
+            window.news_index = "{% url 'product_detail' product.pk product.slug %}";
+
+            var page = 1;
+            var block_request = false;
+            var end_pagination = false;
+
+            $(window).scroll(function () {
+                var margin = $(document).height() - $(window).height() - 200;
+
+                if ($(window).scrollTop() > margin && end_pagination === false && block_request === false) {
+                    block_request = true;
+                    page += 1;
+
+                    $.ajax({
+                        type: 'GET',
+                        url: window.news_index,
+                        data: {
+                            "page": page
+                        },
+                        success: function (data) {
+                            if (data.end_pagination === true) {
+                                end_pagination = true;
+                            } else {
+                                block_request = false;
+                            }
+                            $('.news-list').append(data.content);
+                        }
+                    })
+                }
+            });
+        })
+         const goTopBtn = document.getElementById('goTop')
+             // Изначально высота верхнего содержимого, загружаемого браузером, равна 0
+          let scrollTop = 0
+             // слушаем события прокрутки страницы
+          window.onscroll = () => {
+                 // Получаем высоту верхнего содержимого, которое отображается в браузере
+            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                 // Если высота свернутого содержимого больше 50, отобразить кнопку для возврата наверх;
+                 // Если высота сворачиваемого содержимого меньше 50, скройте кнопку, чтобы вернуться наверх.
+            scrollTop > 50 ? (goTopBtn.style.display = 'block') : (goTopBtn.style.display = 'none')
+          }
+          goTopBtn.onclick = () => {
+                 // Очищаем последний таймер
+            let timer = null;
+            clearInterval(timer);
+                 // Создаем таймер и выполняем стрелочную функцию каждые 15 мсек.
+            timer = setInterval(()=>{
+                     // Каждый раз, когда функция выполняется, scrollTop уменьшается на одну десятую
+              scrollTop -= scrollTop / 10;
+              window.scrollTo(0,scrollTop)
+                     // Когда scrollTop меньше 2, напрямую устанавливаем scrollTop на 0 и очищаем таймер.
+              if(scrollTop<2){
+                window.scrollTo(0,0);
+                clearInterval(timer);
+              }
+            },15)
+          }
+
+    </script>
 {% endblock %}

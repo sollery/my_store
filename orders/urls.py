@@ -7,4 +7,7 @@ from django.conf.urls.static import static
 from . import views
 urlpatterns = [
         path('', views.order_create, name='order_create'),
+        # path('pdf_view/', views.ViewPDF.as_view(), name="pdf_view"),
+        # path('pdf_download/', views.DownloadPDF.as_view(), name="pdf_download"),
+        path('admin/order/<int:order_id>/pdf/',views.admin_order_pdf,name='admin_order_pdf'),
 ]

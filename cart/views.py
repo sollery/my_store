@@ -40,7 +40,7 @@ from .forms import CartAddProductForm
 #     return render(request, 'detail.html', {'cart': cart})
 
 
-def cart_change(request):
+def data_cart(request):
     cart = Cart(request)
     if request.method == 'POST':
         temp = json.load(request)
@@ -52,13 +52,23 @@ def cart_change(request):
         elif temp['change'] == 'del':
             cart.remove(product)
         elif temp['change'] == 'add':
-            print('111111111111')
             cart.add(product=product)
-
         cart = Cart(request)
         print(temp)
         print(cart.cart)
-        return HttpResponse(json.dumps(cart.cart))
+
+        # print(cart.get_total_price())
+        # print(len(cart))
+        in_cart = cart.cart.copy()
+        in_cart['cart_total_price'] = cart.get_total_price()
+        in_cart['cart_len'] = len(cart)
+        print(in_cart)
+    return JsonResponse(in_cart)
+
+
+def cart_change(request):
+
+    cart = Cart(request)
     return render(request, 'detail.html', {'cart': cart})
 
 

@@ -1,13 +1,18 @@
 {% extends '_base.html' %}
 {% block title %}Категории{% endblock title %}
 {% block content %}
-{% for category in category_list %}
-<div>
-    <ul>
-        <li>
-            <h3><a href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h3>
-        </li>
-    </ul>
+
+<div class="container">
+    <div class="font-italic">
+        <h1>Каталог товаров</h1>
+    </div>
+    <div class="row">
+        {% for category in category_list %}
+        <div class="col-lg-4" >
+            <h5><a class="text-decoration-none " href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h5>
+        </div>
+        {%endfor%}
+    </div>
 </div>
-{% endfor %}
+
 {% endblock content %}

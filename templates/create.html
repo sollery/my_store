@@ -3,51 +3,97 @@
 {% block title %}Заказ{% endblock %}
 
 {% block content %}
-{% with total_items=cart|length %}
+<h1 class = "title-page">Подтверждение заказа</h1>
+<div class="container">
+    <div class="row">
+            {% with total_items=cart|length %}
               {% if cart|length > 0 %}
-        <h1>Подтверждение заказа</h1>
-        <div class="order-info">
-            <h3>Ваш заказ:</h3>
-            <ul>
-                {% for item in cart %}
-                    <li>
-                        {{ item.quantity }} шт. {{ item.product.name }}
-                        <span>{{ item.total_price }} руб.</span>
-                    </li>
-                {% endfor %}
-            </ul>
-            <p>Сумма: {{ cart.get_total_price }} руб.</p>
-        </div>
+    <div class="col-lg-6 reg-o">
+        <h3>Заполните форму:</h3>
+            <form action="." method="post" class="">
+                <div class = "reg">
+                    {% for field in form %}
+                        <div class="item">
+                            {{field.label}}
+                             {{ field }}
+                            {{ field.help_text }}
+                        </div>
+                        {%endfor%}
+<!--                        {{ form.first_name.label}}-->
+<!--                        {{ form.first_name }}-->
 
-        <form action="." method="post" class="">
-            <div class = "reg">
-                <div class="item">
-                    {{ form.first_name }}
+<!--                    </div>-->
+<!--                    <div class="item">-->
+<!--                        {{ form.last_name }}-->
+<!--                    </div>-->
+<!--                    <div class="item">-->
+<!--                        {{ form.email }}-->
+<!--                    </div>-->
+<!--                    <div class="item">-->
+<!--                        {{ form.address }}-->
+<!--                    </div>-->
+<!--                    <div class="item">-->
+<!--                        {{ form.postal_code }}-->
+<!--                    </div>-->
+<!--                    <div class="item">-->
+<!--                        {{ form.city }}-->
+<!--                     </div>-->
+<!--                    <div class="item-check">-->
+<!--                        Выберите способ оплаты:-->
+<!--                        <div class="item-check-box">{{ form.payment_method }}</div>-->
+<!--                    </div>-->
+<!--                    <div class="item-check">-->
+<!--                        Выберите способ доставки:-->
+<!--                        <div class="item-check-box">{{ form.delivery_method }}</div>-->
+<!--                    </div>-->
+                    {% csrf_token %}
                 </div>
-                <div class="item">
-                    {{ form.last_name }}
+                <div>
+                    <input class="item-but" type="submit" value="Подтвердить">
                 </div>
-                <div class="item">
-                    {{ form.email }}
-                </div>
-                <div class="item">
-                    {{ form.address }}
-                </div>
-                <div class="item">
-                    {{ form.postal_code }}
-                </div>
-                <div class="item">
-                    {{ form.city }}
-                 </div>
-                <div class="item">
-                    Выберите Способ оплаты: {{ form.payment_method }}
-                </div>
-                {% csrf_token %}
+            </form>
+        </div>
+        <div class="order-info col-lg-6">
+            <h3>Ваш заказ:</h3>
+            <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Товар</th>
+                <th scope="col">Кол-во</th>
+                <th scope="col" >Цена товара</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            <tr>
+                <td>
+                    {{ item.product.name }}
+                </td>
+                <td>
+                    {{ item.quantity }}
+                </td>
+                <td>
+                    {{ item.price }} руб.
+                </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td ><h5>Сумма заказа:</h5></td>
+                <td colspan="3"><h5>{{ cart.get_total_price }} руб.</h5></td>
+            </tr>
+        </tbody>
+    </table>
+<!--                    {% for item in cart %}-->
+<!--                        <h5>Название: {{ item.product.name }}</h5>-->
+<!--                        <h5>Кол-во: {{ item.quantity }} шт.</h5>-->
+<!--                        <h5>Стоимость: {{ item.total_price }} руб.</h5>-->
+<!--                    {% endfor %}-->
+<!--                    <h5>Сумма: </h5>-->
             </div>
-            <p><input type="submit" value="Подтвердить"></p>
-        </form>
-    {% else %}
-        <p> Вы ничего не добавили в корзину, вернитесь в магазин для добавления товара!!!</p>
-    {% endif %}
+        {% else %}
+            <p> Вы ничего не добавили в корзину, вернитесь в магазин для добавления товара!!!</p>
+        {% endif %}
 {% endwith %}
+        </div>
+        </div>
 {% endblock %}
