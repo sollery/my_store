@@ -61,7 +61,7 @@
      {% if cart|length %}
         {% for item in cart %}
         {% with product=item.product %}
-          <p id="{{product.id}}">{{product.name}} X {{ item.quantity }} шт.</p>
+          <p>{{product.name}} × {{ item.quantity }} шт.</p>
         {% endwith %}
         {% endfor %}
      {%else%}

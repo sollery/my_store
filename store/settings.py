@@ -145,6 +145,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
 STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 CART_SESSION_ID = 'cart'
 EMAIL_SUBJECT_PREFIX = '[Zeh-shop]'

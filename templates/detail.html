@@ -18,7 +18,7 @@
         <tbody>
             {% for item in cart %}
             {% with product=item.product %}
-            <tr class = 'product' id="{{product.id}}p">
+            <tr class = 'product' id="{{product.id}}">
                     <td class ='info-cart'><a class ="text-decoration-none" href="{% url 'product_detail' product.pk product.slug %}">{{ product.name }}</a>
                         {% for image_item in product.productimage_set.all %}
                     <div class="product-image-cart">
@@ -27,11 +27,11 @@
                         {% endfor %}
                     </td>
                         <td id="quantity">
-                            <button class="change minus" data-product_id = "{{ product.id }}"
-                                data-change = "minus" >-</button>
-                            <span id = "quantity{{product.id}}">{{ item.quantity }}</span>
-                            <button class="change plus" data-product_id = "{{ product.id }}"
-                                data-change = "plus" >+</button>
+                            <a class ="btn_cart_min_pls"><button class="change minus min_pls" data-product_id = "{{ product.id }}"
+                                                                 data-change = "minus" >‒</button></a>
+                            <span id = "quantity{{product.id}}" class ="count_cart">{{ item.quantity }}</span>
+                            <a class ="btn_cart_min_pls"><button class="change plus min_pls" data-product_id = "{{ product.id }}"
+                                data-change = "plus" >+</button></a>
                         </td>
                     <td id = "item_price{{product.id}}">{{ item.price }} руб.</td>
                     <td id ="total_price{{product.id}}">{{ item.total_price }} руб.</td>

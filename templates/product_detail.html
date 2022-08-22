@@ -7,12 +7,26 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                {% for image_item in product.productimage_set.all %}
                 <div class = "image-zoom" >
-                    <img src="{{ image_item.image.url }}" class="img-responsive" height="450" width="400">
+                    <img id = goods-max src="{{ product.productimage_set.all.0.image.url }}" class="img-responsive" height="450" width="400">
                     <div class="image-zoom-block"></div>
                 </div>
+                <div class = "goods-img-min">
+                {% for image_item in product.productimage_set.all %}
+                    <div class = img_min>
+                        <img src="{{ image_item.image.url }}" class="img-responsive goods-min" height="100" width="150">
+                    </div>
                 {% endfor %}
+                </div>
+                 <div class="rating_p" data-total-value="{{avg_stat | floatformat:0}}">
+                            <div class="rating_item_p" data-item-value="5">★</div>
+                            <div class="rating_item_p" data-item-value="4">★</div>
+                            <div class="rating_item_p" data-item-value="3">★</div>
+                            <div class="rating_item_p" data-item-value="2">★</div>
+                            <div class="rating_item_p" data-item-value="1">★</div>
+                     <h3 class="rating_stat">Рейтинг: {{avg_stat}}</h3>
+                        </div>
+
                 <input class = "hide_rew" id="click-to-hide-2" type="button" value="Показать отзывы">
             </div>
             <div class="col-lg-6 text-center">
@@ -74,12 +88,21 @@
 
             <div class="col-lg-6 frm_rew">
                 {% if user.is_authenticated %}
-                    <h2>Оставить отзыв</h2>
-                    <form action="." method="post">
-                        {{ review_form.as_p }}
-                        {% csrf_token %}
-                        <p><input type="button" data-change="add" value="Добавить отзыв" class="change_rew add add_rew" id="add_rew" data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}"></p>
-                    </form>
+                    <h2>Оцените товар</h2>
+                        <div class="rating" data-total-value="{{rating_p}}" data-product_id="{{product.id}}">
+                        <div class="rating_item" data-item-value="5">★</div>
+                        <div class="rating_item" data-item-value="4">★</div>
+                        <div class="rating_item" data-item-value="3">★</div>
+                        <div class="rating_item" data-item-value="2">★</div>
+                        <div class="rating_item" data-item-value="1">★</div>
+                    </div>
+                    <h1 class="rating_y"></h1>
+                        <h2>Оставить отзыв</h2>
+                        <form action="." method="post">
+                            {{ review_form.as_p }}
+                            {% csrf_token %}
+                            <p><input type="button" data-change="add" value="Добавить отзыв" class="change_rew add add_rew" id="add_rew" data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}"></p>
+                        </form>
                 {%else%}
                     <div>
                         <h3>чтобы оставить отзыв надо <a href="{% url 'account_login' %}">Авторизироваться</a> или <a href="{% url 'account_signup' %}">Регистрация</a></h3>
@@ -96,7 +119,7 @@
             </div>
         </div>-->
         </div>
-        <div id="goTop" style="position: fixed; right: 50px; bottom: 50px; background: deeppink; display: none;">go-Top</div>
+        <div id="goTop" style="position: fixed; right: 50px; bottom: 50px;  color: black; width: 50px; height:100px; display: none;">&#8679;</div>
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -161,5 +184,33 @@
             },15)
           }
 
+        var clickToHide2 = document.querySelector('#click-to-hide-2');
+        clickToHide2.addEventListener("click", hideVisibleElem);
+
+        //	/* Функция добавления / удаления класса, который скрывает элемент */
+        function hideVisibleElem() {
+        let wpcraftBox2 = document.querySelector('.wpcraft-box-2');
+        wpcraftBox2.classList.toggle("hide-element");
+        //
+        //	/* В зависимости от наличия скрывающего класса меняем текст в кнопке */
+        if (wpcraftBox2.classList.contains("hide-element")){
+            clickToHide2.value = 'Показать отзывы';
+        } else {
+            clickToHide2.value = 'Скрыть отзывы';
+        }
+        }
+        $(document).ready(function(){
+            $('.fotki a').mouseover(function(){
+                e.preventDefault();
+                $('.image-zoom img').attr("src",$(this).attr("href"))
+            })
+            console.log('1111111111111')
+        })
+        document.body.onclick= function(event) {
+            event = event || window.event;
+            if (event.target.classList.contains('goods-min')) {
+                document.getElementById('goods-max').src = event.target.src;
+            }
+        }
     </script>
 {% endblock %}

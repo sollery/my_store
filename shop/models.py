@@ -3,6 +3,8 @@ from django.db import models
 from django.urls import reverse
 
 
+
+
 class Category(models.Model):
     name = models.CharField(max_length=200, db_index=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -67,8 +69,20 @@ class ProductImage(models.Model):
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
     def __str__(self):
-        return "%s" % self.id
+        return "%s" % self.image
 
     class Meta:
         verbose_name = 'Фотография'
         verbose_name_plural = 'Фотографии'
+
+
+class Rating(models.Model):
+    value = models.SmallIntegerField()
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    voted_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
+

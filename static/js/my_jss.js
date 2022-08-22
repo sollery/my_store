@@ -158,7 +158,7 @@ cart_buttons.forEach((e) => {
                     data['cart_len'] = temp['cart_len']
                     console.log(data)
                     var tr_m = document.getElementById(String(data.product_id))
-                    var cart_p = document.getElementById(String(data.product_id+'p'))
+//                    var cart_p = document.getElementById(String(data.product_id+'p'))
                     var pr = document.querySelector('#product_price'+String(data.product_id))
                     var total_sum = document.querySelector('.total_sum')
                     var item_price = document.querySelector('#item_price'+String(data.product_id))
@@ -166,6 +166,7 @@ cart_buttons.forEach((e) => {
                     var quantity_item = document.querySelector('#quantity'+String(data.product_id))
                     var quantity_cart = document.querySelector('#quantity_cart')
                     var total_price = document.querySelector('#total_price'+String(data.product_id))
+                    console.log(tr_m)
                     if (data.change == 'plus') {
                         plusFunction(data.product_id)
 
@@ -187,7 +188,7 @@ cart_buttons.forEach((e) => {
                         sum_cart.innerText = data.cart_total_price
                         quantity_cart.innerText = data.cart_len
                         tr_m.remove()
-                        cart_p.remove()
+
 
                     }
 
@@ -197,6 +198,7 @@ cart_buttons.forEach((e) => {
                         sum_cart.innerText = data.cart_total_price
                         quantity_cart.innerText = data.cart_len
                         quantity_item.innerText= temp[t].quantity
+
 
                     }
 
@@ -230,7 +232,7 @@ cart_buttons.forEach((e) => {
                         inf_add_itm.innerText = 'товар добавлен'
                         document.querySelector('.navbar').appendChild(inf_add_itm)
                         var new_itm = document.createElement('p')
-                        new_itm.innerText = String(temp[t].name + ' X ' + temp[t].quantity + ' шт.')
+                        new_itm.innerText = String(temp[t].name + ' × ' + temp[t].quantity + ' шт.')
                         document.querySelector('.focus').appendChild(new_itm)
                         setTimeout (
                             () => {
@@ -590,21 +592,7 @@ zoom.forEach(function(el) {
   });
 });
 
-//var clickToHide2 = document.querySelector('#click-to-hide-2');
-//	clickToHide2.addEventListener("click", hideVisibleElem);
-//
-//	/* Функция добавления / удаления класса, который скрывает элемент */
-//	function hideVisibleElem() {
-//	let wpcraftBox2 = document.querySelector('.wpcraft-box-2');
-//	wpcraftBox2.classList.toggle("hide-element");
-//
-//	/* В зависимости от наличия скрывающего класса меняем текст в кнопке */
-//	if (wpcraftBox2.classList.contains("hide-element")){
-//		clickToHide2.value = 'Показать отзывы';
-//	} else {
-//		clickToHide2.value = 'Скрыть отзывы';
-//	}
-//}
+
 
 
 //дожидаемся полной загрузки страницы
@@ -623,4 +611,99 @@ window.onload = function () {
   };
 }
 
+var filter_button = document.querySelectorAll('.filter_cat');
+console.log(filter_button)
+//var form_filter = document.getElementById('form_filter');
+//var params = new FormData(form_filter);
+//console.log(params)
+
+filter_button.forEach((e) => {
+    e.onclick = function() {
+        var form_filter = document.getElementById('form_filter');
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        data = {'form_filter': form_filter.elements["filter_form_val"].value,'category_id':e.dataset.cat_id,};
+        fetch('http://127.0.0.1:8000/shop/filter_category/',   {
+               method: 'POST',
+               body: JSON.stringify(data),
+               headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Accept': 'text/html',
+                        'Content-Type': 'application/json',
+                    }})
+               .then(response => response.text())
+               .then(temp => {
+                    temp = JSON.parse(temp)
+                    console.log('212')
+                    console.log(temp)
+                    for (let i = 0; i < temp['products'].length; i += 1) {
+                      // Этот код выполняется для каждого элемента
+                      console.log(temp['products'][i].id, temp['products'][i].name,temp['products'][i].price);
+                    }
+                    var div_i = document.querySelector('.product_in_cat')
+                    div_i.innerText = '';
+               })
+               .catch(error => console.log(error))
+
+
+}
+})
+// Add star rating
+//const rating = document.querySelector('form[name=rating]');
+//
+//rating.addEventListener("change", function (e) {
+//    // Получаем данные из формы
+//    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+//    let product = document.querySelector('[name=product]');
+//    let data = {"star":rating.elements["star"].value,"product":product}
+//    fetch(`${this.action}`, {
+//        method: 'POST',
+//        body: data,
+//        headers: {
+//        'X-CSRFToken': csrftoken,
+//        'Accept': 'text/html',
+//        'Content-Type': 'application/json',
+//    }})
+//        .then(response => response.text())
+////        .then(temp => {JSON.parse(temp)
+////            console.log(temp)
+////        })
+//
+//        .catch(error => console.log(error))
+//
+//});
+        const ratingItemsList = document.querySelectorAll('.rating_item');
+        const ratingWrapper = document.querySelector('.rating')
+        const ratingItemsArray = Array.prototype.slice.call(ratingItemsList);
+        ratingItemsArray.forEach(item =>
+            item.addEventListener('click', () => {
+                const itemValue = item.dataset
+                item.parentNode.dataset.totalValue = itemValue
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                data = {'itemValue': itemValue.itemValue,'product_id':ratingWrapper.dataset.product_id};
+                console.log(data)
+                fetch('http://127.0.0.1:8000/shop/add_rating/',{
+                   method: 'POST',
+                   body: JSON.stringify(data),
+                   headers: {
+                            'X-CSRFToken': csrftoken,
+                            'Accept': 'text/html',
+                            'Content-Type': 'application/json',
+                        }})
+                   .then(response => response.text())
+                   .then(temp => {
+                        console.log(temp)
+                        var resp = document.querySelector('.rating_y');
+                        item.parentNode.dataset.totalValue = data.itemValue
+                        resp.innerText = String(temp)
+                        setTimeout (
+                            () => {
+                                resp.remove()
+                            },
+                            3000
+
+                     );
+                   })
+            })
+
+        );
 

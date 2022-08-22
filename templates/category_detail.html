@@ -9,13 +9,13 @@
     {%if products%}
     <div class="row">
         <div class="col-lg-4">
-            <form action="." method="POST" enctype='multipart/form-data'>
+            <form id ="form_filter" action='.' method="POST" enctype='multipart/form-data' onsubmit="return false;">
                     <div class = "reg">
                             {{form}}
                     </div>
                     {% csrf_token %}
                     <div>
-                        <input type="submit" value="фильтровать">
+                        <button class = "filter_cat" data-cat_id ="{{ category.id }}">фильтровать</button>
                     </div>
             </form>
         </div>
@@ -23,17 +23,15 @@
             {% for product in products %}
             <div class="inf_p">
                     <div class="product-item">
-                        {% for image_item in product.productimage_set.all %}
-                    <a class="text-decoration-none" href="{% url 'product_detail' product.pk product.slug %}">
+                    <a class="text-decoration-none" href="{% url 'product_detail' product.id product.slug %}">
                     <div class="info_image_item info_item">
-                        <img src="{{ image_item.image.url }}"  height="100" width="150">
+                        <img src="{{ product.productimage_set.all.0.image.url }}"  height="100" width="150">
                     </div>
-                            {% endfor %}
                         <div class = "info_item_name">
                             <h4>{{ product.name }}</h4>
                         </div>
                         <div class = "info_item_price">
-                            <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
+                            <span>{{ product.price }}</span> руб.
                             {% csrf_token %}
                         </div></a>
                         <div class ="info_item_btn">
@@ -45,7 +43,7 @@
                                     data-name ="{{ product.name }}"
                                     data-price ="{{ product.price }}">Купить
                                 </button>
-                                <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="btn btn-info " hidden>в корзине</a>
+                                <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="btn btn-success btn-buy add " hidden>в корзине</a>
                              {%endif%}
                         </div>
                     </div>
