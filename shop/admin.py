@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Review, ProductImage, Rating
+from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -17,7 +17,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name',  'price', 'count', 'created', 'updated']
+    list_display = ['name',  'price', 'count', 'created', 'updated','end_price']
     list_filter = ['created', 'updated']
     list_editable = ['price', 'count']
     prepopulated_fields = {'slug': ('name',)}
@@ -40,7 +40,14 @@ class RatingAdmin(admin.ModelAdmin):
     """Рейтинг"""
     list_display = ("value", "product", "user")
 
+@admin.register(Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ['value']
 
+
+@admin.register(Discount_product)
+class Discount_productAdmin(admin.ModelAdmin):
+    list_display = ['product','discount','start','end']
 # @admin.register(RatingStar)
 # class RatingStarAdmin(admin.ModelAdmin):
 #     model = RatingStar

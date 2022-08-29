@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+import datetime
 
+from django.utils import timezone
 
+from shop.managers import DiscountActiveManager
 
 
 class Category(models.Model):
@@ -27,6 +30,8 @@ class Product(models.Model):
     count = models.PositiveIntegerField('Кол-во товара', default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    # discount = models.IntegerField('Скидка в процентах', blank=True, default=0)
+    end_price = models.IntegerField('Итоговая цена', default=0)
 
     class Meta:
         ordering = ('name',)
@@ -43,6 +48,36 @@ class Product(models.Model):
         return str(self.pk)
 
 
+
+    @property
+    def discount_check(self):
+        try:
+            sale = Discount_product.disc_objects.get(product_id=self.pk)
+        except Discount_product.DoesNotExist:
+            sale = None
+        return sale
+
+    @property
+    def get_sale(self):
+        if self.discount_check is not None:
+            return int(self.price * (100 - self.discount_check.get_discount_value) / 100)
+        return self.price
+        # lst_v = Discount_product.objects.filter(product_id=self.pk).values('discount__value')
+        # print('---')
+        # print(lst_d)
+        # print('---')
+    #     discount_product_list = Discount_product.objects.all().values('product_id')
+    #     print('----')
+    #     print(discount_product_list)
+    #     lst_d = [i['product_id'] for i in discount_product_list]
+    #     if
+    # def save(self, *args, **kwargs):
+    #     """Расчитать стоимость со скидкой"""
+    #
+    #     self.end_price = int(self.price * (100 - self.discount) / 100)
+    #     super().save(*args, **kwargs)
+
+
 class Review(models.Model):
     Product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='reviews',)
     author = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,)
@@ -50,7 +85,6 @@ class Review(models.Model):
     active = models.BooleanField(default=True)
     created_rew = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated_rew = models.DateTimeField(auto_now_add=False, auto_now=True)
-
 
     class Meta:
         verbose_name = 'Комментарий'
@@ -85,4 +119,48 @@ class Rating(models.Model):
     class Meta:
         verbose_name = 'Рейтинг'
         verbose_name_plural = 'Рейтинги'
+
+
+class Discount(models.Model):
+    value = models.IntegerField('Скидка в процентах', blank=True, default=0)
+
+    class Meta:
+        ordering = ('value',)
+        verbose_name = 'Скидка'
+        verbose_name_plural = 'Скидки'
+
+    def __str__(self):
+        return f"{self.value}%"
+
+
+class Discount_product(models.Model):
+    product = models.ForeignKey(Product, blank=True, null=True, default=None,on_delete=models.CASCADE)
+    discount = models.ForeignKey(Discount, blank=True, null=True, default=None, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
+    start = models.DateTimeField(default=timezone.now())
+    end = models.DateTimeField(default=timezone.now())
+    objects = models.Manager()
+    disc_objects = DiscountActiveManager()
+
+    class Meta:
+        verbose_name = 'Скидка и название товара'
+        verbose_name_plural = 'Скидки и название товара'
+
+    def __str__(self):
+        return f"{self.product.id}"
+
+    @property
+    def get_discount_value(self):
+        return self.discount.value
+
+    # class DiscountManager(models.Manager):
+    #     def get_queryset(self):
+    #         return super.get_queryset().filter(product_id=self.product.id)
+
+  # discount_product_list = Discount_product.objects.all().values('product_id')
+  #   print('----')
+  #   print(discount_product_list)
+  #   lst_d = [i['product_id'] for i in discount_product_list]
+  #   print(lst_d)
+  #   print('----')
 

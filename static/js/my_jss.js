@@ -133,6 +133,10 @@ var cart_buttons = document.querySelectorAll('.change');
 
 cart_buttons.forEach((e) => {
     e.onclick = function() {
+
+
+
+        console.log(e)
 //        var qu = document.getElementById('quantity').value;
 //        var up = document.getElementById('update').value;
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -160,6 +164,7 @@ cart_buttons.forEach((e) => {
                     var tr_m = document.getElementById(String(data.product_id))
 //                    var cart_p = document.getElementById(String(data.product_id+'p'))
                     var pr = document.querySelector('#product_price'+String(data.product_id))
+                    console.log(pr)
                     var total_sum = document.querySelector('.total_sum')
                     var item_price = document.querySelector('#item_price'+String(data.product_id))
                     var sum_cart = document.querySelector('#sum_cart')
@@ -632,16 +637,14 @@ filter_button.forEach((e) => {
                     }})
                .then(response => response.text())
                .then(temp => {
-                    temp = JSON.parse(temp)
-                    console.log('212')
-                    console.log(temp)
-                    for (let i = 0; i < temp['products'].length; i += 1) {
-                      // Этот код выполняется для каждого элемента
-                      console.log(temp['products'][i].id, temp['products'][i].name,temp['products'][i].price);
-                    }
-                    var div_i = document.querySelector('.product_in_cat')
-                    div_i.innerText = '';
-               })
+                   console.log(temp)
+                   var div_el = document.querySelector('.product_in_cat');
+                   var div = document.createElement('div')
+                   div.innerHTML = temp
+                   div_el.innerHTML='';
+                   div_el.appendChild(div)
+
+                   })
                .catch(error => console.log(error))
 
 
@@ -706,4 +709,32 @@ filter_button.forEach((e) => {
             })
 
         );
+
+const proof_pay_but = document.querySelector('.but_order_sum_oplata')
+const proof_pay_inp = document.querySelector('#order_sum_oplata')
+
+function proof_pay(pay_inp,order_id) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    data = {
+            'proof_pay_inp': pay_inp,
+            'order_id' : order_id
+        };
+    fetch('http://127.0.0.1:8000/orders/proof_of_payment/', {
+           method: 'POST',
+           body: JSON.stringify(data),
+           headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Accept': 'text/html',
+                    'Content-Type': 'application/json',
+                }})
+            .then(response => response.text())
+            .then(temp => {
+                        console.log(temp)
+            })
+            .catch(error => console.log(error));
+}
+
+proof_pay_but.addEventListener("click", function(){
+   proof_pay(proof_pay_inp.value,proof_pay_but.dataset.order_id);
+}, true);
 

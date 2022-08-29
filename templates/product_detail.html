@@ -88,14 +88,25 @@
 
             <div class="col-lg-6 frm_rew">
                 {% if user.is_authenticated %}
-                    <h2>Оцените товар</h2>
-                        <div class="rating" data-total-value="{{rating_p}}" data-product_id="{{product.id}}">
-                        <div class="rating_item" data-item-value="5">★</div>
-                        <div class="rating_item" data-item-value="4">★</div>
-                        <div class="rating_item" data-item-value="3">★</div>
-                        <div class="rating_item" data-item-value="2">★</div>
-                        <div class="rating_item" data-item-value="1">★</div>
-                    </div>
+                    {% if rating_p %}
+                        <h2>Изменить оценку</h2>
+                            <div class="rating" data-total-value="{{rating_p}}" data-product_id="{{product.id}}">
+                                <div class="rating_item" data-item-value="5">★</div>
+                                <div class="rating_item" data-item-value="4">★</div>
+                                <div class="rating_item" data-item-value="3">★</div>
+                                <div class="rating_item" data-item-value="2">★</div>
+                                <div class="rating_item" data-item-value="1">★</div>
+                            </div>
+                    {% else %}
+                        <h2>Оцените товар</h2>
+                            <div class="rating" data-total-value="{{rating_p}}" data-product_id="{{product.id}}">
+                                <div class="rating_item" data-item-value="5">★</div>
+                                <div class="rating_item" data-item-value="4">★</div>
+                                <div class="rating_item" data-item-value="3">★</div>
+                                <div class="rating_item" data-item-value="2">★</div>
+                                <div class="rating_item" data-item-value="1">★</div>
+                            </div>
+                    {%endif%}
                     <h1 class="rating_y"></h1>
                         <h2>Оставить отзыв</h2>
                         <form action="." method="post">

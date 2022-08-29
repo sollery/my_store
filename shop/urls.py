@@ -15,5 +15,4 @@ urlpatterns = [
     path('category/<int:id>/', views.show_category_detail, name='category_detail'),
     path('search/', SearchResultsListView.as_view(), name='search_results'),
     path('data_review/', views.add_review, name='data_review'),
-
     ]

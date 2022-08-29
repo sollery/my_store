@@ -26,7 +26,7 @@
   width: 400px;
   align-items: center;
 }
-.item input[type=text], input[type=email] {
+.item input[type=text], input[type=email],input[type=password] {
     width: 400px;
     padding: 10px;
     border:0;
@@ -476,16 +476,20 @@ image-zoom {
     pointer:cursor;
 }
 .bi-basket {
-    margin-right:15px;
+    margin-right:10px;
 }
 
 #quantity_cart {
-    margin-right:15px;
+    margin-right:1px;
 }
 
 .goods-img-min {
     display: flex;
 
+#sum_cart {
+    margin-left:15%;
+
+}
 }
 .img_min {
     border: 1px solid black;
@@ -544,4 +548,7 @@ image-zoom {
 .rating_stat {
     margin-top:10px;
     margin-right: 40%;
+}
+#div_id_login{
+    display:flex;
 }

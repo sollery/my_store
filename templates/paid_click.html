@@ -1,0 +1,16 @@
+{% extends '_base.html' %}
+{% load auth_extras %}
+{% block title %}Информации{% endblock title %}
+{% block content %}
+    {% csrf_token %}
+    <div>
+        {% if not order.paid%}
+        <p>Сумма к оплате{{sum_order}}</p>
+        {%else%}
+        <p>Оплачен</p>
+        {%endif%}
+        <label>Cумма к оплате<input id ="order_sum_oplata"  value ="123" type="text"></label>руб.
+        <button class="but_order_sum_oplata" data-order_id="{{order.id}}">Оплатить</button>
+    </div>
+</head>
+{% endblock content %}

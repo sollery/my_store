@@ -62,7 +62,9 @@ def data_cart(request):
         in_cart = cart.cart.copy()
         in_cart['cart_total_price'] = cart.get_total_price()
         in_cart['cart_len'] = len(cart)
-        print(in_cart)
+        # print(in_cart)
+        # Источник: https: // pythonstart.ru / osnovy / iter - python
+
     return JsonResponse(in_cart)
 
 

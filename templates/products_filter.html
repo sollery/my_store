@@ -1,29 +1,11 @@
-{% extends "_base.html" %}
+{% extends '_base.html' %}
 {% load static %}
-{% block title %}
-{{category.name}}
-{% endblock %}
+{%block title %}
+{% endblock title %}
 {% block content %}
-<h1 class = "title-page">{{category.name}}</h1>
-<div class = "container text-center">
-    {%if products%}
-    <div class="row">
-        <div class="col-lg-4">
-            <form id ="form_filter" action='.' method="POST" enctype='multipart/form-data' onsubmit="return false;">
-                    <div class = "reg">
-                            {{form}}
-                    </div>
-                    {% csrf_token %}
-                    <div>
-                        <button class = "filter_cat" data-cat_id ="{{ category.id }}">фильтровать</button>
-                    </div>
-            </form>
-        </div>
-        <div class="col-lg-4 product_in_cat">
-            {% for product in products %}
+{% for product in products %}
             <div class="inf_p">
                     <div class="product-item">
-                    <a class="text-decoration-none" href="{% url 'product_detail' product.id product.slug %}">
                     <div class="info_image_item info_item">
                         <img src="{{ product.productimage_set.all.0.image.url }}"  height="100" width="150">
                     </div>
@@ -31,9 +13,8 @@
                             <h4>{{ product.name }}</h4>
                         </div>
                         <div class = "info_item_price">
-                            <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
-                            {% csrf_token %}
-                        </div></a>
+                            <span id="product_price{{product.id}}">{{ product.price }}</span> руб.
+                        </div>
                         <div class ="info_item_btn">
                             {% if product.get_id in cart.cart %}
                                 <a href="{% url 'cart_detail' %}" class="btn btn-info ">в корзине</a>
@@ -49,10 +30,4 @@
                     </div>
                 </div>
                 {% endfor %}
-        </div>
-    {%else%}
-        <p>Пустая категория</p>
-    {%endif%}
-</div>
-</div>
 {% endblock %}

@@ -1,3 +1,4 @@
+import json
 import os
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -13,13 +14,40 @@ from io import BytesIO
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 import weasyprint
 from django.template.loader import get_template
 from django.views import View
 from xhtml2pdf import pisa
 
+from .send_email_for_order import send_email_client
+
+
+def proof_of_payment(request):
+    if request.method == 'POST':
+        data = json.load(request)
+        order_id = data.get('order_id')
+        order = Order.objects.get(id=int(order_id))
+        res = ''
+        if int(data.get('proof_pay_inp')) == order.get_total_cost():
+            order.paid = True
+            order.save()
+            res = 'Оплата прошла, спасибо за оплату'
+            send_email_client(order)
+        else:
+            res = 'Оплата не прошла'
+        print(res)
+        return HttpResponse(res)
+
+
+def proof_of_payment_page(request,order_id):
+    order = Order.objects.get(id=order_id)
+    sum_order = order.get_total_cost
+    print(order.check_payment_method())
+    print('*' * 10)
+    return render(request,'paid_click.html',
+                          {'order': order,'sum_order': sum_order})
 
 def order_create(request):
     cart = Cart(request)
@@ -36,39 +64,14 @@ def order_create(request):
                                          product=item['product'],
                                          price=item['price'],
                                          quantity=item['quantity'])
-            met = order.delivery_method
+            # if met == 'Курьером'
             # очистка корзины
             cart.clear()
-            # запуск асинхронной задачи
-
-            print(order.id)
             os = order.get_total_cost
-            # send_mail(
-            #     subject='order',
-            #     message='Уважаемая {} {} мы приняли ваш заказ в обработку, сумма вашего заказа: {}, cпособ доставки {} '
-            #             'Спасибо за заказ! будем ждать вас снова'.format(form.cleaned_data['first_name'],
-            #                                                              form.cleaned_data['last_name'],
-            #                                                              os, met),
-            #     from_email='ilushamdmaa@yandex.ru',
-            #     recipient_list=['itivih70@yandex.ru'],
-            # )
-            subject = 'Z-shop - Заказ: {}'.format(order.id)
-            message = 'Информация по вашему заказу.'
-            email = EmailMessage(subject,
-                                 message,
-                                 'ilushamdmaa@yandex.ru',
-                                 [order.email])
-            # Формирование PDF.
-            html = render_to_string('pdf.html', {'order': order})
-            out = BytesIO()
-            stylesheets=[weasyprint.CSS('static/css/css_pdf.css')]
-            weasyprint.HTML(string=html).write_pdf(out,stylesheets=stylesheets)
-            # Прикрепляем PDF к электронному сообщению.
-            email.attach('z-shop заказ номер:{}.pdf'.format(order.id),
-                         out.getvalue(),
-                         'application/pdf')
-            # Отправка сообщения.
-            email.send()
+            # запуск асинхронной задачи
+            if not order.check_payment_method():
+                print(order.check_payment_method)
+                send_email_client(order)
             return render(request, 'created.html',
                           {'order': order,'user_p': user_p,'o': os})
     else:

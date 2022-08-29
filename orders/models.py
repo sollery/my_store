@@ -49,14 +49,27 @@ class Order(models.Model):
     def __str__(self):
         return 'Order {}'.format(self.id)
 
+    def check_delivery_method(self):
+        if self.delivery_method.title.lower() == 'курьером':
+            return True
+        return False
+
     def get_total_cost(self):
-        if self.delivery_method.title == 'Курьером':
+        if self.check_delivery_method():
             return int(sum(item.get_cost() for item in self.items.all()) + self.delivery_method.price_delivery)
         return int(sum(item.get_cost() for item in self.items.all()))
 
     def order_pdf(self):
         return mark_safe('<a href="{}">PDF</a>'.format(
             reverse('admin_order_pdf', args=[self.id])))
+
+    def check_payment_method(self):
+        if self.payment_method.title.lower() == "картой":
+            return True
+        return False
+
+    def get_absolute_url(self):
+        return reverse('proof_of_payment_page', args=[self.id])
 
 
 class OrderItem(models.Model):

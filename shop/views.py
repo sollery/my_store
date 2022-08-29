@@ -15,7 +15,7 @@ from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
 from .forms import ChoiceSort, ReviewForm
-from shop.models import Product, Category, Review, ProductImage, Rating
+from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product
 
 
 def product_detail(request, pk, slug):
@@ -53,6 +53,9 @@ def product_detail(request, pk, slug):
     rating_product = Rating.objects.filter(product__id=pk,user=request.user).values('value')
 
     print(type(rating_product))
+    print('---')
+    print(product.get_sale)
+    print('---')
     rating_p = 0
     for item in rating_product:
         if item.get('value') is not None:
@@ -153,6 +156,7 @@ def show_category_detail(request, id):
     products = Product.objects.filter(category_id=id)
     return render(request,'category_detail.html',{'category':category,'products':products,'form':form})
 
+
 def filter_p(filtr,id):
     products = Product.objects.filter(category_id=id).order_by(filtr).values('id','price','name')
     return list(products)
@@ -165,15 +169,9 @@ def filter_category(request):
         filtr = temp['form_filter']
         id = temp['category_id']
         products = filter_p(filtr,id)
-        # if filtr == 'min_price':
-        #     products = Product.objects.filter(category_id=id).order_by('price').values('id','description','price','name')
-        # if filtr == 'max_price':
-        #     products = Product.objects.filter(category_id=id).order_by('-price').values('id','description','price','name')
-        # if filtr == 'max_date':
-        #     products = Product.objects.filter(category_id=id).order_by('-created').values('id','description','price','name')
-        # if filtr == 'min_date':
-        #     products = Product.objects.filter(category_id=id).order_by('created').values('id','description','price','name')
-        return JsonResponse({'products':products})
+        html = render_to_string('products_filter.html', {'products': products})
+        print(type(html))
+        return HttpResponse(html)
 
 
 
