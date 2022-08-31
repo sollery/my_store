@@ -66,69 +66,37 @@ console.log(1)
 //function submitForm(event){
 //    event.preventDefault();
 //  }
-var add_rew = document.querySelectorAll('.change_rew');
-add_rew.forEach((e) => {
-    e.onclick = function() {
-        var txt_rew = document.querySelector('#id_review')
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        data = {'txt_rew':txt_rew.value,'product_id':e.dataset.product_id, 'review_id': e.dataset.review_id, 'change':e.dataset.change};
-        console.log(data)
-        fetch('http://127.0.0.1:8000/shop/data_review/',   {
-               method: 'POST',
-               body: JSON.stringify(data),
-               headers: {
-                        'X-CSRFToken': csrftoken,
-                        'Accept': 'text/html',
-                        'Content-Type': 'application/json',
-                    }})
-                .then(response => response.text())
-                .then(temp => {
-                    temp = JSON.parse(temp)
-                    data["author"] = temp.author
-                    data["date"] = temp.date
-                    console.log(data)
-                    var div = document.createElement('div')
-                    var p = document.createElement('p')
-                    var p_txt = document.createElement('p')
-                    var div_del = document.getElementById(String(data.review_id))
-                    var p_error = document.createElement('p')
-                    if (data.change == 'add') {
-                        if (data.txt_rew.length > 0) {
-                            p.classList.add('info')
-                            p_txt.classList.add('text_com')
-                            div.classList.add('_rew_new')
-                            p_txt.innerText = 'Текст: ' + data['txt_rew']
-                            p.innerText = 'от ' + data['author'] + ' дата '+ data['date']
-                            document.querySelector('.lst_rew').appendChild(div)
-                            document.querySelector('._rew_new').appendChild(p)
-                            document.querySelector('._rew_new').appendChild(p_txt)
-                            txt_rew.value = ''
-                            p_error.innerText = 'Ваш отзыв добавлен'
-                            document.querySelector('.frm_rew').appendChild(p_error)
-                        } else {
-                            p_error.innerText = 'ПУСТОЕ ПОЛЕ'
-                            document.querySelector('.frm_rew').appendChild(p_error)
+//var add_rew = document.querySelectorAll('.change_rew');
+//add_rew.forEach((e) => {
+//    e.onclick = function() {
+//        var txt_rew = document.querySelector('#id_text')
+//        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+////        data = {'txt_rew':txt_rew.value,'product_id':e.dataset.product_id, 'review_id': e.dataset.review_id, 'change':e.dataset.change};
+////        data = new FormData(document.getElementById('formReview'))
+////        console.log(data)
+//        fetch('http://127.0.0.1:8000/shop/data_review/',   {
+//               method: 'POST',
+////               body: JSON.stringify(data),
+//               body: new FormData(document.getElementById('formReview')),
+//               headers: {
+//                        'X-CSRFToken': csrftoken,
+//                        'Accept': 'text/html',
+//                        'Content-Type': 'application/json',
+//                    }})
+//                .then(response => response.text())
+////                .then(temp => {
+////                    temp = JSON.parse(temp)
+////                    data["author"] = temp.author
+////                    data["date"] = temp.date
+////                    console.log(data)
+////
+////                    })
+//                .catch(error => console.log(error));;
+//               }
+//               })
 
 
-                        }
-                    setTimeout (
-                            () => {
-                                p_error.remove()
-                            },
-                            3000
-                     );
-                    }
-                    if (data.change == 'del') {
-                        console.log('del')
-                        div_del.remove()
-                    }
-                })
-                .catch(error => console.log(error));;
 
-        console.log(data)
-
-}
-})
 var cart_buttons = document.querySelectorAll('.change');
 
 cart_buttons.forEach((e) => {

@@ -367,7 +367,7 @@ image-zoom {
 .image-zoom.-enter .image-zoom-block {
   display: block;
 }
-._rew{
+._rew, .answer_rew {
     border: 1px solid black;
     text-align: center;
     margin-top: 5%;
@@ -551,4 +551,7 @@ image-zoom {
 }
 #div_id_login{
     display:flex;
+}
+.answer_rew {
+    margin-left:100px;
 }

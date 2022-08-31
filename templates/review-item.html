@@ -1,12 +1,23 @@
 
 
-<div class= "_rew" id = "{{ review.id }}">
+    <div class= "_rew" id = "{{ review.id }}">
                 <input  type="button" value="×" class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}">
                 <p class="info">
                     от {{ review.author }}
                     дата {{ review.created_rew }}
                 </p>
                 <p class = "text_com">
-                    Текст: {{ review.review}}
+                    отзыв: {{ review.text}}
                 </p>
+                <a href="#formReview" onclick="addReview('{{ review.author }}', '{{ review.id }}')">Ответить</a>
                 </div>
+                    {% for rew in review.review_set.all %}
+                        <div class= "answer_rew">
+                                <p class="info">
+                                    от {{ rew.author }}
+                                    дата {{ rew.created_rew }}
+                                </p>
+                                <p class = "text_com">
+                                    Ответ: {{ rew.text}}
+                        </div>
+                    {% endfor %}

@@ -4,6 +4,7 @@ from datetime import datetime
 
 from django.core import paginator
 from django.core.paginator import Paginator
+from django.forms import model_to_dict
 from django.template.loader import render_to_string
 from django.views import View
 from tzlocal import get_localzone
@@ -22,8 +23,8 @@ def product_detail(request, pk, slug):
     # reviews = Review.objects.filter(Product_id=pk)
     # print(reviews)
     product = get_object_or_404(Product, id=pk, slug=slug)
-    reviews = product.reviews.filter(active=True)
-    print(reviews)
+    # reviews = product.reviews.filter(active=True)
+    # print(reviews)
     review_form = ReviewForm()
 
     # product_img=ProductImage.objects.filter(product_id=pk,is_main=True)
@@ -50,71 +51,85 @@ def product_detail(request, pk, slug):
     # 'review_form': review_form
     avg_stat = Rating.objects.filter(product__id=pk).aggregate(Avg('value')).get('value__avg')
     print(avg_stat)
-    rating_product = Rating.objects.filter(product__id=pk,user=request.user).values('value')
-
-    print(type(rating_product))
-    print('---')
-    print(product.get_sale)
-    print('---')
     rating_p = 0
-    for item in rating_product:
-        if item.get('value') is not None:
-            rating_p = item.get('value')
-    print(rating_p)
-    print(rating_product)
+    if request.user.is_authenticated:
+        rating_product = Rating.objects.filter(product__id=pk,user=request.user).values('value')
+        print(type(rating_product))
+        print('---')
+        print(product.get_sale)
+        print('---')
+        for item in rating_product:
+            if item.get('value') is not None:
+                rating_p = item.get('value')
+        print(rating_p)
+        print(rating_product)
+
+
 
     # print(product_img)
     s_p = str(product.id)
     cart_product_form = CartAddProductForm()
-    NEWS_COUNT_PER_PAGE = 2
-    page = int(request.GET.get('page', 1))
-    p = paginator.Paginator(reviews,
-                            2)
-    try:
-        review_page = p.page(page)
-    except paginator.EmptyPage:
-        review_page = paginator.Page([], page, p)
-    if not request.is_ajax():
-        return render(request, 'product_detail.html',
+    # NEWS_COUNT_PER_PAGE = 2
+    # page = int(request.GET.get('page', 1))
+    # p = paginator.Paginator(reviews,
+    #                         2)
+    # try:
+    #     review_page = p.page(page)
+    # except paginator.EmptyPage:
+    #     review_page = paginator.Page([], page, p)
+    # if not request.is_ajax():
+    return render(request, 'product_detail.html',
                       {'product': product,
                        'cart_product_form': cart_product_form,
                        'sp': s_p,
-                       'reviews': review_page,
-                       'review_form': review_form,'rating_product':rating_product,
+                       'review_form': review_form,
                        'rating_p': rating_p,
                        'avg_stat': avg_stat
                        })
-    else:
-        content = ''
-        for review in review_page:
-            content += render_to_string('review-item.html',
-                                        {'review': review},
-                                        request=request)
-        return JsonResponse({
-            "content": content,
-            "end_pagination": True if page >= p.num_pages else False,
-        })
+    # else:
+    #     content = ''
+    #     for review in review_page:
+    #         content += render_to_string('review-item.html',
+    #                                     {'review': review},
+    #                                     request=request)
+    #     return JsonResponse({
+    #         "content": content,
+    #         "end_pagination": True if page >= p.num_pages else False,
+    #     })
 
 
 def add_review(request):
-    if request.method == 'POST':
-        temp = json.load(request)
-        product = get_object_or_404(Product, pk=temp['product_id'])
+        # temp = json.load(request)
+        # product = get_object_or_404(Product, pk=temp['product_id'])
         tz = get_localzone()  # local timezone
         d = datetime.now(tz)
         author = request.user
-        if temp['change'] == 'add':
-            if len(temp['txt_rew']) > 0:
-                print(temp['txt_rew'])
-                res = Review(review=temp['txt_rew'], Product=product, author=request.user)
-                res.save()
-        if temp['change'] == 'del':
-            review = Review.objects.get(id = temp['review_id'])
-            review.delete()
-        return JsonResponse(
-            dict(author=str(author),
-                 date=d.strftime("%d-%b-%Y %H:%M")
-                 ))
+        if request.method == "POST":
+            print(request.POST)
+            form = ReviewForm(request.POST)
+            product = Product.objects.get(id=int(request.POST.get("product_id")))
+            if form.is_valid():
+                form = form.save(commit=False)
+                if request.POST.get("parent", None):
+                    form.parent_id = int(request.POST.get("parent"))
+                form.product = product
+                form.author = author
+                form.save()
+            return JsonResponse(
+                    dict(author=str(author),
+                         date=d.strftime("%d-%b-%Y %H:%M")
+                         ))
+
+        # if len(temp['txt_rew']) > 0:
+        #     print(temp['txt_rew'])
+        #     res = Review(text=temp['txt_rew'], product=product, author=request.user)
+        #     if temp.get("parent", None):
+        #         res.parent_id = int(request.POST.get("parent"))
+        #     res.save()
+        # if temp['change'] == 'del':
+        #     review = Review.objects.get(id = temp['review_id'])
+        #     review.delete()
+
 
 
 def add_rating(request):
@@ -221,5 +236,6 @@ class CategoryListView(ListView):
 #             )
 #             avg_stat = Rating.objects.filter(product__id=int(request.POST.get("product"))).aggregate(Avg('star'))
 #             return JsonResponse(avg_stat)
+
 
 

@@ -35,7 +35,7 @@
             </div>
             <div class="one"><h1 class = "title-page">Новинки</h1></div>
             <div class="row product_list">
-                {% for product in page_obj %}
+                {% for product in products %}
                 <div class="col-lg-3 inf_p">
                     <div class="product-item">
                     <a class="text-decoration-none" href="{% url 'product_detail' product.pk product.slug %}">
@@ -63,7 +63,6 @@
                         </div>
                     </div>
                 </div>
-
                 {% endfor %}
         </div>
 <!--            <div id="pagination">-->

@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product
+from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product, Favorites
 
 
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('author', 'Product', 'created_rew', 'active')
+    list_display = ('author', 'product', 'created_rew', 'active')
     list_filter = ('active', 'created_rew', 'updated_rew')
     search_fields = ('author', 'body')
 admin.site.register(Review, ReviewAdmin)
@@ -52,3 +52,7 @@ class Discount_productAdmin(admin.ModelAdmin):
 # class RatingStarAdmin(admin.ModelAdmin):
 #     model = RatingStar
 
+
+@admin.register(Favorites)
+class FavoritesAdmin(admin.ModelAdmin):
+    list_display = ['product','user']

@@ -1,0 +1,15 @@
+{% extends '_base.html' %}
+{% load auth_extras %}
+{% block title %}Информации{% endblock title %}
+{% block content %}
+{%for item in favorites%}
+     <a class="text-decoration-none"
+        href="{% url 'product_detail' item.product.pk item.product.slug %}">
+         {{item.product.name}}
+     </a>
+{%endfor%}
+
+{% if not user.is_authenticated %}
+{{text}}<a href="{% url 'account_login' %}">Авторизироваться</a> или <a href="{% url 'account_signup' %}">Регистрация</a>
+{%endif%}
+{% endblock content %}

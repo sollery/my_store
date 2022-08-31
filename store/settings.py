@@ -85,7 +85,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
-                'shop.context_processors.get_caterogy_list'
+                'shop.context_processors.get_caterogy_list',
+                'shop.context_processors.get_favorites',
+
             ],
         },
     },
@@ -148,6 +150,7 @@ STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 CART_SESSION_ID = 'cart'
+FAVORITES_SESSION_ID = 'favorites'
 EMAIL_SUBJECT_PREFIX = '[Zeh-shop]'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_PORT = 465

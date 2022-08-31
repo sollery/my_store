@@ -47,7 +47,8 @@ class Product(models.Model):
     def get_id(self):
         return str(self.pk)
 
-
+    def get_review(self):
+        return self.review_set.filter(parent__isnull=True)
 
     @property
     def discount_check(self):
@@ -79,19 +80,22 @@ class Product(models.Model):
 
 
 class Review(models.Model):
-    Product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='reviews',)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE)
     author = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,)
-    review = models.TextField('Отзыв')
+    text = models.TextField('Отзыв')
     active = models.BooleanField(default=True)
     created_rew = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated_rew = models.DateTimeField(auto_now_add=False, auto_now=True)
+    parent = models.ForeignKey(
+        'self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True
+    )
 
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return 'Отзыв от {} о {}'.format(self.author, self.Product)
+        return 'Отзыв от {} о {}'.format(self.author, self.product)
 
 
 class ProductImage(models.Model):
@@ -137,8 +141,8 @@ class Discount_product(models.Model):
     product = models.ForeignKey(Product, blank=True, null=True, default=None,on_delete=models.CASCADE)
     discount = models.ForeignKey(Discount, blank=True, null=True, default=None, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
-    start = models.DateTimeField(default=timezone.now())
-    end = models.DateTimeField(default=timezone.now())
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=timezone.now)
     objects = models.Manager()
     disc_objects = DiscountActiveManager()
 
@@ -153,6 +157,20 @@ class Discount_product(models.Model):
     def get_discount_value(self):
         return self.discount.value
 
+
+class Favorites(models.Model):
+    product = models.ForeignKey(Product, blank=True, null=True, default=None,on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,)
+
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
+        unique_together = ('product', 'user',)
+
+    def __str__(self):
+        return f"Товар:{self.product}"
+
+
     # class DiscountManager(models.Manager):
     #     def get_queryset(self):
     #         return super.get_queryset().filter(product_id=self.product.id)
@@ -163,4 +181,5 @@ class Discount_product(models.Model):
   #   lst_d = [i['product_id'] for i in discount_product_list]
   #   print(lst_d)
   #   print('----')
+
 
