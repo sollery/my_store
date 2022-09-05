@@ -68,10 +68,21 @@ def data_cart(request):
     return JsonResponse(in_cart)
 
 
-def cart_change(request):
-
+def cart_detail(request):
     cart = Cart(request)
     return render(request, 'detail.html', {'cart': cart})
 
 
-
+def cart_clear(request):
+    cart = Cart(request)
+    text = 'произошла ошибка'
+    data = json.load(request)
+    if request.method == 'POST':
+        print('----')
+        print(data)
+        print('----')
+        if data.get('clear'):
+            print('1')
+            cart.clear()
+            text = 'Корзина пуста'
+        return HttpResponse(text)

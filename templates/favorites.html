@@ -2,14 +2,29 @@
 {% load auth_extras %}
 {% block title %}Информации{% endblock title %}
 {% block content %}
+<div class="head_cart">
+    <h1 class = "title-page">Избранное</h1>
+    <input type="button" value="Очистить" class="cart_clear_but clear favorite_but" data-change_favorites="clear">
+    {% csrf_token %}
+</div>
+<div class="favorites_div">
 {%for item in favorites%}
+    <div id="favorite{{item.product.id}}">
      <a class="text-decoration-none"
         href="{% url 'product_detail' item.product.pk item.product.slug %}">
          {{item.product.name}}
-     </a>
+     </a><input type="button" value="&#10006" class="favorite_but"
+                                   data-product_id = "{{ item.product.id }}"
+                                   data-change_favorites="del">
+     </div>
 {%endfor%}
+</div>
 
 {% if not user.is_authenticated %}
-{{text}}<a href="{% url 'account_login' %}">Авторизироваться</a> или <a href="{% url 'account_signup' %}">Регистрация</a>
+    {{text}}
+    <a href="{% url 'account_login' %}">
+        Авторизироваться</a>или
+    <a href="{% url 'account_signup' %}">
+        Регистрация</a>
 {%endif%}
 {% endblock content %}

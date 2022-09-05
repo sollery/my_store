@@ -8,4 +8,6 @@ class DiscountActiveManager(models.Manager):
         return super().get_queryset().filter(Q(start__lte=timezone.now()) & Q(end__gte=timezone.now()) & Q(active=True))
 
 
-
+class ProductImageMainManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(main=True)

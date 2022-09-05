@@ -33,8 +33,11 @@
           <div class="modal-body">
             <div class="row">
                 {% for category in category_list %}
-                <div class="col-lg-4" >
-                    <h5><a class="text-decoration-none " href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h5>
+                <div class="col-lg-4 catalog_category">
+                    <a class="text-decoration-none " href="{% url 'category_detail' category.pk %}">
+                        <img src="{{ category.categoryimage_set.all.0.image.url }}" height="100" width="150">
+                        <h5>{{ category.name }}</h5>
+                     </a>
                 </div>
                 {%endfor%}
              </div>
@@ -42,6 +45,7 @@
         </div>
       </div>
     </div>
+    <div id="goTop" style="position: fixed; right: 50px; bottom: 50px;  color: black; width: 50px; height:100px; display: none;">&#8679;</div>
 </div>
 
 <!--<nav aria-label="Page navigation example">-->

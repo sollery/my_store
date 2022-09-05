@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class = "image-zoom" >
-                    <img id = goods-max src="{{ product.productimage_set.all.0.image.url }}" class="img-responsive" height="450" width="400">
+                    <img id = goods-max src="/media/{{product.get_image_main}}" class="img-responsive" height="450" width="400">
                     <div class="image-zoom-block"></div>
                 </div>
                 <div class = "goods-img-min">
@@ -47,12 +47,12 @@
                         {% if product.get_id in cart.cart %}
                             <a href="{% url 'cart_detail' %}" class="btn btn-info">в корзине</a>
                         {% else %}
-                            <button data-change="add" id="add_basket{{ product.id }}" class="change btn btn-success btn-buy add"
+                            <button data-change="add" id="add_basket{{ product.id }}" class="change add_but add"
                                 data-product_id = "{{ product.id }}"
                                 data-name ="{{ product.name }}"
                                 data-price ="{{ product.price }}">Купить
                             </button>
-                            <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="btn btn-info" hidden>в корзине</a>
+                            <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="in_but" hidden>в корзине</a>
                          {%endif%}
                     </div>
                 </div>
@@ -132,7 +132,6 @@
             </div>
         </div>-->
         </div>
-        <div id="goTop" style="position: fixed; right: 50px; bottom: 50px;  color: black; width: 50px; height:100px; display: none;">&#8679;</div>
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -169,33 +168,7 @@
 <!--                }-->
 <!--            });-->
 <!--        })-->
-         const goTopBtn = document.getElementById('goTop')
-             // Изначально высота верхнего содержимого, загружаемого браузером, равна 0
-          let scrollTop = 0
-             // слушаем события прокрутки страницы
-          window.onscroll = () => {
-                 // Получаем высоту верхнего содержимого, которое отображается в браузере
-            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                 // Если высота свернутого содержимого больше 50, отобразить кнопку для возврата наверх;
-                 // Если высота сворачиваемого содержимого меньше 50, скройте кнопку, чтобы вернуться наверх.
-            scrollTop > 50 ? (goTopBtn.style.display = 'block') : (goTopBtn.style.display = 'none')
-          }
-          goTopBtn.onclick = () => {
-                 // Очищаем последний таймер
-            let timer = null;
-            clearInterval(timer);
-                 // Создаем таймер и выполняем стрелочную функцию каждые 15 мсек.
-            timer = setInterval(()=>{
-                     // Каждый раз, когда функция выполняется, scrollTop уменьшается на одну десятую
-              scrollTop -= scrollTop / 10;
-              window.scrollTo(0,scrollTop)
-                     // Когда scrollTop меньше 2, напрямую устанавливаем scrollTop на 0 и очищаем таймер.
-              if(scrollTop<2){
-                window.scrollTo(0,0);
-                clearInterval(timer);
-              }
-            },15)
-          }
+
 
         var clickToHide2 = document.querySelector('#click-to-hide-2');
         clickToHide2.addEventListener("click", hideVisibleElem);

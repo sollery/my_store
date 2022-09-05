@@ -5,7 +5,7 @@ import datetime
 
 from django.utils import timezone
 
-from shop.managers import DiscountActiveManager
+from shop.managers import DiscountActiveManager, ProductImageMainManager
 
 
 class Category(models.Model):
@@ -19,6 +19,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+
 
 
 class Product(models.Model):
@@ -42,7 +46,7 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('product_detail', args=[self.id, self.slug])
+        return reverse('product_detail', args=[str(self.id), self.slug])
 
     def get_id(self):
         return str(self.pk)
@@ -63,6 +67,25 @@ class Product(models.Model):
         if self.discount_check is not None:
             return int(self.price * (100 - self.discount_check.get_discount_value) / 100)
         return self.price
+    
+    def check_favorites(self, user):
+        favorites = Favorites.objects.filter(user=user).values('product_id')
+        try:
+            favorite_product = favorites.get(product__id=self.pk)
+            return favorite_product is not None
+        except Favorites.DoesNotExist:
+            return False
+
+    @property
+    def get_image_main(self):
+        try:
+            product_img = ProductImage.image_main_objects.get(product_id=self.pk)
+        except product_img.DoesNotExist:
+            product_img = None
+        return product_img
+
+
+
         # lst_v = Discount_product.objects.filter(product_id=self.pk).values('discount__value')
         # print('---')
         # print(lst_d)
@@ -98,20 +121,7 @@ class Review(models.Model):
         return 'Отзыв от {} о {}'.format(self.author, self.product)
 
 
-class ProductImage(models.Model):
-    product = models.ForeignKey(Product, blank=True, null=True, default=None,on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products_images/')
-    is_main = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True, auto_now=False)
-    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 
-    def __str__(self):
-        return "%s" % self.image
-
-    class Meta:
-        verbose_name = 'Фотография'
-        verbose_name_plural = 'Фотографии'
 
 
 class Rating(models.Model):
@@ -183,3 +193,40 @@ class Favorites(models.Model):
   #   print('----')
 
 
+class AbstractImage(models.Model):
+    image = models.ImageField()
+    is_active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True, auto_now=False)
+    updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class CategoryImage(AbstractImage):
+    image = models.ImageField(upload_to='category_images/')
+    category = models.ForeignKey(Category, blank=True, null=True, default=None,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s" % self.image
+
+    class Meta:
+        verbose_name = 'Фотография категории'
+        verbose_name_plural = 'Фотографии категории'
+
+class ProductImage(AbstractImage):
+    image = models.ImageField(upload_to='products_images/')
+    product = models.ForeignKey(Product, blank=True, null=True, default=None,on_delete=models.CASCADE)
+    main = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return "%s" % self.image
+
+    class Meta:
+        verbose_name = 'Фотография продукта'
+        verbose_name_plural = 'Фотографии продуктов'
+
+
+    objects = models.Manager()
+    image_main_objects = ProductImageMainManager()

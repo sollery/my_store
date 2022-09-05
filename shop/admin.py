@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product, Favorites
+from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product, Favorites, \
+    CategoryImage
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -56,3 +57,16 @@ class Discount_productAdmin(admin.ModelAdmin):
 @admin.register(Favorites)
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = ['product','user']
+
+
+class CategoryImageInline(admin.TabularInline):
+    model = CategoryImage
+    extra = 0
+
+class CategoryImageAdmin (admin.ModelAdmin):
+    list_display = [field.name for field in CategoryImage._meta.fields]
+
+    class Meta:
+        model = CategoryImage
+
+admin.site.register(CategoryImage, CategoryImageAdmin)

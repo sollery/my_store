@@ -25,14 +25,13 @@
                     <div class="product-item">
                     <a class="text-decoration-none" href="{% url 'product_detail' product.id product.slug %}">
                     <div class="info_image_item info_item">
-                        <img src="{{ product.productimage_set.all.0.image.url }}"  height="100" width="150">
+                        <img src="/media/{{product.get_image_main}}"  height="100" width="150">
                     </div>
                         <div class = "info_item_name">
                             <h4>{{ product.name }}</h4>
                         </div>
                         <div class = "info_item_price">
                             <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
-                            {% csrf_token %}
                         </div></a>
                         <div class ="info_item_btn">
                             {% if product.get_id in cart.cart %}

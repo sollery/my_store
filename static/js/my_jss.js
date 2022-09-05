@@ -1,3 +1,32 @@
+const goTopBtn = document.getElementById('goTop')
+             // Изначально высота верхнего содержимого, загружаемого браузером, равна 0
+          let scrollTop = 0
+             // слушаем события прокрутки страницы
+          window.onscroll = () => {
+                 // Получаем высоту верхнего содержимого, которое отображается в браузере
+            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                 // Если высота свернутого содержимого больше 50, отобразить кнопку для возврата наверх;
+                 // Если высота сворачиваемого содержимого меньше 50, скройте кнопку, чтобы вернуться наверх.
+            scrollTop > 50 ? (goTopBtn.style.display = 'block') : (goTopBtn.style.display = 'none')
+          }
+          goTopBtn.onclick = () => {
+                 // Очищаем последний таймер
+            let timer = null;
+            clearInterval(timer);
+                 // Создаем таймер и выполняем стрелочную функцию каждые 15 мсек.
+            timer = setInterval(()=>{
+                     // Каждый раз, когда функция выполняется, scrollTop уменьшается на одну десятую
+              scrollTop -= scrollTop / 10;
+              window.scrollTo(0,scrollTop)
+                     // Когда scrollTop меньше 2, напрямую устанавливаем scrollTop на 0 и очищаем таймер.
+              if(scrollTop<2){
+                window.scrollTo(0,0);
+                clearInterval(timer);
+              }
+            },15)
+          }
+
+
 var buttons = document.querySelectorAll('#button_del');
 var elems = document.querySelectorAll('.tdss');
 //console.log(elems)
@@ -297,27 +326,27 @@ cart_buttons.forEach((e) => {
         }
 
         })
-function ajaxPagination () {
-    $('#pagination a.page-link').each((index,el) => {
-        $(el).click((e) => {
-            e.preventDefault()
-            let page_url = $(el).attr('href')
-            console.log(page_url)
-
-            $.ajax({
-                url: page_url,
-                type: 'GET',
-                success: (data) => {
-                    $('.product_list').empty()
-                    $('.product_list').append($(data).find('.product_list').html())
-                    $('#pagination').empty()
-                    $('#pagination').append($(data).find('#pagination').html())
-
-                }
-            })
-        })
-    })
-}
+//function ajaxPagination () {
+//    $('#pagination a.page-link').each((index,el) => {
+//        $(el).click((e) => {
+//            e.preventDefault()
+//            let page_url = $(el).attr('href')
+//            console.log(page_url)
+//
+//            $.ajax({
+//                url: page_url,
+//                type: 'GET',
+//                success: (data) => {
+//                    $('.product_list').empty()
+//                    $('.product_list').append($(data).find('.product_list').html())
+//                    $('#pagination').empty()
+//                    $('#pagination').append($(data).find('#pagination').html())
+//
+//                }
+//            })
+//        })
+//    })
+//}
 
 //var b = document.querySelectorAll('.gt_ch')
 //b.forEach((e) => {
@@ -330,14 +359,14 @@ function ajax_cart() {
     }
 
 
-$(document).ready(function() {
-    ajaxPagination()
-
-})
-$(document).ajaxStop(function() {
-    ajaxPagination()
-
-})
+//$(document).ready(function() {
+//    ajaxPagination()
+//
+//})
+//$(document).ajaxStop(function() {
+//    ajaxPagination()
+//
+//})
 //});
 
 //var cart = {2 : 'quantity'
@@ -678,12 +707,52 @@ filter_button.forEach((e) => {
 
         );
 
+
+var favorite_buts = document.querySelectorAll('.favorite_but');
+        favorite_buts.forEach((e) => {
+            e.onclick = function() {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            data = {
+                    'product_id': e.dataset.product_id,
+                    'change' : e.dataset.change_favorites
+                };
+                fetch('http://127.0.0.1:8000/change_favorites/', {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                                 'X-CSRFToken': csrftoken,
+                                 'Accept': 'text/html',
+                                 'Content-Type': 'application/json',
+                             }})
+                    .then(response => response.text())
+                    .then(temp => {
+                        temp = JSON.parse(temp)
+                        console.log(temp)
+                        var count_fav = document.querySelector('.favorites_count')
+                        var favorite_div = document.querySelector('.favorites_div')
+                        var fav_div = document.querySelector('#favorite'+String(data.product_id))
+                        count_fav.innerText = temp['favorites_count']
+                        if (data.change == 'add'){
+                            e.value = '✔'
+                            }
+                        if (data.change == "del") {
+                            fav_div.remove()
+                            }
+                        if (data.change == 'clear') {
+                            favorite_div.innerText = ' '
+                        }
+                    })
+            }
+        })
+
+
+
 const proof_pay_but = document.querySelector('.but_order_sum_oplata')
 const proof_pay_inp = document.querySelector('#order_sum_oplata')
 
 function proof_pay(pay_inp,order_id) {
     const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    data = {
+    const data = {
             'proof_pay_inp': pay_inp,
             'order_id' : order_id
         };

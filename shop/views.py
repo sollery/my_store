@@ -26,8 +26,12 @@ def product_detail(request, pk, slug):
     # reviews = product.reviews.filter(active=True)
     # print(reviews)
     review_form = ReviewForm()
-
-    # product_img=ProductImage.objects.filter(product_id=pk,is_main=True)
+    check_fav = product.check_favorites(request.user)
+    print(check_fav)
+    print(product.get_image_main)
+    print(product.get_absolute_url())
+    # product_img=product.objects.filter(productimage__main=True)
+    # print(product_img)
     # paginator = Paginator(reviews, 2)
     # #
     # page_number = request.GET.get('page')
@@ -50,6 +54,8 @@ def product_detail(request, pk, slug):
     #     review_form = ReviewForm()
     # 'review_form': review_form
     avg_stat = Rating.objects.filter(product__id=pk).aggregate(Avg('value')).get('value__avg')
+    if avg_stat is None:
+        avg_stat = 0
     print(avg_stat)
     rating_p = 0
     if request.user.is_authenticated:
@@ -84,7 +90,8 @@ def product_detail(request, pk, slug):
                        'sp': s_p,
                        'review_form': review_form,
                        'rating_p': rating_p,
-                       'avg_stat': avg_stat
+                       'avg_stat': avg_stat,
+                       'check_fav': check_fav
                        })
     # else:
     #     content = ''
@@ -185,7 +192,7 @@ def filter_category(request):
         id = temp['category_id']
         products = filter_p(filtr,id)
         html = render_to_string('products_filter.html', {'products': products})
-        print(type(html))
+        print(html)
         return HttpResponse(html)
 
 
@@ -236,6 +243,7 @@ class CategoryListView(ListView):
 #             )
 #             avg_stat = Rating.objects.filter(product__id=int(request.POST.get("product"))).aggregate(Avg('star'))
 #             return JsonResponse(avg_stat)
+
 
 
 
