@@ -10,7 +10,7 @@
         {% for category in category_list %}
         <div class="col-lg-4" >
             <img src="{{ category.CategoryImage_set.all.0.image.url }}" class="img-responsive" height="450" width="400">
-            <h5><a class="text-decoration-none " href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h5>
+            <h5><a class="category_link" href="{% url 'category_detail' category.pk %}">{{ category.name }}</a></h5>
         </div>
         {%endfor%}
     </div>

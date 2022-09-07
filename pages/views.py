@@ -15,7 +15,7 @@ from cart.cart import Cart
 
 def home(request):
     products = Product.objects.all().order_by('created')[:4]
-    products_rating = Rating.objects.all().order_by('value').values('product_id')
+    products_rating = Rating.objects.all().order_by('-value').values('product_id','value')
     # print(products_rating)
     cart_product_form = CartAddProductForm()
     context = {'products':products,'products_rating':products_rating,'cart_product_form':cart_product_form}
@@ -24,8 +24,12 @@ def home(request):
     #
     # page_number = request.GET.get('page')
     # page_obj = paginator.get_page(page_number)
-    favorites = Favorites.objects.filter(Q(user=request.user)).values('product_id')
-    fav_product = [item.get('product_id') for item in favorites]
+    try:
+        favorites = Favorites.objects.filter(Q(user=request.user)).values('product_id')
+        fav_product = [item.get('product_id') for item in favorites]
+    except:
+        fav_product = []
+    print(products_rating)
     print(fav_product)
     for product in products:
         print(product.id)

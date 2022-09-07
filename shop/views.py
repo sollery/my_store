@@ -27,6 +27,9 @@ def product_detail(request, pk, slug):
     # print(reviews)
     review_form = ReviewForm()
     check_fav = product.check_favorites(request.user)
+    print('avg')
+    print(product.get_avg_rating)
+    print('avg')
     print(check_fav)
     print(product.get_image_main)
     print(product.get_absolute_url())
@@ -54,21 +57,19 @@ def product_detail(request, pk, slug):
     #     review_form = ReviewForm()
     # 'review_form': review_form
     avg_stat = Rating.objects.filter(product__id=pk).aggregate(Avg('value')).get('value__avg')
-    if avg_stat is None:
-        avg_stat = 0
-    print(avg_stat)
-    rating_p = 0
+    rating_product = 0
     if request.user.is_authenticated:
-        rating_product = Rating.objects.filter(product__id=pk,user=request.user).values('value')
+        rating_product = Rating.objects.get(product__id=pk,user=request.user).value
         print(type(rating_product))
-        print('---')
-        print(product.get_sale)
-        print('---')
-        for item in rating_product:
-            if item.get('value') is not None:
-                rating_p = item.get('value')
-        print(rating_p)
-        print(rating_product)
+        # print(type(rating_product))
+        # print('---')
+        # print(product.get_sale)
+        # print('---')
+        # for item in rating_product:
+        #     if item.get('value') is not None:
+        #         rating_p = item.get('value')
+        # print(rating_p)
+        # print(rating_product)
 
 
 
@@ -89,8 +90,7 @@ def product_detail(request, pk, slug):
                        'cart_product_form': cart_product_form,
                        'sp': s_p,
                        'review_form': review_form,
-                       'rating_p': rating_p,
-                       'avg_stat': avg_stat,
+                       'rating_product': rating_product,
                        'check_fav': check_fav
                        })
     # else:

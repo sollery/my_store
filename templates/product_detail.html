@@ -18,15 +18,14 @@
                     </div>
                 {% endfor %}
                 </div>
-                 <div class="rating_p" data-total-value="{{avg_stat | floatformat:0}}">
+                 <div class="rating_p" data-total-value="{{product.get_avg_rating}}">
                             <div class="rating_item_p" data-item-value="5">★</div>
                             <div class="rating_item_p" data-item-value="4">★</div>
                             <div class="rating_item_p" data-item-value="3">★</div>
                             <div class="rating_item_p" data-item-value="2">★</div>
                             <div class="rating_item_p" data-item-value="1">★</div>
-                     <h3 class="rating_stat">Рейтинг: {{avg_stat}}</h3>
+                     <h3 class="rating_stat">Рейтинг: {{product.get_avg_rating}}</h3>
                         </div>
-
                 <input class = "hide_rew" id="click-to-hide-2" type="button" value="Показать отзывы">
             </div>
             <div class="col-lg-6 text-center">
@@ -88,9 +87,9 @@
 
             <div class="col-lg-6 frm_rew">
                 {% if user.is_authenticated %}
-                    {% if rating_p %}
+                    {% if rating_product %}
                         <h2>Изменить оценку</h2>
-                            <div class="rating" data-total-value="{{rating_p}}" data-product_id="{{product.id}}">
+                            <div class="rating" data-total-value="{{rating_product}}" data-product_id="{{product.id}}">
                                 <div class="rating_item" data-item-value="5">★</div>
                                 <div class="rating_item" data-item-value="4">★</div>
                                 <div class="rating_item" data-item-value="3">★</div>
@@ -99,7 +98,7 @@
                             </div>
                     {% else %}
                         <h2>Оцените товар</h2>
-                            <div class="rating" data-total-value="{{rating_p}}" data-product_id="{{product.id}}">
+                            <div class="rating" data-total-value="{{rating_product}}" data-product_id="{{product.id}}">
                                 <div class="rating_item" data-item-value="5">★</div>
                                 <div class="rating_item" data-item-value="4">★</div>
                                 <div class="rating_item" data-item-value="3">★</div>

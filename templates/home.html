@@ -48,9 +48,20 @@
                         <div class = "info_item_price">
                             <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
                             {% csrf_token %}
+                        </div>
+                        <div class = "info_item_rating">
+                            <div class="rating_p" data-total-value="{{product.get_avg_rating}}">
+                                <div class="rating_item_p" data-item-value="5">★</div>
+                                <div class="rating_item_p" data-item-value="4">★</div>
+                                <div class="rating_item_p" data-item-value="3">★</div>
+                                <div class="rating_item_p" data-item-value="2">★</div>
+                                <div class="rating_item_p" data-item-value="1">★</div>
+                            </div>
+                            <div>
+                                ({{product.get_count_rating}})
+                            </div>
                         </div></a>
                         <div class ="info_item_btn">
-
                             {% if product.get_id in cart.cart %}
                                 <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>
                             {% else %}
@@ -61,16 +72,19 @@
                                 </button>
                                 <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="in_but add" hidden>в корзине</a>
                              {%endif%}
-                            {% if product.id in fav_product%}
-                                <input type="button" value="&#10004;" class="favorite_but"
-                                       data-product_id = "{{ product.id }}"
-                                       data-change_favorites="add">
+                            {% if user.is_authenticated %}
+                                {% if product.id in fav_product%}
+                                    <input type="button" value="&#10004;" class="favorite_but favorite_but_add"
+                                           data-product_id = "{{ product.id }}"
+                                           data-change_favorites="add">
+                                {%else%}
+                                    <input type="button" value="&#10084;" class="favorite_but favorite_but_add"
+                                           data-product_id = "{{ product.id }}"
+                                           data-change_favorites="add">
+                                {%endif%}
                             {%else%}
-                                <input type="button" value="&#10084;" class="favorite_but"
-                                       data-product_id = "{{ product.id }}"
-                                       data-change_favorites="add">
+                                    <a href="{% url 'account_login' %}" class="favorite_but_login">&#10084;</a>
                             {%endif%}
-                            <span>{{check_fav}}</span>
                         </div>
                     </div>
                 </div>

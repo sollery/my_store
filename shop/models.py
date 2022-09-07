@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 import datetime
-
+from django.db.models import Q, Avg
 from django.utils import timezone
 
 from shop.managers import DiscountActiveManager, ProductImageMainManager
@@ -80,9 +80,26 @@ class Product(models.Model):
     def get_image_main(self):
         try:
             product_img = ProductImage.image_main_objects.get(product_id=self.pk)
-        except product_img.DoesNotExist:
+        except ProductImage.DoesNotExist:
             product_img = None
         return product_img
+
+    @property
+    def get_avg_rating(self):
+        try:
+            avg_stats = Rating.objects.filter(product__id=self.pk).aggregate(Avg('value')).get('value__avg')
+        except Rating.DoesNotExist:
+            avg_stats = 0
+        return round(avg_stats)
+
+    @property
+    def get_count_rating(self):
+        try:
+            count_rating = Rating.objects.filter(product__id=self.pk).count()
+        except Rating.DoesNotExist:
+            count_rating = 0
+        return count_rating
+
 
 
 

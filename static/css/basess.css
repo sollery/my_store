@@ -80,8 +80,12 @@
     border-radius: 5px;
     transition: transform .2s;
 
-
 }
+.col_product_item {
+    display:flex;
+    justify-content: space-around;
+}
+
 .product-item:hover {
     transform: scale(1.1);
 
@@ -93,6 +97,7 @@ img {
 .product-item a {
     text-decoration: none;
     color: black;
+    cursor: pointer !important;
 }
 button:hover, a:hover {
     opacity: 0.7;
@@ -288,8 +293,11 @@ a.animated-button.add:before {
 }
 * {
   box-sizing:border-box;
-}
 
+}
+.row {
+    auto-margin;
+}
 textarea {
   width:100%;
   resize: vertical;
@@ -466,13 +474,22 @@ image-zoom {
 
 .nav-link {
     cursor: pointer;
-}
 
+}
+.catalog_category:hover {
+  -webkit-transform: rotateZ(20deg);
+  -ms-transform: rotateZ(20deg);
+  transform: rotateZ(20deg);
+}
 .container-focus {
     display:flex;
     justify-content: space-around;
     width:150px;
 }
+
+.nav-link:hover {
+  transform: scale(1.2);
+  }
 .goods-img-min {
     display: flex;
 
@@ -526,7 +543,7 @@ image-zoom {
   align-items: center;
 }
 .rating_item_p {
-    font-size:40px;
+    font-size:30px;
     color:grey;
 }
 
@@ -564,9 +581,10 @@ image-zoom {
     color:white;
     border-radius:10px;
     height:30px;
+    text-align:center;
 }
 
-.favorite_but{
+.favorite_but_add {
     background-color:black;
     border:none;
     cursor: pointer;
@@ -575,13 +593,15 @@ image-zoom {
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     line-height: 1.5;
+    border: 1px solid white;
+
 
 }
-.favorite_but:hover {
+.favorite_but_add:hover {
     background-color:white;
     color:black;
-    border:1px solid black;
-
+    border: 1px solid grey;
+    transform: scale(1.2);
 }
 .favorites_div {
     margin-bottom:10%;
@@ -619,4 +639,40 @@ image-zoom {
     display:flex;
     justify-content: center;
     text-align: center;
+}
+
+.item_favorites {
+    margin-bottom:5%;
+}
+.favorite_but_del {
+    margin-top:20px;
+    margin-left: 150px;
+    background-color:black;
+    cursor: pointer;
+    color:white;
+    border-radius:30px;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid white;
+}
+
+.favorite_but_del:hover {
+    background-color:white;
+    color:black;
+    border: 1px solid grey;
+    transform: scale(1.2);
+}
+.info_item_rating {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+footer {
+    background-color:black;
+    color: white;
+    margin-top: 10%;
+}
+footer a {
+    color: white;
 }

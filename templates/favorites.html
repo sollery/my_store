@@ -2,29 +2,32 @@
 {% load auth_extras %}
 {% block title %}Информации{% endblock title %}
 {% block content %}
-<div class="head_cart">
+<div class="container">
+      <div class="head_cart">
     <h1 class = "title-page">Избранное</h1>
     <input type="button" value="Очистить" class="cart_clear_but clear favorite_but" data-change_favorites="clear">
     {% csrf_token %}
 </div>
-<div class="favorites_div">
-{%for item in favorites%}
-    <div id="favorite{{item.product.id}}">
-     <a class="text-decoration-none"
-        href="{% url 'product_detail' item.product.pk item.product.slug %}">
-         {{item.product.name}}
-     </a><input type="button" value="&#10006" class="favorite_but"
-                                   data-product_id = "{{ item.product.id }}"
-                                   data-change_favorites="del">
-     </div>
-{%endfor%}
+<div class="row favorites_div">
+      {%for item in favorites%}
+         <div class="col-sm-6 col_product_item">
+          <div class="product-item" id="favorite{{item.product.id}}">
+              <div>
+                  <input type="button" value="&#10006" class="favorite_but favorite_but_del"
+                                         data-product_id = "{{ item.product.id }}"
+                                         data-change_favorites="del">
+              </div>
+              <a href="{{item.product.get_absolute_url}}">
+               <div class="info_image_item info_item">
+                   <img src="/media/{{item.product.get_image_main}}"  height="150" width="200">
+               </div>
+              <div class ="info_item_name">
+                  <h4>{{ item.product.name }}</h4>
+              </div>
+           </a>
+           </div>
+            </div>
+      {%endfor%}
+      </div>
 </div>
-
-{% if not user.is_authenticated %}
-    {{text}}
-    <a href="{% url 'account_login' %}">
-        Авторизироваться</a>или
-    <a href="{% url 'account_signup' %}">
-        Регистрация</a>
-{%endif%}
-{% endblock content %}
+      {% endblock content %}
