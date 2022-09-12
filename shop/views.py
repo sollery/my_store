@@ -16,7 +16,7 @@ from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
 from .forms import ChoiceSort, ReviewForm
-from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product
+from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductAccessories
 
 
 def product_detail(request, pk, slug):
@@ -28,7 +28,7 @@ def product_detail(request, pk, slug):
     review_form = ReviewForm()
     check_fav = product.check_favorites(request.user)
     print('avg')
-    print(product.get_avg_rating)
+    # print(product.get_avg_rating)
     print('avg')
     print(check_fav)
     print(product.get_image_main)
@@ -56,10 +56,19 @@ def product_detail(request, pk, slug):
     # else:
     #     review_form = ReviewForm()
     # 'review_form': review_form
-    avg_stat = Rating.objects.filter(product__id=pk).aggregate(Avg('value')).get('value__avg')
-    rating_product = 0
+
+    acs = ProductAccessories.objects.filter(parent_id=product.pk)
+    abc = [i.childer.get_absolute_url for i in acs]
+    print(abc)
+    print('*'*8)
+    print(acs.count())
+    print('*' * 8)
     if request.user.is_authenticated:
-        rating_product = Rating.objects.get(product__id=pk,user=request.user).value
+        try:
+            rating_product = Rating.objects.get(product__id=pk,user=request.user).value
+        except Rating.DoesNotExist:
+            rating_product = 0
+
         print(type(rating_product))
         # print(type(rating_product))
         # print('---')
@@ -91,7 +100,8 @@ def product_detail(request, pk, slug):
                        'sp': s_p,
                        'review_form': review_form,
                        'rating_product': rating_product,
-                       'check_fav': check_fav
+                       'check_fav': check_fav,
+                       'acs': acs
                        })
     # else:
     #     content = ''

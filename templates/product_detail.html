@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class = "image-zoom" >
-                    <img id = goods-max src="/media/{{product.get_image_main}}" class="img-responsive" height="450" width="400">
+                    <img id = goods-max src="/media/{{product.get_image_main}}" class="img-responsive block{{product.id}}" height="450" width="400">
                     <div class="image-zoom-block"></div>
                 </div>
                 <div class = "goods-img-min">
@@ -39,20 +39,41 @@
                 </div>
                         <div role="tabpanel" class="tab-pane active" id="description">
                             <span class="text-center" >{{ product.description }}</span>
+                            <div>
+                                <span>Аксесуары</span>
+                                {%for i in acs%}
+                                <a class="text-decoration-none" href="{{i.childer.get_absolute_url}}">
+                                    {{i.childer.name}}
+                                {%endfor%}
+                                </a>
+                            </div>
                         </div>
                 <div>
                         {% csrf_token %}
                     <div class ="info_item_btn">
                         {% if product.get_id in cart.cart %}
-                            <a href="{% url 'cart_detail' %}" class="btn btn-info">в корзине</a>
-                        {% else %}
-                            <button data-change="add" id="add_basket{{ product.id }}" class="change add_but add"
-                                data-product_id = "{{ product.id }}"
-                                data-name ="{{ product.name }}"
-                                data-price ="{{ product.price }}">Купить
-                            </button>
-                            <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="in_but" hidden>в корзине</a>
-                         {%endif%}
+                                <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>
+                            {% else %}
+                                <button data-change="add" id="add_basket{{ product.id }}" class="change add_but add"
+                                    data-product_id = "{{ product.id }}"
+                                    data-name ="{{ product.name }}"
+                                    data-price ="{{ product.price }}">Купить
+                                </button>
+                                <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="in_but add" hidden>в корзине</a>
+                             {%endif%}
+                            {% if user.is_authenticated %}
+                                {% if check_fav%}
+                                    <input type="button" value="&#10004;" class="favorite_but favorite_but_add"
+                                           data-product_id = "{{ product.id }}"
+                                           data-change_favorites="add">
+                                {%else%}
+                                    <input type="button" value="&#10084;" class="favorite_but favorite_but_add"
+                                           data-product_id = "{{ product.id }}"
+                                           data-change_favorites="add">
+                                {%endif%}
+                            {%else%}
+                                    <a href="{% url 'account_login' %}" class="favorite_but_login">&#10084;</a>
+                            {%endif%}
                     </div>
                 </div>
 

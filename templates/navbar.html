@@ -11,6 +11,11 @@
       <li class="nav-item">
         <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter">Каталог</a>
       </li>
+        {% if user.is_superuser %}
+        <li class="nav-item">
+            <a class="nav-link" href ="http://127.0.0.1:8000/admin/">Админка</a>
+        </li>
+        {% endif %}
     </ul>
     <ul class="navbar-nav my-2 mt-lg-0">
         <li class="nav-item">
@@ -61,17 +66,17 @@
   </div>
 
 </nav>
- <div class="focus">
-     {% if cart|length %}
-        {% for item in cart %}
-        {% with product=item.product %}
-          <p>{{product.name}} × {{ item.quantity }} шт.</p>
-        {% endwith %}
-        {% endfor %}
-     {%else%}
-        <p>Корзина пуста</p>
-     {%endif%}
- </div>
+<!-- <div class="focus">-->
+<!--     {% if cart|length %}-->
+<!--        {% for item in cart %}-->
+<!--        {% with product=item.product %}-->
+<!--          <p>{{product.name}} × {{ item.quantity }} шт.</p>-->
+<!--        {% endwith %}-->
+<!--        {% endfor %}-->
+<!--     {%else%}-->
+<!--        <p>Корзина пуста</p>-->
+<!--     {%endif%}-->
+<!-- </div>-->
 
 <!--Stack Overflow на русском — это сайт вопросов и ответов для программистов. Присоединяйтесь! Регистрация займёт не больше минуты.-->
 

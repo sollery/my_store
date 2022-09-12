@@ -25,8 +25,39 @@ const goTopBtn = document.getElementById('goTop')
               }
             },15)
           }
+var addss = document.querySelectorAll('.add')
 
+addss.forEach(function(btn) {
+  // Вешаем событие клик
+  btn.addEventListener('click', function(e) {
+  id = $(this).data("product_id");
+  console.log(id)
+  $('.block'+String(id)).clone()
+  .css({'position' : 'absolute', 'z-index' : '11100', top: $(this).offset().top-300, left:$(this).offset().left-100})
+  .appendTo("body").animate({
+        top: $(".cart_info_nav").offset()['top'],
+        left: $(".cart_info_nav").offset()['left'],
+        opacity: 0,
+        width: 100,
+        height:100
+    },1000, function(){
+        $(this).remove();
+    });
+  })
+})
 
+function get_text(text){
+    var inf_add_itm = document.createElement('p')
+    inf_add_itm.classList.add('inf_add')
+    inf_add_itm.innerText = text
+    document.querySelector('.navbar').appendChild(inf_add_itm)
+    setTimeout (
+            () => {
+                inf_add_itm.remove()
+                },
+                3000
+            );
+    }
 var buttons = document.querySelectorAll('#button_del');
 var elems = document.querySelectorAll('.tdss');
 //console.log(elems)
@@ -161,7 +192,7 @@ cart_buttons.forEach((e) => {
                     var tr_m = document.getElementById(String(data.product_id))
 //                    var cart_p = document.getElementById(String(data.product_id+'p'))
                     var pr = document.querySelector('#product_price'+String(data.product_id))
-                    console.log(pr)
+//                    console.log(pr)
                     var total_sum = document.querySelector('.total_sum')
                     var item_price = document.querySelector('#item_price'+String(data.product_id))
                     var sum_cart = document.querySelector('#sum_cart')
@@ -229,19 +260,20 @@ cart_buttons.forEach((e) => {
                         add.hidden = true;
                         var in_b = document.getElementById('in_basket'+String(id))
                         in_b.hidden = false;
-                        var inf_add_itm = document.createElement('p')
-                        inf_add_itm.classList.add('inf_add')
-                        inf_add_itm.innerText = 'товар добавлен'
-                        document.querySelector('.navbar').appendChild(inf_add_itm)
-                        var new_itm = document.createElement('p')
-                        new_itm.innerText = String(temp[t].name + ' × ' + temp[t].quantity + ' шт.')
-                        document.querySelector('.focus').appendChild(new_itm)
-                        setTimeout (
-                            () => {
-                                inf_add_itm.remove()
-                            },
-                            5000
-                        );
+//                        var inf_add_itm = document.createElement('p')
+//                        inf_add_itm.classList.add('inf_add')
+//                        inf_add_itm.innerText = 'товар добавлен'
+//                        document.querySelector('.navbar').appendChild(inf_add_itm)
+                        get_text('товар добавлен')
+//                        var new_itm = document.createElement('p')
+//                        new_itm.innerText = String(temp[t].name + ' × ' + temp[t].quantity + ' шт.')
+//                        document.querySelector('.focus').appendChild(new_itm)
+//                        setTimeout (
+//                            () => {
+//                                inf_add_itm.remove()
+//                            },
+//                            5000
+//                        );
                     }
                 })
                 .catch(error => console.log(error));
@@ -694,14 +726,7 @@ filter_button.forEach((e) => {
                         console.log(temp)
                         var resp = document.querySelector('.rating_y');
                         item.parentNode.dataset.totalValue = data.itemValue
-                        resp.innerText = String(temp)
-                        setTimeout (
-                            () => {
-                                resp.remove()
-                            },
-                            3000
-
-                     );
+                        get_text("Спасибо за оценку")
                    })
             })
 
@@ -734,6 +759,7 @@ var favorite_buts = document.querySelectorAll('.favorite_but');
                         count_fav.innerText = temp['favorites_count']
                         if (data.change == 'add'){
                             e.value = '✔'
+
                             }
                         if (data.change == "del") {
                             fav_div.remove()
@@ -741,6 +767,7 @@ var favorite_buts = document.querySelectorAll('.favorite_but');
                         if (data.change == 'clear') {
                             favorite_div.innerText = ' '
                         }
+                        get_text(temp.text)
                     })
             }
         })

@@ -71,7 +71,7 @@ def change_favorites(request):
                     text = 'Товар уже в избранном'
                 else:
                     favorite.save()
-                    text = 'Товар добавлен'
+                    text = 'Товар добавлен в избранное'
             except:
                 text = 'Произошла ошибка'
         elif temp.get('change') == 'del':
@@ -86,7 +86,7 @@ def change_favorites(request):
             try:
                 favorites = Favorites.objects.all()
                 favorites.delete()
-                text = 'Очистили'
+                text = 'Все товары удаленны из избранного'
             except:
                 text = 'Произошла ошибка'
         favorites_all = Favorites.objects.filter(user=user).count()

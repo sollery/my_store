@@ -36,6 +36,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     # discount = models.IntegerField('Скидка в процентах', blank=True, default=0)
     end_price = models.IntegerField('Итоговая цена', default=0)
+    # parent = models.ManyToManyField("self", blank=True, default=None)
 
     class Meta:
         ordering = ('name',)
@@ -67,9 +68,13 @@ class Product(models.Model):
         if self.discount_check is not None:
             return int(self.price * (100 - self.discount_check.get_discount_value) / 100)
         return self.price
-    
+
+
     def check_favorites(self, user):
-        favorites = Favorites.objects.filter(user=user).values('product_id')
+        if user.is_authenticated:
+            favorites = Favorites.objects.filter(user=user).values('product_id')
+        else:
+            return
         try:
             favorite_product = favorites.get(product__id=self.pk)
             return favorite_product is not None
@@ -88,9 +93,13 @@ class Product(models.Model):
     def get_avg_rating(self):
         try:
             avg_stats = Rating.objects.filter(product__id=self.pk).aggregate(Avg('value')).get('value__avg')
+            if avg_stats is not None:
+                return round(avg_stats)
+            else:
+                return 0
         except Rating.DoesNotExist:
-            avg_stats = 0
-        return round(avg_stats)
+            return 0
+
 
     @property
     def get_count_rating(self):
@@ -247,3 +256,8 @@ class ProductImage(AbstractImage):
 
     objects = models.Manager()
     image_main_objects = ProductImageMainManager()
+
+
+class ProductAccessories(models.Model):
+    parent = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='parent')
+    childer = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='childer')

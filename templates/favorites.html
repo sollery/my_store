@@ -10,8 +10,8 @@
 </div>
 <div class="row favorites_div">
       {%for item in favorites%}
-         <div class="col-sm-6 col_product_item">
-          <div class="product-item" id="favorite{{item.product.id}}">
+         <div class="col-sm-12 col_product_item">
+          <div class="product-item_favorite" id="favorite{{item.product.id}}">
               <div>
                   <input type="button" value="&#10006" class="favorite_but favorite_but_del"
                                          data-product_id = "{{ item.product.id }}"
@@ -25,6 +25,19 @@
                   <h4>{{ item.product.name }}</h4>
               </div>
            </a>
+              <div class ="info_item_btn">
+                    {% if product.get_id in cart.cart %}
+                        <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>
+                    {% else %}
+                        <button data-change="add" id="add_basket{{ product.id }}" class="change add_but add"
+                            data-product_id = "{{ product.id }}"
+                            data-name ="{{ product.name }}"
+                            data-price ="{{ product.price }}">Купить
+                        </button>
+                        <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="in_but add" hidden>в корзине</a>
+                     {%endif%}
+
+              </div>
            </div>
             </div>
       {%endfor%}

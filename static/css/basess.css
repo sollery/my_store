@@ -68,7 +68,7 @@
     height: 50px;
 }
 
-.product-item {
+.product-item, .product-item_favorite{
     margin-top: 50px;
     text-align: center;
     display: flex;
@@ -84,9 +84,10 @@
 .col_product_item {
     display:flex;
     justify-content: space-around;
+
 }
 
-.product-item:hover {
+.product-item:hover, .product-item_favorite:hover{
     transform: scale(1.1);
 
 }
@@ -94,7 +95,7 @@ img {
     border-radius: 5px 5px 0 0;
 }
 
-.product-item a {
+.product-item a, product-item_favorite a{
     text-decoration: none;
     color: black;
     cursor: pointer !important;
@@ -117,13 +118,11 @@ button:hover, a:hover {
 }
 
 .inf_add {
-    height:35px;
-    width: 150px;
     background-color: black;
     color: white;
     position: absolute;
     top: 70px;
-    right: -150px;
+    right: -300px;
     border-radius: 6px;
     text-align: center;
 
@@ -152,19 +151,21 @@ button:hover, a:hover {
     }
 }
 .table {
-    border: 0;
-    cellspacing 0;
-    cellpadding 0;
     text-align: center;
     width:60%;
     margin-left:20%;
+    border-collapse: collapse;
+    border: 0px;
 }
 .table a {
     text-shadow: none;
     color:black;
 }
 
-
+table {
+     border-collapse: collapse;
+     border: 0px;
+}
 a.animated-button.thar-one {
   color: #fff;
   cursor: pointer;
@@ -447,9 +448,7 @@ image-zoom {
     display:none;
     pointer-events: none;
 }
-.focus:hover {
-    z-index: 999999;
-}
+
 .min_pls {
     border:none;
     width:35px;
@@ -492,6 +491,10 @@ image-zoom {
   }
 .goods-img-min {
     display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+
+
 
 }
 .cart_info_nav {
@@ -500,9 +503,13 @@ image-zoom {
 
 }
 .img_min {
-    border: 1px solid black;
+    border: 2px solid black;
     border-radius:5px;
-    margin-left: 5px;
+    width:200px;
+    height:110px;
+    text-align:center;
+    margin-left:10px;
+
 }
 .btn-success {
     border-color:white;
@@ -541,6 +548,7 @@ image-zoom {
   display:flex;
   flex-direction: row-reverse;
   align-items: center;
+  justify-content: center;
 }
 .rating_item_p {
     font-size:30px;
@@ -675,4 +683,8 @@ footer {
 }
 footer a {
     color: white;
+}
+.product-item_favorite {
+    w
+
 }

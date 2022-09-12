@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product, Favorites, \
-    CategoryImage
+    CategoryImage,ProductAccessories
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -57,6 +57,10 @@ class Discount_productAdmin(admin.ModelAdmin):
 @admin.register(Favorites)
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = ['product','user']
+
+@admin.register(ProductAccessories)
+class ProductAccessoriesAdmin(admin.ModelAdmin):
+    list_display = ['parent','childer']
 
 
 class CategoryImageInline(admin.TabularInline):
