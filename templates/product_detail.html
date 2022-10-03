@@ -41,7 +41,7 @@
                             <span class="text-center" >{{ product.description }}</span>
                             <div>
                                 <span>Аксесуары</span>
-                                {%for i in acs%}
+                                {%for i in accessories%}
                                 <a class="text-decoration-none" href="{{i.childer.get_absolute_url}}">
                                     {{i.childer.name}}
                                 {%endfor%}

@@ -11,13 +11,7 @@
     text-decoration: none;
     color: black;
 }
-.reg {
-    display: flex;
-    flex-direction: column;
-    margin: 10 -5px;
-    margin-bottom: 10px;
-    margin-top: 20px;
-}
+
 
 .item {
   display:flex;
@@ -34,7 +28,14 @@
     border-radius:10px;
     margin-left: 5%;
 }
-
+#div_id_username input{
+    width: 400px;
+    padding: 10px;
+    border:0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    border-radius:10px;
+    margin-left: 5%;
+}
 .my_radio {
 }
 
@@ -270,7 +271,6 @@ a.animated-button.add:before {
 }
 .title-page {
     text-align: center;
-
 }
 
 .item-but {
@@ -458,7 +458,7 @@ image-zoom {
     text-align: center;
     margin-left: 5px;
     border-radius:100%;
-    pointer:cursor;
+    cursor: pointer !important;
 
 }
 .minus {
@@ -566,8 +566,10 @@ image-zoom {
     margin-top:10px;
     margin-right: 40%;
 }
-#div_id_login{
+.input_login{
     display:flex;
+    align-items: center;
+    flex-direction: column;
 }
 .answer_rew {
     margin-left:100px;
@@ -582,7 +584,7 @@ image-zoom {
     justify-content: space-around;
     align-items: center;
 }
-.cart_clear_but {
+.cart_clear_but, .login_but, .reg_but {
     background-color:black;
     border:none;
     cursor: pointer;
@@ -591,6 +593,25 @@ image-zoom {
     height:30px;
     text-align:center;
 }
+.logo{
+    border: 4px solid black;
+    border-radius: 30px;
+    width: 200px;
+    height:55px;
+}
+.login_but {
+    height: 50px;
+    width: 100px;
+    font-size: x-large;
+
+}
+.reg_but {
+    height: 50px;
+    width: 200px;
+    font-size: x-large;
+
+}
+
 
 .favorite_but_add {
     background-color:black;
@@ -684,7 +705,4 @@ footer {
 footer a {
     color: white;
 }
-.product-item_favorite {
-    w
 
-}

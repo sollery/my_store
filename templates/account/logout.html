@@ -2,11 +2,22 @@
 {% load crispy_forms_tags %}
 {% block title %}Log Out{% endblock %}
 {% block content %}
-<h1>Выход</h1>
-<p>Вы точно хотите выйти?</p>
-<form method="post" action="{% url 'account_logout' %}">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <button class="btn btn-danger" type="submit">Выйти</button>
-</form>
+<div class="contrainer">
+
+    <div class="row">
+        <div class="text-center col-md-8 offset-md-2 reg" >
+            <h1 class ="logo col-md-8 mx-auto">Z-SHOP</h1>
+             <h1 class ="title-page ">Выход</h1>
+            <p class ="title-page ">Вы точно хотите выйти?</p>
+            <form method="post">
+
+                {% csrf_token %}
+               <div class="input_login">
+               {{ form|crispy }}
+               </div>
+              <button class="login_but" type="submit">Выйти</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock content %}

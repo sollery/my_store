@@ -57,11 +57,11 @@ def product_detail(request, pk, slug):
     #     review_form = ReviewForm()
     # 'review_form': review_form
 
-    acs = ProductAccessories.objects.filter(parent_id=product.pk)
-    abc = [i.childer.get_absolute_url for i in acs]
+    accessories = ProductAccessories.objects.filter(parent_id=product.pk)
+    abc = [i.childer.name for i in accessories]
     print(abc)
     print('*'*8)
-    print(acs.count())
+    print(accessories.count())
     print('*' * 8)
     if request.user.is_authenticated:
         try:
@@ -101,7 +101,7 @@ def product_detail(request, pk, slug):
                        'review_form': review_form,
                        'rating_product': rating_product,
                        'check_fav': check_fav,
-                       'acs': acs
+                       'accessories': accessories
                        })
     # else:
     #     content = ''

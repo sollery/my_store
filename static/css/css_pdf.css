@@ -1,8 +1,47 @@
 .table {
-    border: 0;
-    cellspacing 0;
-    cellpadding 0;
-    text-align: center;
-    width:60%;
-    margin-left:20%;
+  border: 1px solid black;
+  margin-top: 5%;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+   border: 1px solid black;
+}
+
+
+body {
+     font-size: 14px;
+
+}
+
+html,body {
+    height:297mm;
+    width:210mm;
+}
+
+
+.max_c {
+    font-size: 40px;
+}
+
+.mid_c {
+    font-size: 30px;
+}
+
+.low_c {
+    font-size: 20px;
+    margin-top: 40px;
+    margin-left: 50px;
+}
+
+.my_center {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.my_info{
+    margin-top: 50px;
 }

@@ -6,7 +6,6 @@
       <div class="head_cart">
     <h1 class = "title-page">Избранное</h1>
     <input type="button" value="Очистить" class="cart_clear_but clear favorite_but" data-change_favorites="clear">
-    {% csrf_token %}
 </div>
 <div class="row favorites_div">
       {%for item in favorites%}
@@ -19,25 +18,28 @@
               </div>
               <a href="{{item.product.get_absolute_url}}">
                <div class="info_image_item info_item">
-                   <img src="/media/{{item.product.get_image_main}}"  height="150" width="200">
+                   <img class ="block{{item.product.id}}" src="/media/{{item.product.get_image_main}}"  height="150" width="200">
                </div>
               <div class ="info_item_name">
                   <h4>{{ item.product.name }}</h4>
               </div>
+                  <div class = "info_item_price">
+                        <span id = "product_price{{item.product.id}}">{{ item.product.price }}</span> руб.
+                        {% csrf_token %}
+                  </div>
            </a>
               <div class ="info_item_btn">
-                    {% if product.get_id in cart.cart %}
-                        <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>
-                    {% else %}
-                        <button data-change="add" id="add_basket{{ product.id }}" class="change add_but add"
-                            data-product_id = "{{ product.id }}"
-                            data-name ="{{ product.name }}"
-                            data-price ="{{ product.price }}">Купить
-                        </button>
-                        <a href="{% url 'cart_detail' %}" id="in_basket{{ product.id }}" class="in_but add" hidden>в корзине</a>
-                     {%endif%}
-
-              </div>
+                {% if item.product.get_id in cart.cart %}
+                    <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>
+                {% else %}
+                    <button data-change="add" id="add_basket{{ item.product.id }}" class="change add_but add"
+                        data-product_id = "{{ item.product.id }}"
+                        data-name ="{{ item.product.name }}"
+                        data-price ="{{ item.product.price }}">Купить
+                    </button>
+                    <a href="{% url 'cart_detail' %}" id="in_basket{{ item.product.id }}" class="in_but add" hidden>в корзине</a>
+                 {%endif%}
+            </div>
            </div>
             </div>
       {%endfor%}

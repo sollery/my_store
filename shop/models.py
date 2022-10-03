@@ -21,10 +21,6 @@ class Category(models.Model):
         return self.name
 
 
-
-
-
-
 class Product(models.Model):
     slug = models.SlugField(max_length=200, db_index=True)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
@@ -34,6 +30,7 @@ class Product(models.Model):
     count = models.PositiveIntegerField('Кол-во товара', default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
     # discount = models.IntegerField('Скидка в процентах', blank=True, default=0)
     end_price = models.IntegerField('Итоговая цена', default=0)
     # parent = models.ManyToManyField("self", blank=True, default=None)
@@ -261,3 +258,11 @@ class ProductImage(AbstractImage):
 class ProductAccessories(models.Model):
     parent = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='parent')
     childer = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='childer')
+
+    def __str__(self):
+        return f"Аксесуар {self.childer} для {self.parent}"
+
+    class Meta:
+        verbose_name = 'Аксесуар'
+        verbose_name_plural = 'Аксесуары'
+

@@ -47,7 +47,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
 
     def __str__(self):
-        return 'Order {}'.format(self.id)
+        return 'Заказ номер: {}'.format(self.id)
 
     def check_delivery_method(self):
         if self.delivery_method.title.lower() == 'курьером':
