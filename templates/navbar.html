@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg  fixed-top">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+  <button class="navbar-toggler test" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon test">==</span>
   </button>
   <a class="navbar-brand" href="{% url 'about' %}">Z-SHOP</a>
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
@@ -37,7 +37,9 @@
       <li class="nav-item ">
           <a class="nav-link"  href="{% url 'favorites' %}">
               <div class="cart_info_nav">
-                  <svg width="20" height="17" xmlns="http://www.w3.org/2000/svg" fill="currentColor"  viewBox="0 0 24 24"><path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12 14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z"/></svg></svg>
+                  <svg width="20" height="17" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                       viewBox="0 0 24 24"><path d="M12 4.435c-1.989-5.399-12-4.597-12 3.568 0 4.068 3.06 9.481 12
+                        14.997 8.94-5.516 12-10.929 12-14.997 0-8.118-10-8.999-12-3.568z"/></svg>
                   <span class="favorites_count">{{favorites|length}}</span>
               </div>
           </a>

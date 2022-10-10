@@ -14,7 +14,7 @@ from shop.models import Category
 from cart.cart import Cart
 
 def home(request):
-    products = Product.objects.all().order_by('created')[:4]
+    products = Product.objects.all().order_by('-created')[:4]
     products_rating = Rating.objects.all().order_by('-value').values('product_id','value')
     # print(products_rating)
     cart_product_form = CartAddProductForm()
@@ -45,11 +45,14 @@ def check_favorites(request):
     context = {'text':'для добавление в избранное нужна авторизация'}
     if request.user.is_authenticated:
         favorites = Favorites.objects.filter(user=request.user)
+        paginator = Paginator(favorites, 2)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         print('*********')
         print(request.user)
         print(favorites)
         print('*********')
-        return render(request, 'favorites.html', {'favorites': favorites})
+        return render(request, 'favorites.html', {'page_obj': page_obj})
     return render(request, 'favorites.html', context)
 
 

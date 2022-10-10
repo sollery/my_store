@@ -3,32 +3,31 @@
 {% block title %}Информации{% endblock title %}
 {% block content %}
 <div class="container">
-      <div class="head_cart">
-    <h1 class = "title-page">Избранное</h1>
-    <input type="button" value="Очистить" class="cart_clear_but clear favorite_but" data-change_favorites="clear">
-</div>
-<div class="row favorites_div">
-      {%for item in favorites%}
-         <div class="col-sm-12 col_product_item">
-          <div class="product-item_favorite" id="favorite{{item.product.id}}">
-              <div>
-                  <input type="button" value="&#10006" class="favorite_but favorite_but_del"
-                                         data-product_id = "{{ item.product.id }}"
-                                         data-change_favorites="del">
-              </div>
-              <a href="{{item.product.get_absolute_url}}">
-               <div class="info_image_item info_item">
-                   <img class ="block{{item.product.id}}" src="/media/{{item.product.get_image_main}}"  height="150" width="200">
+    <div class="head_cart">
+        <h1 class = "title-page">Избранное</h1>
+         <input type="button" value="Очистить" class="cart_clear_but clear favorite_but" data-change_favorites="clear">
+    </div>
+<table class="table">
+    <tr>
+        <th>Товар</th>
+        <th>Цена</th>
+        <th>Описание</th>
+        <th>Рейтинг</th>
+        <th>Удалить</th>
+    </tr>
+    {%for item in page_obj%}
+    <tr class="fav_tr" id="favorite{{item.product.id}}" >
+        <td>
+            <div class="product_fav">
+                <div class="info_image_item info_item">
+                   <a href="{{item.product.get_absolute_url}}">
+                        <img class ="block{{item.product.id}}" src="/media/{{item.product.get_image_main}}"  height="150" width="200">
+                    </a>
                </div>
               <div class ="info_item_name">
                   <h4>{{ item.product.name }}</h4>
               </div>
-                  <div class = "info_item_price">
-                        <span id = "product_price{{item.product.id}}">{{ item.product.price }}</span> руб.
-                        {% csrf_token %}
-                  </div>
-           </a>
-              <div class ="info_item_btn">
+                 <div class ="info_item_btn">
                 {% if item.product.get_id in cart.cart %}
                     <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>
                 {% else %}
@@ -40,9 +39,111 @@
                     <a href="{% url 'cart_detail' %}" id="in_basket{{ item.product.id }}" class="in_but add" hidden>в корзине</a>
                  {%endif%}
             </div>
-           </div>
             </div>
-      {%endfor%}
-      </div>
+            <td>
+                <div class>
+                        <span id = "product_price{{item.product.id}}">{{ item.product.price }}</span> руб.
+                        {% csrf_token %}
+                  </div>
+            </td>
+            <td>Траляля</td>
+            <td>
+                <div>
+                        <div class="rating_p" data-total-value="{{item.product.get_avg_rating}}">
+                            <div class="rating_item_p" data-item-value="5">★</div>
+                            <div class="rating_item_p" data-item-value="4">★</div>
+                            <div class="rating_item_p" data-item-value="3">★</div>
+                            <div class="rating_item_p" data-item-value="2">★</div>
+                            <div class="rating_item_p" data-item-value="1">★</div>
+                        </div>
+                        <div>
+                            ({{item.product.get_count_rating}})
+                        </div>
+                  </div>
+            </td>
+        <td>
+            <div>
+            <input type="button" value="&#10006" class="favorite_but favorite_but_del"
+                                         data-product_id = "{{ item.product.id }}"
+                                         data-change_favorites="del">
+             </div>
+        </td>
+    </tr>
+    {%endfor%}
+    </table>
+    <nav aria-label="Page navigation example">
+    <ul class="mypagination">
+        {% if page_obj.has_previous %}
+            <li><a href="?page=1">Начало</a></li>
+            <li><a href="?page={{ page_obj.previous_page_number }}"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+            </svg></a></li>
+        {% endif %}
+
+        <h5 class="">
+            стр {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+        </h5>
+
+        {% if page_obj.has_next %}
+         <li><a href="?page={{ page_obj.next_page_number }}"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+  <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+</svg></a></li>
+        <li><a href="?page={{ page_obj.paginator.num_pages }}">Конец</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!--<div class="row">-->
+<!--      {%for item in favorites%}-->
+<!--         <div class="col-lg-12">-->
+<!--             <div class="product-item" id="favorite{{item.product.id}}">-->
+<!--              <div>-->
+<!--                  <input type="button" value="&#10006" class="favorite_but favorite_but_del"-->
+<!--                                         data-product_id = "{{ item.product.id }}"-->
+<!--                                         data-change_favorites="del">-->
+<!--              </div>-->
+
+<!--               <div class="info_image_item info_item">-->
+<!--                   <a href="{{item.product.get_absolute_url}}">-->
+<!--                        <img class ="block{{item.product.id}}" src="/media/{{item.product.get_image_main}}"  height="150" width="200">-->
+<!--                    </a>-->
+<!--               </div>-->
+<!--              <div class ="info_item_name">-->
+<!--                  <h4>{{ item.product.name }}</h4>-->
+<!--              </div>-->
+<!--&lt;!&ndash;                  <div class = "info_item_price">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span id = "product_price{{item.product.id}}">{{ item.product.price }}</span> руб.&ndash;&gt;-->
+<!--&lt;!&ndash;                        {% csrf_token %}&ndash;&gt;-->
+<!--&lt;!&ndash;                  </div>&ndash;&gt;-->
+<!--                  <div class = "info_item_rating">-->
+<!--                        <div class="rating_p" data-total-value="{{item.product.get_avg_rating}}">-->
+<!--                            <div class="rating_item_p" data-item-value="5">★</div>-->
+<!--                            <div class="rating_item_p" data-item-value="4">★</div>-->
+<!--                            <div class="rating_item_p" data-item-value="3">★</div>-->
+<!--                            <div class="rating_item_p" data-item-value="2">★</div>-->
+<!--                            <div class="rating_item_p" data-item-value="1">★</div>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            ({{item.product.get_count_rating}})-->
+<!--                        </div>-->
+<!--                  </div>-->
+
+<!--              <div class ="info_item_btn">-->
+<!--                {% if item.product.get_id in cart.cart %}-->
+<!--                    <a href="{% url 'cart_detail' %}" class="in_but">в корзине</a>-->
+<!--                {% else %}-->
+<!--                    <button data-change="add" id="add_basket{{ item.product.id }}" class="change add_but add"-->
+<!--                        data-product_id = "{{ item.product.id }}"-->
+<!--                        data-name ="{{ item.product.name }}"-->
+<!--                        data-price ="{{ item.product.price }}">Купить-->
+<!--                    </button>-->
+<!--                    <a href="{% url 'cart_detail' %}" id="in_basket{{ item.product.id }}" class="in_but add" hidden>в корзине</a>-->
+<!--                 {%endif%}-->
+<!--            </div>-->
+<!--           </div>-->
+<!--            </div>-->
+<!--      {%endfor%}-->
+
+<!--      </div>-->
 </div>
       {% endblock content %}

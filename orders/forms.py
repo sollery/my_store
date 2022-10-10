@@ -1,5 +1,7 @@
 from django import forms
-from .models import Order
+from django.core.exceptions import ValidationError
+
+from .models import Order, DeliveryMethod
 from django.forms import TextInput, EmailInput, NumberInput, Select, RadioSelect, ModelForm
 
 
@@ -17,7 +19,9 @@ class OrderCreateForm(forms.ModelForm):
             'payment_method': 'Способ оплаты',
             'delivery_method': 'Способ доставки',
         }
-        help_text = {'first_name': 'Заполните имя', 'last_name': 'Из уже существующих'}
+        help_text = {
+             'help_text': 'Курьером стоимость - 300 рублей'
+        }
 
         widgets = {
             "first_name": TextInput(attrs={
@@ -43,14 +47,21 @@ class OrderCreateForm(forms.ModelForm):
                 'class': 'myfield',
                 'placeholder': 'Ваш город'
             }),
-            "payment_method": RadioSelect(attrs={
-                'class': 'my_radio',
-                'placeholder': 'Способ оплаты'
-            }),
-            "delivery_method": RadioSelect(attrs={
-                'class': 'my_radio',
-                'fields': ['title','price_delivery'],
-                'placeholder': 'Способ оплаты'
-            }),
 
         }
+
+    def __init__(self, *args, **kwargs):
+        super(OrderCreateForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+
+class Oplata(forms.Form):
+    paid_order_sum = forms.IntegerField(help_text="Введите сумму для оплаты")
+    def clean_renewal_date(self):
+        data = self.cleaned_data['paid_order_sum']
+        #Проверка того, что дата не выходит за "нижнюю" границу (не в прошлом).
+        if data < 0:
+            raise ValidationError('Invalid date - renewal in past')
+        #Проверка того, то дата не выходит за "верхнюю" границу (+4 недели).
+        # Помните, что всегда надо возвращать "очищенные" данные.
+        return data

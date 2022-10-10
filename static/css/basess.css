@@ -28,6 +28,9 @@
     border-radius:10px;
     margin-left: 5%;
 }
+input[type=button] {
+    cursor: pointer;
+}
 #div_id_username input{
     width: 400px;
     padding: 10px;
@@ -62,6 +65,8 @@
     max-height: 150px;
 
 }
+
+
 .info_item_img {
     margin-bottom: 20px;
 }
@@ -112,11 +117,6 @@ button:hover, a:hover {
     height:400px;
 }
 
-.info-cart{
-    display: flex;
-    flex-direction: row;
-
-}
 
 .inf_add {
     background-color: black;
@@ -151,21 +151,38 @@ button:hover, a:hover {
         right: 100px;
     }
 }
-.table {
+
+.test {
+    margin-top: 10px;
+    color:white;
     text-align: center;
-    width:60%;
-    margin-left:20%;
+}
+.table {
+    table-layout: fixed
+    border-spacing:0px;
+    text-align: center;
     border-collapse: collapse;
     border: 0px;
+    font-size:20px;
+    width:75%;
+    margin-left: 10%;
 }
 .table a {
     text-shadow: none;
     color:black;
 }
+.table tr, .table td, .table th  {
+    border: 0px;
+    vertical-align:middle;
 
-table {
-     border-collapse: collapse;
-     border: 0px;
+}
+.table td {
+}
+.product {
+    text-align: center;
+}
+.cart_tab {
+    display:flex;
 }
 a.animated-button.thar-one {
   color: #fff;
@@ -332,7 +349,7 @@ body{
 .image-zoom:nth-child(1) {
     width: 100%
 }
-image-zoom {
+.image-zoom {
   display: inline-block;
   max-width: 100%;
   max-height: 100%;
@@ -377,11 +394,11 @@ image-zoom {
   display: block;
 }
 ._rew, .answer_rew {
-    border: 1px solid black;
+
     text-align: center;
     margin-top: 5%;
     border-radius:15px;
-    background-color:white;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
 
 }
 
@@ -395,14 +412,18 @@ image-zoom {
 .hide-element {
     display: none !important;
 }
-.hide_rew {
+.hide_rew, .hide_answer_rew, .filter_cat, .show-more-btn, .rec_hide {
     background-color: black;
     color: white;
     border-radius: 15px;
     border:none;
     margin-top:20px;
-    pointer:cursor;
+    pointer:cursor !important;
+}
 
+#goTop {
+    text-align: center;
+    font-size:50px;
 }
 ._rew_new {
     border: 1px solid black;
@@ -418,12 +439,13 @@ image-zoom {
 	text-align: center;
 	padding: 8px 14px;
 	width: 400px;
-	background-color:black;
-    color:#fff;
+	background-color:green;
+    color:white;
     margin-bottom: 10%;
     text-decoration: none;
     outline: none;
     color:white;
+    font-size:20px;
 }
 .cart_but_zakaz:hover{
     text-decoration: none;
@@ -451,25 +473,26 @@ image-zoom {
 
 .min_pls {
     border:none;
-    width:35px;
-    background-color:black;
-    color:white;
+    width:40px;
+    height:40px;
     font-weight:700;
     text-align: center;
-    margin-left: 5px;
     border-radius:100%;
     cursor: pointer !important;
 
+
 }
 .minus {
-    margin-right: 5px;
+    background-color:black;
+    color:white;
+}
+
+.plus {
+    background-color:black;
+    color:white;
 }
 
 
-
-.table td {
-    width:200px;
-}
 
 .nav-link {
     cursor: pointer;
@@ -509,6 +532,7 @@ image-zoom {
     height:110px;
     text-align:center;
     margin-left:10px;
+    cursor:pointer;
 
 }
 .btn-success {
@@ -575,7 +599,9 @@ image-zoom {
     margin-left:100px;
 }
 .del {
+    font-size: 30px;
     background-color:white;
+    color:red;
     border:none;
     cursor: pointer;
 }
@@ -590,8 +616,11 @@ image-zoom {
     cursor: pointer;
     color:white;
     border-radius:10px;
-    height:30px;
     text-align:center;
+}
+.cart_clear_but {
+    background-color:DarkRed;
+    font-size:20px;
 }
 .logo{
     border: 4px solid black;
@@ -675,7 +704,6 @@ image-zoom {
 }
 .favorite_but_del {
     margin-top:20px;
-    margin-left: 150px;
     background-color:black;
     cursor: pointer;
     color:white;
@@ -685,7 +713,9 @@ image-zoom {
     line-height: 1.5;
     border: 1px solid white;
 }
-
+.fav_tr {
+    align-items: center;
+}
 .favorite_but_del:hover {
     background-color:white;
     color:black;
@@ -706,3 +736,122 @@ footer a {
     color: white;
 }
 
+a {
+    text-decoration: none;
+}
+
+
+.mypagination {
+    display:flex;
+    justify-content: center;
+    align-items: center
+}
+
+.count_rows {
+    margin-left: 38%;
+    text-align: center;
+    margin-top:20%;
+
+}
+
+li {
+    list-style-type: none; /* Убираем маркеры */
+}
+
+ul {
+    padding-left: 0; /* Сдвигаем список влево */
+}
+
+.product_fav {
+    display:flex;
+    flex-direction: column;f
+}
+#id_filter_form_val {
+    align-items: center;
+    font-size:20px;
+}
+
+.filter_cat {
+    cursor: pointer !important;
+    font-size:20px;
+}
+.show-more-btn {
+    cursor:pointer;
+}
+
+.recomend_product a {
+    text-decoration: none;
+    color: black;
+    font-size:20px;
+
+}
+.recomend_product {
+    display:flex;
+}
+
+.recomend_body {
+    margin-top: 1%;
+    text-align: center;
+
+}
+.product_rec {
+    text-align: center;
+    margin-top:20px;
+}
+.rec_hide {
+    cursor:pointer;
+    border-radius: 30px;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top:0px;
+}
+.modal_rec {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal_rec-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+}
+
+/* The Close Button */
+.close {
+  color: black;
+  top: 0;
+  right: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rec_title {
+  color: black;
+  font-size: 30px;
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
+}
+.block_rec_title {
+    text-align: center;
+}

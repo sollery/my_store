@@ -645,40 +645,13 @@ window.onload = function () {
   };
 }
 
-var filter_button = document.querySelectorAll('.filter_cat');
-console.log(filter_button)
+//var filter_button = document.querySelectorAll('.filter_cat');
+//console.log(filter_button)
 //var form_filter = document.getElementById('form_filter');
 //var params = new FormData(form_filter);
 //console.log(params)
 
-filter_button.forEach((e) => {
-    e.onclick = function() {
-        var form_filter = document.getElementById('form_filter');
-        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        data = {'form_filter': form_filter.elements["filter_form_val"].value,'category_id':e.dataset.cat_id,};
-        fetch('http://127.0.0.1:8000/shop/filter_category/',   {
-               method: 'POST',
-               body: JSON.stringify(data),
-               headers: {
-                        'X-CSRFToken': csrftoken,
-                        'Accept': 'text/html',
-                        'Content-Type': 'application/json',
-                    }})
-               .then(response => response.text())
-               .then(temp => {
-                   console.log(temp)
-                   var div_el = document.querySelector('.product_in_cat');
-                   var div = document.createElement('div')
-                   div.innerHTML = temp
-                   div_el.innerHTML='';
-                   div_el.appendChild(div)
 
-                   })
-               .catch(error => console.log(error))
-
-
-}
-})
 // Add star rating
 //const rating = document.querySelector('form[name=rating]');
 //
@@ -774,31 +747,59 @@ var favorite_buts = document.querySelectorAll('.favorite_but');
 
 
 
-const proof_pay_but = document.querySelector('.but_order_sum_oplata')
-const proof_pay_inp = document.querySelector('#order_sum_oplata')
+//const proof_pay_but = document.querySelector('.but_order_sum_oplata')
+//const proof_pay_inp = document.querySelector('#order_sum_oplata')
+//
+//function proof_pay(pay_inp,order_id) {
+//    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+//    const data = {
+//            'proof_pay_inp': pay_inp,
+//            'order_id' : order_id
+//        };
+//    fetch('http://127.0.0.1:8000/orders/proof_of_payment/', {
+//           method: 'POST',
+//           body: JSON.stringify(data),
+//           headers: {
+//                    'X-CSRFToken': csrftoken,
+//                    'Accept': 'text/html',
+//                    'Content-Type': 'application/json',
+//                }})
+//            .then(response => response.text())
+//            .then(temp => {
+//                        console.log(temp)
+//            })
+//            .catch(error => console.log(error));
+//}
+//
+//proof_pay_but.addEventListener("click", function(){
+//   proof_pay(proof_pay_inp.value,proof_pay_but.dataset.order_id);
+//}, true);
 
-function proof_pay(pay_inp,order_id) {
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const data = {
-            'proof_pay_inp': pay_inp,
-            'order_id' : order_id
-        };
-    fetch('http://127.0.0.1:8000/orders/proof_of_payment/', {
-           method: 'POST',
-           body: JSON.stringify(data),
-           headers: {
-                    'X-CSRFToken': csrftoken,
-                    'Accept': 'text/html',
-                    'Content-Type': 'application/json',
-                }})
-            .then(response => response.text())
-            .then(temp => {
-                        console.log(temp)
-            })
-            .catch(error => console.log(error));
-}
-
-proof_pay_but.addEventListener("click", function(){
-   proof_pay(proof_pay_inp.value,proof_pay_but.dataset.order_id);
-}, true);
-
+//filter_button.forEach((e) => {
+//    e.onclick = function() {
+//        var form_filter = document.getElementById('form_filter');
+//        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+//        data = {'form_filter': form_filter.elements["filter_form_val"].value,'category_id':e.dataset.cat_id,};
+//        fetch('http://127.0.0.1:8000/shop/filter_category/',   {
+//               method: 'POST',
+//               body: JSON.stringify(data),
+//               headers: {
+//                        'X-CSRFToken': csrftoken,
+//                        'Accept': 'text/html',
+//                        'Content-Type': 'application/json',
+//                    }})
+//               .then(response => response.text())
+//               .then(temp => {
+//                   console.log(temp)
+//                   var div_el = document.querySelector('.product_in_cat');
+//                   var div = document.createElement('div')
+//                   div.innerHTML = temp
+//                   div_el.innerHTML='';
+//                   div_el.appendChild(div)
+//
+//                   })
+//               .catch(error => console.log(error))
+//
+//
+//}
+//})

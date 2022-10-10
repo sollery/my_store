@@ -11,29 +11,30 @@
     {% if cart%}
         <table class="table">
                 <tr>
-                    <th scope="col">Товар</th>
-                    <th scope="col">Кол-во</th>
-                    <th scope="col">Цена товара</th>
-                    <th scope="col">Сумма</th>
-                    <th scope="col">удалить</th>
+                    <th>Товар</th>
+                    <th>Кол-во</th>
+                    <th>Цена товара</th>
+                    <th>Сумма</th>
+                    <th>удалить</th>
                 </tr>
                 {% for item in cart %}
                 {% with product=item.product %}
                 <tr class = 'product' id="{{product.id}}">
-                            <td class ='info-cart'>
-                                <a class ="text-decoration-none" href="{{product.get_absolute_url}}">
-                                    <span>{{ product.name }}</span></a>
-                        <div class="product-image-cart">
-                            <img src="/media/{{product.get_image_main}}" class="img-responsive" height="30" width="50">
-                        </div>
+                        <td class ='info-cart'>
+                            <a class ="text-decoration-none" href="{{product.get_absolute_url}}">
+                             <div class="product-image-cart">
+                                <img src="/media/{{product.get_image_main}}" class="img-responsive" height="100" width="150">
+                            </div>
+                             <span>{{ product.name }}</span></a>
                         </td>
-                            <td id="quantity">
-                                <input type="button" class="change minus min_pls" data-product_id = "{{ product.id }}"
-                                                                     data-change = "minus" value ='-'>
-                                <span id = "quantity{{product.id}}" class ="count_cart">{{ item.quantity }}</span>
-                                <input type="button" class="change plus min_pls" data-product_id = "{{ product.id }}"
-                                    data-change = "plus" value="+">
-                            </td>
+                    <div class="cart_tab">
+                        <td id="quantity">
+                            <input type="button" class="change minus min_pls" data-product_id = "{{ product.id }}"
+                                                                 data-change = "minus" value ='-'>
+                            <span id = "quantity{{product.id}}" class ="count_cart">{{ item.quantity }}</span>
+                            <input type="button" class="change plus min_pls" data-product_id = "{{ product.id }}"
+                                data-change = "plus" value="+">
+                        </td>
                         <td id = "item_price{{product.id}}">{{ item.price }} руб.</td>
                         <td id ="total_price{{product.id}}">{{ item.total_price }} руб.</td>
                         <td>
@@ -42,6 +43,7 @@
                                    data-product_id = "{{ product.id }}"
                                    data-change = "del">
                         </td>
+                    </div>
                 </tr>
                 {% endwith %}
                 {% endfor %}
@@ -76,8 +78,15 @@ clear.onclick = function () {
             .then(temp => {
                 console.log(temp)
                 var cart_w = document.querySelector('.cart_wrp');
+                var quantity_cart = document.querySelector('#quantity_cart');
+                var sum_cart = document.querySelector('#sum_cart');
                 cart_w.innerHTML='';
                 cart_w.innerHTML=temp;
+                quantity_cart.innerHTML = 0;
+                sum_cart.innerHTML = 0;
+
+
+
             })
     }
 </script>

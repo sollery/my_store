@@ -39,15 +39,8 @@
                 </div>
                         <div role="tabpanel" class="tab-pane active" id="description">
                             <span class="text-center" >{{ product.description }}</span>
-                            <div>
-                                <span>Аксесуары</span>
-                                {%for i in accessories%}
-                                <a class="text-decoration-none" href="{{i.childer.get_absolute_url}}">
-                                    {{i.childer.name}}
-                                {%endfor%}
-                                </a>
-                            </div>
                         </div>
+
                 <div>
                         {% csrf_token %}
                     <div class ="info_item_btn">
@@ -74,19 +67,26 @@
                             {%else%}
                                     <a href="{% url 'account_login' %}" class="favorite_but_login">&#10084;</a>
                             {%endif%}
+                        <div class="product_rec">
+                            <h5>Рекомендации к данному товары:</h5>
+                            <button class="rec_hide" id="myBtn">Посмотреть</button>
+                        </div>
+
                     </div>
                 </div>
-
-
             </div>
          </div>
-        <div class="row ">
-            <div class="col-lg-6 comment hide-element wpcraft-box-2 ">
+        <div class="row">
+            <div class="col-lg-6 comment hide-element wpcraft-box-2">
                 <div class = "lst_rew news-list">
-            {% for review in product.get_review %}
-                {% include 'review-item.html' %}
-            {% endfor %}
-            </div>
+                    {% if product.get_review %}
+                        {% for review in product.get_review %}
+                            {% include 'review-item.html' %}
+                        {% endfor %}
+                    {%else%}
+                        <h1>Пока нет отзывов</h1>
+                    {%endif%}
+                </div>
 
 <!--                <div id="pagination">-->
 <!--                    <span class="step-links">-->
@@ -134,10 +134,11 @@
                             <input type="hidden" name="product_id"  value="{{ product.id }}">
                             {{ review_form.as_p }}
                             {% csrf_token %}
-                            <p><input type="button" data-change="add" value="Добавить отзыв" class="change_rew add add_rew" id="add_rew" data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}"></p>
+                            <p><input type="button" data-change="add" value="Добавить отзыв" class="change_rew add_rew" id="add_rew" data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}"></p>
                         </form>
                 {%else%}
                     <div>
+                        <p><input type="button" data-change="add" value="Добавить отзыв" class="change_rew add_rew"  data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}" hidden></p>
                         <h3>чтобы оставить отзыв или оценить товар нужно <a href="{% url 'account_login' %}">Войти</a> или <a href="{% url 'account_signup' %}">Зарегистрироваться</a></h3>
                      </div>
                 {%endif%}
@@ -151,7 +152,70 @@
             {%endfor%}
             </div>
         </div>-->
+
         </div>
+
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal_rec">
+
+        <!-- Modal content -->
+            <div class="modal_rec-content">
+                <span class="close">&times;</span>
+                <div class="block_rec_title"><span class="rec_title">Рекомендации</span></div>
+                <hr>
+                <div class="recomend_body row">
+                {%for rec in recommends%}
+                    <div class="col-lg-4 recomend_product">
+                        <a href="{{rec.url}}">
+                             <img src="/media/{{rec.img}}"  height="100" width="150">
+                            <h5>{{rec.name}}</h5>
+                        </a>
+                    </div>
+                {%endfor%}
+                </div>
+            </div>
+
+        </div>
+
+<!--        <div class="row">-->
+<!--            <div class="col-lg-6">-->
+<!--            <div class="recomend_product" style="display:none;">-->
+<!--                    {%for i in accessories%}-->
+<!--                    <div>-->
+<!--                    <a href="{{i.url}}">-->
+<!--                        {{i.name}}-->
+<!--                    {%endfor%}-->
+<!--                    </a>-->
+<!--                     </div>-->
+<!--                </div>-->
+<!--                <button class="rec_hide">Рекомендации</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--     <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Большое модальное окно</button>-->
+<!--     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
+<!--      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">-->
+<!--        <div class="modal-content">-->
+<!--          <div class="modal-header">-->
+<!--            <h5 class="modal-title" id="exampleModalLongTitle">Категории товаров</h5>-->
+<!--            <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--              <span aria-hidden="true">&times;</span>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--          <div class="modal-body">-->
+<!--            <div class="row">-->
+<!--                {%for i in accessories%}-->
+<!--                <div class="col-lg-4 recomend_product">-->
+<!--                    <a href="{{i.url}}">-->
+<!--                        {{i.name}}-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--                {%endfor%}-->
+<!--             </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -234,10 +298,60 @@
                 .then(data => {
                     postForm.reset();
                     console.log(data)
+                    var parent_rew = document.querySelector('.lst_rew')
+                    var child_rew = document.createElement("div");
+                    var child_rew_info = document.createElement("p");
+                    var child_rew_text_com = document.createElement("p");
+                    child_rew.classList.add('_rew')
+                    child_rew_info.classList.add('info')
+                    child_rew_text_com.classList.add('text_com')
+                    child_rew_info.innerText = 'от ' + data.author + ' дата: ' + data.date
+                    child_rew_text_com.innerText = 'отзыв ' + data.text
+                    child_rew.appendChild(child_rew_info)
+                    child_rew.appendChild(child_rew_text_com)
+                    parent_rew.appendChild(child_rew)
                 })
-        //        .catch((error) => {
-        //            console.error('Error:', error);
-        //        });
+<!--        //        .catch((error) => {-->
+<!--        //            console.error('Error:', error);-->
+<!--        //        });-->
             }
+        var answer_buts = document.querySelectorAll('.hide_answer_rew');
+        answer_buts.forEach((e) => {
+            e.onclick = function() {
+                console.log(e.dataset.review_id)
+                let answer_rew = document.querySelector('.answer_com'+e.dataset.review_id)
+                console.log(answer_rew)
+                answer_rew.classList.toggle("hide-element");
+                if (answer_rew.classList.contains("hide-element")){
+                    e.value = 'Показать ответы';
+                } else {
+                    e.value = 'Скрыть ответы';
+                }
+            }
+        })
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
     </script>
 {% endblock %}

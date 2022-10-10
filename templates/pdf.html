@@ -1,21 +1,27 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
  <div class = "text-center mid_c" >Z-SHOP</div>
-<div class="my_info">
-    <div class = "mid_c">
-        Номер вашего заказа: {{ order.id }}
-    </div>
-    <div class = "mid_c">
-        {{order.created}}
-    </div>
-</div>
+<!--<div class="my_info">-->
+<!--    <div class = "mid_c">-->
+<!--        Номер вашего заказа: {{ order.id }}-->
+<!--    </div>-->
+<!--    <div class = "mid_c">-->
+<!--        {{order.created}}-->
+<!--    </div>-->
+<!--</div>-->
   <div class="mid_c">
-    Инфо клиента:
+    Информация по заказу:
  </div>
+<div class="low_c">Номер вашего заказа: {{ order.id }}</div>
+<div class="low_c">Дата: {{order.created}}</div>
  <div class="low_c">Имя: {{ order.first_name }} {{ order.last_name }}</div>
  <div class="low_c">Почта: {{ order.email }}</div>
  <div class="low_c">Улица: {{ order.address }}</div>
  <div class="low_c">Город: {{ order.city }}</div>
-
+ <div class="low_c">Способ доставки: {{order.delivery_method.title}}</div>
+ <div class="low_c">Стоимость доставки: {{order.delivery_method.price_delivery}} руб.</div>
+<div class="low_c">
+    Статус: {% if order.paid %}Оплачен{% else %}Не оплачен{% endif %}
+</div>
  <table class="table table-bordered">
      <caption>Товары в заказе</caption>
   <thead>
@@ -25,7 +31,6 @@
     <th>Цена</th>
     <th>Кол-во</th>
     <th>Общая стоимость</th>
-    <th>Стоимость доставки</th>
    </tr>
   </thead>
    <tbody>
@@ -36,15 +41,14 @@
         <td>{{ item.price }} руб.</td>
         <td>{{ item.quantity }} шт.</td>
         <td>{{ item.get_cost }} руб.</td>
-         <td>{{order.delivery_method.price_delivery}} руб.</td>
+
         </tr>
      {% endfor %}
      <tr>
-     <td colspan="5" >Сумма к оплате:</td>
+<!--     <td colspan="5" >Стоимость доставки</td>-->
+<!--     <td>{{order.delivery_method.price_delivery}} руб.</td>-->
+     <td colspan="4" >Сумма к оплате:</td>
      <td>{{ order.get_total_cost }} руб.</td>
      </tr>
    </tbody>
    </table>
-<div class="low_c">
- Статус: {% if order.paid %}Оплачен{% else %}Не оплачен{% endif %}
-</div>

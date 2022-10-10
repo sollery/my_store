@@ -146,11 +146,10 @@ class Review(models.Model):
 
 
 
-
 class Rating(models.Model):
     value = models.SmallIntegerField()
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="ratings")
     voted_on = models.DateTimeField(auto_now=True)
 
     class Meta:

@@ -9,8 +9,11 @@
         {%else%}
         <p>Оплачен</p>
         {%endif%}
-        <label>Cумма к оплате<input id ="order_sum_oplata"  value ="123" type="text"></label>руб.
-        <button class="but_order_sum_oplata" data-order_id="{{order.id}}">Оплатить</button>
+        <form class="div_form" action="" method="post">{% csrf_token %}
+            <h4>{{form}}</h4>
+            <input type="submit" class="btn btn-dark btn_count" value="Оплатить">
+        </form>
+            <h1>{{error}}</h1>
     </div>
 </head>
 {% endblock content %}

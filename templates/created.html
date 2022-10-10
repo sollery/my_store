@@ -8,7 +8,11 @@
         <strong>{{ order.id }}</strong>.</p>
         <strong>К оплате: {{o}} руб.</strong>
     {% if order.check_payment_method%}
-    <p><a href="{{order.get_absolute_url}}">Оплатить</a></p>
+        {% if order.paid %}
+            <p>Заказ оплачен</p>
+        {%else%}
+            <p><a href="{{order.get_absolute_url}}">Оплатить</a></p>
+        {%endif%}
     {%else%}
     <p>Оплата при доставке</p>
     {%endif%}

@@ -11,12 +11,19 @@ from tzlocal import get_localzone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Avg
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
 from .forms import ChoiceSort, ReviewForm
 from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductAccessories
+
+
+def check_parent_or_children(product):
+    if ProductAccessories.objects.filter(parent_id=product.pk):
+        return True
+    else:
+        return False
 
 
 def product_detail(request, pk, slug):
@@ -56,19 +63,28 @@ def product_detail(request, pk, slug):
     # else:
     #     review_form = ReviewForm()
     # 'review_form': review_form
+    recommends = None
+    if check_parent_or_children(product):
+        recommends = ProductAccessories.objects.filter(parent_id=product.pk)
+        recommends = [{'name': i.childer.name, 'url': i.childer.get_absolute_url,'img':i.childer.get_image_main}for i in recommends]
 
-    accessories = ProductAccessories.objects.filter(parent_id=product.pk)
-    abc = [i.childer.name for i in accessories]
-    print(abc)
+    else:
+        recommends = ProductAccessories.objects.filter(childer_id=product.pk)
+        recommends = [{'name': i.parent.name, 'url': i.parent.get_absolute_url,'img':i.parent.get_image_main} for i in recommends]
+    # abc = [i for i in accessories]
+    # print(abc)
+    # recommends = [{'name':'test_1','url':'lalalal'},{'name':'test_1','url':'lalalal'},{'name':'test_1','url':'lalalal'},
+    #               {'name':'test_1','url':'lalalal'},{'name':'test_1','url':'lalalal'},]
     print('*'*8)
-    print(accessories.count())
+    print(recommends)
     print('*' * 8)
     if request.user.is_authenticated:
         try:
             rating_product = Rating.objects.get(product__id=pk,user=request.user).value
         except Rating.DoesNotExist:
             rating_product = 0
-
+    else:
+        rating_product = 0
         print(type(rating_product))
         # print(type(rating_product))
         # print('---')
@@ -81,7 +97,9 @@ def product_detail(request, pk, slug):
         # print(rating_product)
 
 
-
+    p_test = Product.objects.all().annotate(avg=Avg('ratings')).order_by('avg')
+    print('рейтинг:')
+    print(p_test)
     # print(product_img)
     s_p = str(product.id)
     cart_product_form = CartAddProductForm()
@@ -101,7 +119,7 @@ def product_detail(request, pk, slug):
                        'review_form': review_form,
                        'rating_product': rating_product,
                        'check_fav': check_fav,
-                       'accessories': accessories
+                       'recommends': recommends
                        })
     # else:
     #     content = ''
@@ -132,9 +150,11 @@ def add_review(request):
                 form.product = product
                 form.author = author
                 form.save()
+                print(form.text)
             return JsonResponse(
                     dict(author=str(author),
-                         date=d.strftime("%d-%b-%Y %H:%M")
+                         date=d.strftime("%d-%b-%Y %H:%M"),
+                         text=form.text,
                          ))
 
         # if len(temp['txt_rew']) > 0:
@@ -186,25 +206,44 @@ def show_category_detail(request, id):
     category = Category.objects.get(pk=id)
     form = ChoiceSort()
     products = Product.objects.filter(category_id=id)
-    return render(request,'category_detail.html',{'category':category,'products':products,'form':form})
-
-
-def filter_p(filtr,id):
-    products = Product.objects.filter(category_id=id).order_by(filtr).values('id','price','name')
-    return list(products)
-
-
-def filter_category(request):
+    error = ''
     if request.method == 'POST':
-        temp = json.load(request)
-        print(temp)
-        filtr = temp['form_filter']
-        id = temp['category_id']
-        products = filter_p(filtr,id)
-        html = render_to_string('products_filter.html', {'products': products})
-        print(html)
-        return HttpResponse(html)
+        form = ChoiceSort(request.POST)
+        if request.POST["filter_form_val"] == 'empty':
+            error = 'Ошибка, Вы не выбрали фильтр!!!'
+            return render(request,'category_detail.html',{'category':category,'products':products,'form':form,'error':error})
+        if request.POST["filter_form_val"] == 'avg':
+            products = Product.objects.filter(category_id=id).annotate(avg=Avg('ratings__value')).order_by('-avg')
+            print(products)
+            return render(request, 'category_detail.html',
+                          {'category': category, 'products': products, 'form': form, 'error': error})
+        products = Product.objects.filter(category_id=id).order_by(request.POST["filter_form_val"])
 
+    # paginator = Paginator(products, 2)
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+    return render(request,'category_detail.html',{'category':category,'products':products,'form':form,'error':error})
+
+
+
+# def filter_p(filtr,id):
+#     products = Product.objects.filter(category_id=id).order_by(filtr).values('id','price','name')
+#     return list(products)
+
+
+# def filter_category(request):
+#     if request.method == 'POST':
+#         temp = json.load(request)
+#         print(temp)
+#         filtr = temp['form_filter']
+#         id = temp['category_id']
+#         products = filter_p(filtr,id)
+#         paginator = Paginator(products, 2)
+#         page_number = request.GET.get('page')
+#         page_obj = paginator.get_page(page_number)
+#         html = render_to_string('products_filter.html', {'page_obj': page_obj})
+#         print(html)
+#         return HttpResponse(html)
 
 
         # category = Category.objects.get(pk=id)

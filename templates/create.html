@@ -12,46 +12,56 @@
         <h3>Заполните форму:</h3>
             <form action="." method="post" class="">
                 <div class = "reg">
-                    {% for field in form %}
-                        <div class="item">
-                            {{field.label}}
-                             {{ field }}
-                            {{ field.help_text }}
-                        </div>
-                        {%endfor%}
+<!--                    {% for field in form %}-->
+<!--                        <div class="item">-->
+<!--                            {{field.label}}-->
+<!--                             {{ field }}-->
+<!--                            {{ field.help_text }}-->
+<!--                        </div>-->
+<!--                        {%endfor%}-->
 <!--                        {{ form.first_name.label}}-->
 <!--                        {{ form.first_name }}-->
 
 <!--                    </div>-->
-<!--                    <div class="item">-->
-<!--                        {{ form.last_name }}-->
-<!--                    </div>-->
-<!--                    <div class="item">-->
-<!--                        {{ form.email }}-->
-<!--                    </div>-->
-<!--                    <div class="item">-->
-<!--                        {{ form.address }}-->
-<!--                    </div>-->
-<!--                    <div class="item">-->
-<!--                        {{ form.postal_code }}-->
-<!--                    </div>-->
-<!--                    <div class="item">-->
-<!--                        {{ form.city }}-->
-<!--                     </div>-->
-<!--                    <div class="item-check">-->
-<!--                        Выберите способ оплаты:-->
-<!--                        <div class="item-check-box">{{ form.payment_method }}</div>-->
-<!--                    </div>-->
-<!--                    <div class="item-check">-->
-<!--                        Выберите способ доставки:-->
-<!--                        <div class="item-check-box">{{ form.delivery_method }}</div>-->
-<!--                    </div>-->
+                    <div class="item">
+                        {{form.first_name.label}}
+                        {{ form.first_name }}
+                    </div>
+                    <div class="item">
+                        {{form.last_name.label}}
+                        {{ form.last_name }}
+                    </div>
+                    <div class="item">
+                        {{form.email.label}}
+                        {{ form.email }}
+                    </div>
+                    <div class="item">
+                        {{form.address.label}}
+                        {{ form.address }}
+                    </div>
+                    <div class="item">
+                        {{form.postal_code.label}}
+                        {{ form.postal_code }}
+                    </div>
+                    <div class="item">
+                        {{form.city.label}}
+                        {{ form.city }}
+                     </div>
+                    <div class="item">
+                        {{ form.payment_method.label}}
+                        {{ form.payment_method }}
+                    </div>
+                        <div class="item">
+                            {{ form.delivery_method.label}}
+                            {{ form.delivery_method }}
+                        </div>
+
+
                     {% csrf_token %}
                 </div>
                 <div>
                     <input class="item-but" type="submit" value="Подтвердить">
                 </div>
-
             </form>
         </div>
         <div class="order-info col-lg-6">
@@ -78,12 +88,12 @@
                 </td>
             </tr>
             {% endfor %}
-            <tr>
-                <td ><h5>Сумма заказа:</h5></td>
-                <td colspan="3"><h5>{{ cart.get_total_price }} руб.</h5></td>
-            </tr>
         </tbody>
     </table>
+            <div class="t_cart">
+            <h3>Сумма заказа:</h3>
+            <h3><span>{{ cart.get_total_price }}</span> руб.</h3>
+         </div>
 <!--                    {% for item in cart %}-->
 <!--                        <h5>Название: {{ item.product.name }}</h5>-->
 <!--                        <h5>Кол-во: {{ item.quantity }} шт.</h5>-->

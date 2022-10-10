@@ -11,5 +11,5 @@ urlpatterns = [
         # path('pdf_download/', views.DownloadPDF.as_view(), name="pdf_download"),
         path('admin/order/<int:order_id>/pdf/',views.admin_order_pdf,name='admin_order_pdf'),
         path('proof_of_payment_page/<int:order_id>/',views.proof_of_payment_page,name='proof_of_payment_page'),
-        path('proof_of_payment/', views.proof_of_payment,name='proof_of_payment'),
+        # path('proof_of_payment/', views.proof_of_payment,name='proof_of_payment'),
 ]

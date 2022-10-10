@@ -1,7 +1,9 @@
 
 
     <div class= "_rew" id = "{{ review.id }}">
-                <input  type="button" value="×" class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}">
+        {% if user.is_authenticated and user.email  == review.author.email%}
+            <input  type="button" value="×" class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}">
+        {% endif %}
                 <p class="info">
                     от {{ review.author }}
                     дата {{ review.created_rew }}
@@ -9,10 +11,17 @@
                 <p class = "text_com">
                     отзыв: {{ review.text}}
                 </p>
+                <input  type="button" class="hide_answer_rew" value="показать ответы" data-review_id = "{{ review.id }}">
+                {% if user.is_authenticated %}
                 <a href="#formReview" onclick="addReview('{{ review.author }}', '{{ review.id }}')">Ответить</a>
+                {%else%}
+                <a href="{% url 'account_login' %}">ответить</a>
+                <input type="button" data-change="add" value="Добавить отзыв" class="change_rew add_rew" id="add_rew" data-product_id ="{{ product.id }}" data-review_id = "{{ review.id }}" hidden>
+                {%endif%}
                 </div>
+                    <div class="answer_com{{review.id}} hide-element">
                     {% for rew in review.review_set.all %}
-                        <div class= "answer_rew">
+                        <div class="answer_rew">
                                 <p class="info">
                                     от {{ rew.author }}
                                     дата {{ rew.created_rew }}
@@ -21,3 +30,4 @@
                                     Ответ: {{ rew.text}}
                         </div>
                     {% endfor %}
+                    </div>
