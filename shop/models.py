@@ -39,6 +39,7 @@ class Product(models.Model):
         ordering = ('name',)
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+        unique_together = ('name',)
 
     def __str__(self):
         return self.name
@@ -50,7 +51,7 @@ class Product(models.Model):
         return str(self.pk)
 
     def get_review(self):
-        return self.review_set.filter(parent__isnull=True)
+        return self.reviews.filter(parent__isnull=True)
 
     @property
     def discount_check(self):
@@ -126,8 +127,8 @@ class Product(models.Model):
 
 
 class Review(models.Model):
-    product = models.ForeignKey(Product,on_delete=models.CASCADE)
-    author = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,related_name='reviews')
+    author = models.ForeignKey(get_user_model(),on_delete=models.SET_NULL,null=True)
     text = models.TextField('Отзыв')
     active = models.BooleanField(default=True)
     created_rew = models.DateTimeField(auto_now_add=True, auto_now=False)
@@ -139,6 +140,7 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+        ordering = ['-created_rew']
 
     def __str__(self):
         return 'Отзыв от {} о {}'.format(self.author, self.product)
@@ -236,9 +238,10 @@ class CategoryImage(AbstractImage):
         verbose_name = 'Фотография категории'
         verbose_name_plural = 'Фотографии категории'
 
+
 class ProductImage(AbstractImage):
     image = models.ImageField(upload_to='products_images/')
-    product = models.ForeignKey(Product, blank=True, null=True, default=None,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, blank=True, null=True, default=None, on_delete=models.CASCADE)
     main = models.BooleanField(default=False)
 
 

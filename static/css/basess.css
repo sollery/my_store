@@ -261,17 +261,20 @@ a.animated-button.add:before {
 }
 
 .del_rew {
-    width: 20px;
-    height: 20px;
     margin-left: 80%;
     margin-top:3%;
     border:none;
-    font-size: 100%;
+    font-size: 20px;
     text-align: center;
     background-color:white;
+    cursor:pointer;
+    font-weight: bold;
+
 
 }
-
+.del_rew:hover {
+    color:red;
+}
 .item-check {
    margin: 0 5px;
 }
@@ -596,7 +599,7 @@ body{
     flex-direction: column;
 }
 .answer_rew {
-    margin-left:100px;
+    width:80%;
 }
 .del {
     font-size: 30px;
@@ -854,4 +857,7 @@ ul {
 }
 .block_rec_title {
     text-align: center;
+}
+.error {
+    color:red;
 }

@@ -19,9 +19,6 @@ class OrderCreateForm(forms.ModelForm):
             'payment_method': 'Способ оплаты',
             'delivery_method': 'Способ доставки',
         }
-        help_text = {
-             'help_text': 'Курьером стоимость - 300 рублей'
-        }
 
         widgets = {
             "first_name": TextInput(attrs={
@@ -54,9 +51,12 @@ class OrderCreateForm(forms.ModelForm):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+        self.fields['delivery_method'].help_text = 'Курьером стоимость - 300 рублей'
+
+        print(self.fields['delivery_method'].help_text)
 
 class Oplata(forms.Form):
-    paid_order_sum = forms.IntegerField(help_text="Введите сумму для оплаты")
+    paid_order_sum = forms.IntegerField(label='Введите сумму к оплате')
     def clean_renewal_date(self):
         data = self.cleaned_data['paid_order_sum']
         #Проверка того, что дата не выходит за "нижнюю" границу (не в прошлом).

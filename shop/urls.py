@@ -15,4 +15,9 @@ urlpatterns = [
     path('category/<int:id>/', views.show_category_detail, name='category_detail'),
     path('search/', SearchResultsListView.as_view(), name='search_results'),
     path('data_review/', views.add_review, name='data_review'),
+    path('del_review/', views.del_review, name='del_review'),
+    path('create_product/', views.create_product,name='create_product'),
+    path('create_category/', views.create_category,name='create_category'),
+    path('upl_img_product/<int:pk>/', views.upl_img_product,name='upl_img_product'),
+    path('upl_img_category/<int:pk>/',views.upl_img_category,name='upl_img_category'),
     ]

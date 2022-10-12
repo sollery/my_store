@@ -37,8 +37,8 @@
                         <h4>Цена: <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.</h4>
                     </p>
                 </div>
-                        <div role="tabpanel" class="tab-pane active" id="description">
-                            <span class="text-center" >{{ product.description }}</span>
+                        <div>
+                            <span>{{ product.description }}</span>
                         </div>
 
                 <div>
@@ -84,7 +84,7 @@
                             {% include 'review-item.html' %}
                         {% endfor %}
                     {%else%}
-                        <h1>Пока нет отзывов</h1>
+                        <h4>Пока нет отзывов</h4>
                     {%endif%}
                 </div>
 
@@ -166,7 +166,7 @@
                 <hr>
                 <div class="recomend_body row">
                 {%for rec in recommends%}
-                    <div class="col-lg-4 recomend_product">
+                    <div class="col-lg-3 recomend_product">
                         <a href="{{rec.url}}">
                              <img src="/media/{{rec.img}}"  height="100" width="150">
                             <h5>{{rec.name}}</h5>
@@ -309,7 +309,7 @@
                     child_rew_text_com.innerText = 'отзыв ' + data.text
                     child_rew.appendChild(child_rew_info)
                     child_rew.appendChild(child_rew_text_com)
-                    parent_rew.appendChild(child_rew)
+                    parent_rew.prepend(child_rew)
                 })
 <!--        //        .catch((error) => {-->
 <!--        //            console.error('Error:', error);-->
@@ -353,5 +353,27 @@
             modal.style.display = "none";
           }
         }
+        var del_rew = document.querySelectorAll('.del_rew');
+        del_rew.forEach((e) => {
+            e.onclick = function() {
+            data = {'rew_id':e.dataset.review_id,'product_id':e.dataset.product_id}
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            fetch('http://127.0.0.1:8000/shop/del_review/', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                         'X-CSRFToken': csrftoken,
+                         'Accept': 'text/html',
+                         'Content-Type': 'application/json',
+                     }})
+                .then(response => console.log(response))
+                .then(temp => {
+                    console.log(data)
+                    let rew = document.getElementById(data.rew_id)
+                    console.log(rew)
+                    rew.remove()
+                })
+            }
+            })
     </script>
 {% endblock %}

@@ -12,17 +12,6 @@
         <h3>Заполните форму:</h3>
             <form action="." method="post" class="">
                 <div class = "reg">
-<!--                    {% for field in form %}-->
-<!--                        <div class="item">-->
-<!--                            {{field.label}}-->
-<!--                             {{ field }}-->
-<!--                            {{ field.help_text }}-->
-<!--                        </div>-->
-<!--                        {%endfor%}-->
-<!--                        {{ form.first_name.label}}-->
-<!--                        {{ form.first_name }}-->
-
-<!--                    </div>-->
                     <div class="item">
                         {{form.first_name.label}}
                         {{ form.first_name }}
@@ -51,13 +40,14 @@
                         {{ form.payment_method.label}}
                         {{ form.payment_method }}
                     </div>
+
                         <div class="item">
                             {{ form.delivery_method.label}}
                             {{ form.delivery_method }}
                         </div>
-
-
+                        <span>Курьером стоимость - 300 рублей</span>
                     {% csrf_token %}
+
                 </div>
                 <div>
                     <input class="item-but" type="submit" value="Подтвердить">

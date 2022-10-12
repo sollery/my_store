@@ -3,17 +3,17 @@
 {% block title %}Thank you{% endblock %}
 
 {% block content %}
-    <h1>Спасибо Вам,  {{ order.first_name }} {{ order.last_name }}</h1>
+    <h1>Спасибо Вам,  {{ order.first_name }}</h1>
     <p>Ваш заказ зарегистрирован. Номер вашего заказа:
         <strong>{{ order.id }}</strong>.</p>
         <strong>К оплате: {{o}} руб.</strong>
     {% if order.check_payment_method%}
         {% if order.paid %}
-            <p>Заказ оплачен</p>
+            <p>Заказ оплачен, письмо отправлено на указанную почту</p>
         {%else%}
             <p><a href="{{order.get_absolute_url}}">Оплатить</a></p>
         {%endif%}
     {%else%}
-    <p>Оплата при доставке</p>
+    <p>Оплата при доставке, письмо отправлено на указанную почту</p>
     {%endif%}
 {% endblock %}

@@ -1,8 +1,8 @@
 
 
     <div class= "_rew" id = "{{ review.id }}">
-        {% if user.is_authenticated and user.email  == review.author.email%}
-            <input  type="button" value="×" class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}">
+        {% if user.is_superuser or user.email  == review.author.email%}
+        <span class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}">×</span>
         {% endif %}
                 <p class="info">
                     от {{ review.author }}
@@ -22,6 +22,7 @@
                     <div class="answer_com{{review.id}} hide-element">
                     {% for rew in review.review_set.all %}
                         <div class="answer_rew">
+                            <span class="change_rew del_rew" data-change="del" data-review_id = "{{ review.id }}" data-product_id ="{{ product.id }}" data-parent = {{review.parent}}>×</span>
                                 <p class="info">
                                     от {{ rew.author }}
                                     дата {{ rew.created_rew }}

@@ -3,9 +3,11 @@
 {% block title %}Информации{% endblock title %}
 {% block content %}
     {% csrf_token %}
-    <div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
         {% if not order.paid%}
-        <p>Сумма к оплате{{sum_order}}</p>
+        <h1>Сумма к оплате: {{sum_order}} руб.</h1>
         {%else%}
         <p>Оплачен</p>
         {%endif%}
@@ -13,7 +15,9 @@
             <h4>{{form}}</h4>
             <input type="submit" class="btn btn-dark btn_count" value="Оплатить">
         </form>
-            <h1>{{error}}</h1>
+            <h3 class="error">{{error}}</h3>
+
+             </div>
+        </div>
     </div>
-</head>
 {% endblock content %}

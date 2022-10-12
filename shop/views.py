@@ -4,19 +4,19 @@ from datetime import datetime
 
 from django.core import paginator
 from django.core.paginator import Paginator
-from django.forms import model_to_dict
+from django.forms import model_to_dict, formset_factory
 from django.template.loader import render_to_string
 from django.views import View
 from tzlocal import get_localzone
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q, Avg
+from django.db.models import Q, Avg, Count
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
-from .forms import ChoiceSort, ReviewForm
-from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductAccessories
+from .forms import ChoiceSort, ReviewForm, ProductForm, ProductImgForm, CategoryForm, CategoryImgForm
+from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductAccessories,CategoryImage
 
 
 def check_parent_or_children(product):
@@ -133,6 +133,14 @@ def product_detail(request, pk, slug):
     #     })
 
 
+def del_review(request):
+    if request.method == "POST":
+        temp = json.load(request)
+        review = Review.objects.filter(product_id=temp.get('product_id'),id=temp.get('rew_id'))
+        review.delete()
+        return HttpResponse('ok')
+
+
 def add_review(request):
         # temp = json.load(request)
         # product = get_object_or_404(Product, pk=temp['product_id'])
@@ -217,6 +225,12 @@ def show_category_detail(request, id):
             print(products)
             return render(request, 'category_detail.html',
                           {'category': category, 'products': products, 'form': form, 'error': error})
+        if request.POST["filter_form_val"] == 'reviews_count':
+            products = Product.objects.filter(category_id=id).annotate(cnt=Count('reviews')).order_by('-cnt')
+            print(products)
+            return render(request, 'category_detail.html',
+                          {'category': category, 'products': products, 'form': form, 'error': error})
+
         products = Product.objects.filter(category_id=id).order_by(request.POST["filter_form_val"])
 
     # paginator = Paginator(products, 2)
@@ -293,6 +307,67 @@ class CategoryListView(ListView):
 #             avg_stat = Rating.objects.filter(product__id=int(request.POST.get("product"))).aggregate(Avg('star'))
 #             return JsonResponse(avg_stat)
 
+from django.contrib.admin.views.decorators import staff_member_required
+
+
+@staff_member_required
+def create_product(request):
+    form = ProductForm()
+    if request.method == "POST":
+        print('10')
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            product_name = form.cleaned_data.get('name')
+            product_id = Product.objects.get(name=product_name)
+            print(product_id)
+            # return redirect('home')
+            return redirect(f'/shop/upl_img_product/{int(product_id.id)}/')
+    return render(request,'create_product.html',{'form':form})
 
 
 
+@staff_member_required
+def create_category(request):
+    form = CategoryForm()
+    if request.method == "POST":
+        print('10')
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            category_name = form.cleaned_data.get('name')
+            category = Category.objects.get(name=category_name)
+            return redirect(f'/shop/upl_img_category/{int(category.id)}/')
+    return render(request,'create_category.html',{'form':form})
+
+
+@staff_member_required
+def upl_img_product(request,pk):
+    ProductImgFormFormset = formset_factory(ProductImgForm, extra=3)
+    formset = ProductImgFormFormset()
+    if request.method == 'POST':
+        ProductImgFormFormset = formset_factory(ProductImgForm)
+        formset = ProductImgFormFormset(request.POST, request.FILES)
+        product = Product.objects.get(id=pk)
+        product_slug = product.slug
+        if formset.is_valid():
+            for form in formset:
+                print(form)
+                main = form.cleaned_data.get('main')
+                img = form.cleaned_data.get('image')
+
+                ProductImage.objects.create(main=main,image=img,product=product)
+            return redirect(f'/shop/products/{pk}/{product_slug}/')
+    return render(request,'upl_img_product.html',{'formset':formset})
+
+@staff_member_required
+def upl_img_category(request,pk):
+    form = CategoryImgForm()
+    if request.method == 'POST':
+        form = CategoryImgForm(request.POST, request.FILES)
+        category = Category.objects.get(id=pk)
+        if form.is_valid():
+            img = form.cleaned_data.get('image')
+            CategoryImage.objects.create(image=img,category=category)
+            return redirect(f'/shop/category/{pk}/')
+    return render(request, 'upl_img_category.html', {'form': form})

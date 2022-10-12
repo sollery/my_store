@@ -15,6 +15,12 @@
         <li class="nav-item">
             <a class="nav-link" href ="http://127.0.0.1:8000/admin/">Админка</a>
         </li>
+         <li class="nav-item">
+            <a class="nav-link" href ="{% url 'create_product' %}">Создать продукт</a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link" href ="{% url 'create_category' %}">Создать категорию</a>
+        </li>
         {% endif %}
     </ul>
     <ul class="navbar-nav my-2 mt-lg-0">
