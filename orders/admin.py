@@ -13,7 +13,7 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'first_name', 'last_name', 'email',
-                    'address', 'postal_code', 'city', 'paid',
+                    'address', 'city', 'paid',
                     'created', 'updated','order_pdf']
     list_filter = ['paid', 'created', 'updated']
 

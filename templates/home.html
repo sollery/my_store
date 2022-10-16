@@ -15,11 +15,11 @@
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
               <div class="carousel-inner">
                 <div class="carousel-item active">
-                  <a href="/shop/category/1/">
+                  <a href="/shop/category/1/gadzhety/">
                       <img class="d-block w-100" src="https://img.freepik.com/foto-gratis/personas-que-utilizan-tecnologia-inteligente-dispositivos-digitales-efecto-exposicion-doble-color_53876-104899.jpg?w=1060&t=st=1658660335~exp=1658660935~hmac=2ccd99cc61a422b7dcc31b60e2d5c7c6b9facc5720da72615d6ceedbe54b97a2" alt="Первый слайд"></a>
                 </div>
                 <div class="carousel-item">
-                    <a href="/shop/category/7/">
+                    <a href="/shop/category/7/naushniki/">
                   <img class="d-block w-100" src="https://img.freepik.com/free-photo/woman-listening-to-music-in-double-color-exposure-effect_53876-104136.jpg?t=st=1658591282~exp=1658591882~hmac=56617251a27a256a99030a3a6c6692d6ede75f972da3c2b4fa5acf6c779fddf7&w=1380" alt="Второй слайд"></a>
                 </div>
               </div>
@@ -44,6 +44,9 @@
                         <div class = "info_item_name">
                             <h4>{{ product.name }}</h4>
                         </div>
+<!--                        <div class="info_item_description">-->
+<!--                            {{product.description|truncatechars:30}}-->
+<!--                        </div>-->
                         <div class = "info_item_price">
                             <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
                             {% csrf_token %}
@@ -57,7 +60,7 @@
                                 <div class="rating_item_p" data-item-value="1">★</div>
                             </div>
                             <div>
-                                ({{product.get_count_rating}})
+                                <span class="count_ratings">({{product.get_count_rating}})</span>
                             </div>
                         </div></a>
                         <div class ="info_item_btn">

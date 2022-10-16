@@ -19,14 +19,16 @@
                 {% endfor %}
                 </div>
                  <div class="rating_p" data-total-value="{{product.get_avg_rating}}">
+                            )<span class="count_ratings">{{product.get_count_rating}}</span>(
                             <div class="rating_item_p" data-item-value="5">★</div>
                             <div class="rating_item_p" data-item-value="4">★</div>
                             <div class="rating_item_p" data-item-value="3">★</div>
                             <div class="rating_item_p" data-item-value="2">★</div>
                             <div class="rating_item_p" data-item-value="1">★</div>
                      <h3 class="rating_stat">Рейтинг: {{product.get_avg_rating}}</h3>
-                        </div>
-                <input class = "hide_rew" id="click-to-hide-2" type="button" value="Показать отзывы">
+                 </div>
+                <button class = "hide_rew" id="click-to-hide-2">Показать отзывы(<span class="count_reviews">{{product.get_count_reviews}}</span>)</button>
+
             </div>
             <div class="col-lg-6 text-center">
                 <h1>
@@ -166,7 +168,7 @@
                 <hr>
                 <div class="recomend_body row">
                 {%for rec in recommends%}
-                    <div class="col-lg-3 recomend_product">
+                    <div class="col-lg-4 recomend_product">
                         <a href="{{rec.url}}">
                              <img src="/media/{{rec.img}}"  height="100" width="150">
                             <h5>{{rec.name}}</h5>
@@ -218,7 +220,7 @@
 <!--    </div>-->
     </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
+<script src="{% static 'js/product_detail.js' %}"></script>
 
 <!--        $(document).ready(function () {-->
 <!--            window.news_index = "{% url 'product_detail' product.pk product.slug %}";-->
@@ -254,126 +256,121 @@
 <!--        })-->
 
 
-        var clickToHide2 = document.querySelector('#click-to-hide-2');
-        clickToHide2.addEventListener("click", hideVisibleElem);
+<!--        var clickToHide2 = document.querySelector('#click-to-hide-2');-->
+<!--        clickToHide2.addEventListener("click", hideVisibleElem);-->
 
-        //	/* Функция добавления / удаления класса, который скрывает элемент */
-        function hideVisibleElem() {
-        let wpcraftBox2 = document.querySelector('.wpcraft-box-2');
-        wpcraftBox2.classList.toggle("hide-element");
-        //
-        //	/* В зависимости от наличия скрывающего класса меняем текст в кнопке */
-        if (wpcraftBox2.classList.contains("hide-element")){
-            clickToHide2.value = 'Показать отзывы';
-        } else {
-            clickToHide2.value = 'Скрыть отзывы';
-        }
-        }
-        $(document).ready(function(){
-            $('.fotki a').mouseover(function(){
-                e.preventDefault();
-                $('.image-zoom img').attr("src",$(this).attr("href"))
-            })
-            console.log('1111111111111')
-        })
-        document.body.onclick= function(event) {
-            event = event || window.event;
-            if (event.target.classList.contains('goods-min')) {
-                document.getElementById('goods-max').src = event.target.src;
-            }
-        }
-         function addReview(name, id) {
-            document.getElementById("contactparent").value = id;
-            document.getElementById("id_text").innerText = `${name}, `
-        }
-        var add_rew = document.querySelector('.add_rew');
-        add_rew.onclick = function () {
-            const postForm = document.querySelector("#formReview");
-            formData = new FormData(postForm);
-            fetch('http://127.0.0.1:8000/shop/data_review/', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    postForm.reset();
-                    console.log(data)
-                    var parent_rew = document.querySelector('.lst_rew')
-                    var child_rew = document.createElement("div");
-                    var child_rew_info = document.createElement("p");
-                    var child_rew_text_com = document.createElement("p");
-                    child_rew.classList.add('_rew')
-                    child_rew_info.classList.add('info')
-                    child_rew_text_com.classList.add('text_com')
-                    child_rew_info.innerText = 'от ' + data.author + ' дата: ' + data.date
-                    child_rew_text_com.innerText = 'отзыв ' + data.text
-                    child_rew.appendChild(child_rew_info)
-                    child_rew.appendChild(child_rew_text_com)
-                    parent_rew.prepend(child_rew)
-                })
-<!--        //        .catch((error) => {-->
-<!--        //            console.error('Error:', error);-->
-<!--        //        });-->
-            }
-        var answer_buts = document.querySelectorAll('.hide_answer_rew');
-        answer_buts.forEach((e) => {
-            e.onclick = function() {
-                console.log(e.dataset.review_id)
-                let answer_rew = document.querySelector('.answer_com'+e.dataset.review_id)
-                console.log(answer_rew)
-                answer_rew.classList.toggle("hide-element");
-                if (answer_rew.classList.contains("hide-element")){
-                    e.value = 'Показать ответы';
-                } else {
-                    e.value = 'Скрыть ответы';
-                }
-            }
-        })
-        var modal = document.getElementById("myModal");
+<!--        //	/* Функция добавления / удаления класса, который скрывает элемент */-->
+<!--        function hideVisibleElem() {-->
+<!--        let wpcraftBox2 = document.querySelector('.wpcraft-box-2');-->
+<!--        wpcraftBox2.classList.toggle("hide-element");-->
+<!--        //-->
+<!--        //	/* В зависимости от наличия скрывающего класса меняем текст в кнопке */-->
+<!--        }-->
+<!--        $(document).ready(function(){-->
+<!--            $('.fotki a').mouseover(function(){-->
+<!--                e.preventDefault();-->
+<!--                $('.image-zoom img').attr("src",$(this).attr("href"))-->
+<!--            })-->
+<!--            console.log('1111111111111')-->
+<!--        })-->
+<!--        document.body.onclick= function(event) {-->
+<!--            event = event || window.event;-->
+<!--            if (event.target.classList.contains('goods-min')) {-->
+<!--                document.getElementById('goods-max').src = event.target.src;-->
+<!--            }-->
+<!--        }-->
+<!--         function addReview(name, id) {-->
+<!--            document.getElementById("contactparent").value = id;-->
+<!--            document.getElementById("id_text").innerText = `${name}, `-->
+<!--        }-->
+<!--        var add_rew = document.querySelector('.add_rew');-->
+<!--        add_rew.onclick = function () {-->
+<!--            const postForm = document.querySelector("#formReview");-->
+<!--            formData = new FormData(postForm);-->
+<!--            fetch('http://127.0.0.1:8000/shop/data_review/', {-->
+<!--                    method: 'POST',-->
+<!--                    body: formData,-->
+<!--                })-->
+<!--                .then(response => response.json())-->
+<!--                .then(data => {-->
+<!--                    postForm.reset();-->
+<!--                    console.log(data)-->
+<!--                    var parent_rew = document.querySelector('.lst_rew')-->
+<!--                    var child_rew = document.createElement("div");-->
+<!--                    var child_rew_info = document.createElement("p");-->
+<!--                    var child_rew_text_com = document.createElement("p");-->
+<!--                    child_rew.classList.add('_rew')-->
+<!--                    child_rew_info.classList.add('info')-->
+<!--                    child_rew_text_com.classList.add('text_com')-->
+<!--                    child_rew_info.innerText = 'от ' + data.author + ' дата: ' + data.date-->
+<!--                    child_rew_text_com.innerText = 'отзыв ' + data.text-->
+<!--                    child_rew.appendChild(child_rew_info)-->
+<!--                    child_rew.appendChild(child_rew_text_com)-->
+<!--                    parent_rew.prepend(child_rew)-->
+<!--                })-->
+<!--&lt;!&ndash;        //        .catch((error) => {&ndash;&gt;-->
+<!--&lt;!&ndash;        //            console.error('Error:', error);&ndash;&gt;-->
+<!--&lt;!&ndash;        //        });&ndash;&gt;-->
+<!--            }-->
+<!--        var answer_buts = document.querySelectorAll('.hide_answer_rew');-->
+<!--        answer_buts.forEach((e) => {-->
+<!--            e.onclick = function() {-->
+<!--                console.log(e.dataset.review_id)-->
+<!--                let answer_rew = document.querySelector('.answer_com'+e.dataset.review_id)-->
+<!--                console.log(answer_rew)-->
+<!--                answer_rew.classList.toggle("hide-element");-->
+<!--                if (answer_rew.classList.contains("hide-element")){-->
+<!--                    e.value = 'Показать ответы';-->
+<!--                } else {-->
+<!--                    e.value = 'Скрыть ответы';-->
+<!--                }-->
+<!--            }-->
+<!--        })-->
+<!--        var modal = document.getElementById("myModal");-->
 
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
+<!--        // Get the button that opens the modal-->
+<!--        var btn = document.getElementById("myBtn");-->
 
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
+<!--        // Get the <span> element that closes the modal-->
+<!--        var span = document.getElementsByClassName("close")[0];-->
 
-        // When the user clicks the button, open the modal
-        btn.onclick = function() {
-          modal.style.display = "block";
-        }
+<!--        // When the user clicks the button, open the modal-->
+<!--        btn.onclick = function() {-->
+<!--          modal.style.display = "block";-->
+<!--        }-->
 
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-          modal.style.display = "none";
-        }
+<!--        // When the user clicks on <span> (x), close the modal-->
+<!--        span.onclick = function() {-->
+<!--          modal.style.display = "none";-->
+<!--        }-->
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-          if (event.target == modal) {
-            modal.style.display = "none";
-          }
-        }
-        var del_rew = document.querySelectorAll('.del_rew');
-        del_rew.forEach((e) => {
-            e.onclick = function() {
-            data = {'rew_id':e.dataset.review_id,'product_id':e.dataset.product_id}
-            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-            fetch('http://127.0.0.1:8000/shop/del_review/', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                         'X-CSRFToken': csrftoken,
-                         'Accept': 'text/html',
-                         'Content-Type': 'application/json',
-                     }})
-                .then(response => console.log(response))
-                .then(temp => {
-                    console.log(data)
-                    let rew = document.getElementById(data.rew_id)
-                    console.log(rew)
-                    rew.remove()
-                })
-            }
-            })
-    </script>
+<!--        // When the user clicks anywhere outside of the modal, close it-->
+<!--        window.onclick = function(event) {-->
+<!--          if (event.target == modal) {-->
+<!--            modal.style.display = "none";-->
+<!--          }-->
+<!--        }-->
+<!--        var del_rew = document.querySelectorAll('.del_rew');-->
+<!--        del_rew.forEach((e) => {-->
+<!--            e.onclick = function() {-->
+<!--            data = {'rew_id':e.dataset.review_id,'product_id':e.dataset.product_id}-->
+<!--            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;-->
+<!--            fetch('http://127.0.0.1:8000/shop/del_review/', {-->
+<!--                method: 'POST',-->
+<!--                body: JSON.stringify(data),-->
+<!--                headers: {-->
+<!--                         'X-CSRFToken': csrftoken,-->
+<!--                         'Accept': 'text/html',-->
+<!--                         'Content-Type': 'application/json',-->
+<!--                     }})-->
+<!--                .then(response => console.log(response))-->
+<!--                .then(temp => {-->
+<!--                    console.log(data)-->
+<!--                    let rew = document.getElementById(data.rew_id)-->
+<!--                    console.log(rew)-->
+<!--                    rew.remove()-->
+<!--                })-->
+<!--            }-->
+<!--            })-->
+
 {% endblock %}

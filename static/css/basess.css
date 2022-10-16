@@ -19,14 +19,16 @@
   height: 50px;
   width: 400px;
   align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
 }
 .item input[type=text], input[type=email],input[type=password] {
-    width: 400px;
+    width: 300px;
     padding: 10px;
     border:0;
     box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
     border-radius:10px;
-    margin-left: 5%;
+    margin-left: 3%;
 }
 input[type=button] {
     cursor: pointer;
@@ -52,6 +54,7 @@ input[type=button] {
 
 .info_item_price {
     margin-top: 15px;
+    font-size:20px;
 }
 
 .info_item_btn {
@@ -128,7 +131,7 @@ button:hover, a:hover {
     text-align: center;
 
     animation-name: inf_add;
-    animation-duration: 1s;
+    animation-duration: 2s;
     animation-timing-function: linear;
     animation-iteration-count: 1;
     animation-direction: reverse;
@@ -164,8 +167,6 @@ button:hover, a:hover {
     border-collapse: collapse;
     border: 0px;
     font-size:20px;
-    width:75%;
-    margin-left: 10%;
 }
 .table a {
     text-shadow: none;
@@ -302,6 +303,9 @@ a.animated-button.add:before {
 	width: 400px;
 	background-color:black;
     color:#fff;
+}
+.order_item-but {
+    margin-top:50px;
 }
 
 .item-but {
@@ -706,15 +710,7 @@ body{
     margin-bottom:5%;
 }
 .favorite_but_del {
-    margin-top:20px;
-    background-color:black;
     cursor: pointer;
-    color:white;
-    border-radius:30px;
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    border: 1px solid white;
 }
 .fav_tr {
     align-items: center;
@@ -722,7 +718,6 @@ body{
 .favorite_but_del:hover {
     background-color:white;
     color:black;
-    border: 1px solid grey;
     transform: scale(1.2);
 }
 .info_item_rating {
@@ -745,6 +740,7 @@ a {
 
 
 .mypagination {
+    margin-top: 3%;
     display:flex;
     justify-content: center;
     align-items: center
@@ -790,6 +786,7 @@ ul {
 }
 .recomend_product {
     display:flex;
+    justify-content: center;
 }
 
 .recomend_body {
@@ -860,4 +857,52 @@ ul {
 }
 .error {
     color:red;
+}
+
+.errorlist {
+    color:red;
+}
+.count_ratings {
+    font-size: 20px;
+}
+
+.info_item_description {
+    font-size: 20px;
+}
+
+.result_search {
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 20px;
+}
+.result_search:hover {
+    text-decoration: none;
+    color: black;
+}
+.search_item {
+    margin-top:1%;
+}
+
+
+.block_search_item a {
+    text-decoration: none;
+    color: black;
+}
+
+.block_search_item a:hover {
+    text-decoration: none;
+    color: black;
+}
+
+td {
+    width: 200px;
+}
+
+.finish_order {
+    margin-top:25%;
+    font-size: 50px;
 }

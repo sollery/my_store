@@ -1,9 +1,8 @@
-
 import json
 from datetime import datetime
-
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core import paginator
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms import model_to_dict, formset_factory
 from django.template.loader import render_to_string
 from django.views import View
@@ -16,11 +15,11 @@ from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
 from .forms import ChoiceSort, ReviewForm, ProductForm, ProductImgForm, CategoryForm, CategoryImgForm
-from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductAccessories,CategoryImage
+from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductRecommendations,CategoryImage
 
 
 def check_parent_or_children(product):
-    if ProductAccessories.objects.filter(parent_id=product.pk):
+    if ProductRecommendations.objects.filter(parent_id=product.pk):
         return True
     else:
         return False
@@ -65,11 +64,11 @@ def product_detail(request, pk, slug):
     # 'review_form': review_form
     recommends = None
     if check_parent_or_children(product):
-        recommends = ProductAccessories.objects.filter(parent_id=product.pk)
+        recommends = ProductRecommendations.objects.filter(parent_id=product.pk)
         recommends = [{'name': i.childer.name, 'url': i.childer.get_absolute_url,'img':i.childer.get_image_main}for i in recommends]
 
     else:
-        recommends = ProductAccessories.objects.filter(childer_id=product.pk)
+        recommends = ProductRecommendations.objects.filter(childer_id=product.pk)
         recommends = [{'name': i.parent.name, 'url': i.parent.get_absolute_url,'img':i.parent.get_image_main} for i in recommends]
     # abc = [i for i in accessories]
     # print(abc)
@@ -198,20 +197,49 @@ class ProductListView(ListView):
     template_name = 'product_list.html'
 
 
-class SearchResultsListView(LoginRequiredMixin,ListView):
-    model = Product
-    context_object_name = 'product_list'
-    template_name = 'search_results.html'
-    login_url = 'account_login'
+# class SearchResultsListView(LoginRequiredMixin,ListView):
+#     model = Product
+#     paginate_by = '3'
+#     context_object_name = 'product_list'
+#     template_name = 'search_results.html'
+#     login_url = 'account_login'
+#
+#     # paginator = Paginator(products, 2)
+#     # page_number = request.GET.get('page')
+#     # page_obj = paginator.get_page(page_number)
+#
+#     def get_queryset(self):
+#         query = self.request.GET.get('q', None)
+#         print(query)
+#         return Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)
+#                                       | Q(category__name__icontains=query))
 
-    def get_queryset(self):
-        query = self.request.GET.get('q')
-        return Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)
+def search_result(request):
+    products_list = Product.objects.all()
+    query = request.GET.get('q')
+    if query:
+        products_list = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)
                                       | Q(category__name__icontains=query))
+    paginator = Paginator(products_list, 3) # 6 posts per page
+    page = request.GET.get('page')
+
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    context = {
+        'products': products
+    }
+    return render(request, "search_results.html", context)
 
 
-def show_category_detail(request, id):
-    category = Category.objects.get(pk=id)
+
+
+def show_category_detail(request, id,slug):
+    category = get_object_or_404(Category, id=id, slug=slug)
     form = ChoiceSort()
     products = Product.objects.filter(category_id=id)
     error = ''
@@ -307,7 +335,7 @@ class CategoryListView(ListView):
 #             avg_stat = Rating.objects.filter(product__id=int(request.POST.get("product"))).aggregate(Avg('star'))
 #             return JsonResponse(avg_stat)
 
-from django.contrib.admin.views.decorators import staff_member_required
+
 
 
 @staff_member_required
@@ -359,6 +387,7 @@ def upl_img_product(request,pk):
                 ProductImage.objects.create(main=main,image=img,product=product)
             return redirect(f'/shop/products/{pk}/{product_slug}/')
     return render(request,'upl_img_product.html',{'formset':formset})
+
 
 @staff_member_required
 def upl_img_category(request,pk):

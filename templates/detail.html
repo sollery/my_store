@@ -2,6 +2,9 @@
 {% load static %}
 {% block title %}Ваша корзина{% endblock %}
 {% block content %}
+<div class="container">
+    <div class="row">
+    <div class="col-lg-12">
 <div class="head_cart">
     <h1 class = "title-page">Ваша корзина покупок</h1>
     <input type="button" value="Очистить" class="cart_clear_but clear" data-met = "cart_clear">
@@ -11,10 +14,10 @@
     {% if cart%}
         <table class="table">
                 <tr>
-                    <th>Товар</th>
-                    <th>Кол-во</th>
-                    <th>Цена товара</th>
-                    <th>Сумма</th>
+                    <th>товар</th>
+                    <th>кол-во</th>
+                    <th>цена товара</th>
+                    <th>сумма</th>
                     <th>удалить</th>
                 </tr>
                 {% for item in cart %}
@@ -57,7 +60,11 @@
     {%else%}
     <p>Корзина пуста</p>
     {%endif%}
+        </div>
+</div>
+</div>
 <script>
+
 
 var clear = document.querySelector('.clear');
 clear.onclick = function () {

@@ -12,6 +12,7 @@ class DeliveryMethod(models.Model):
     class Meta:
         verbose_name = 'Способ доставки'
         verbose_name_plural = 'Способы доставки'
+        db_table = 'DeliveryMethod'
 
     def __str__(self):
         return self.title
@@ -23,6 +24,7 @@ class PaymentMethod(models.Model):
     class Meta:
         verbose_name = 'Способ оплаты'
         verbose_name_plural = 'Способы'
+        db_table = 'PaymentMethod'
 
     def __str__(self):
         return self.title
@@ -33,7 +35,6 @@ class Order(models.Model):
     last_name = models.CharField('Фамилия', max_length=50)
     email = models.EmailField('Эл.адрес')
     address = models.CharField('Адрес',max_length=250)
-    postal_code = models.CharField('Почтовый индекс',max_length=20)
     city = models.CharField('Город',max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -45,6 +46,7 @@ class Order(models.Model):
         ordering = ('-created',)
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+        db_table = 'Order'
 
     def __str__(self):
         return 'Заказ номер: {}'.format(self.id)
@@ -73,10 +75,15 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name='order_items',on_delete=models.CASCADE,null=True)
-    price = models.IntegerField()
-    quantity = models.PositiveIntegerField()
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE,verbose_name='Номер заказа')
+    product = models.ForeignKey(Product, related_name='order_items',on_delete=models.CASCADE,null=True,
+                                verbose_name='Название продукта')
+    price = models.IntegerField('Цена')
+    quantity = models.PositiveIntegerField('Кол-во')
+
+
+    class Meta:
+        db_table = 'OrderItem'
 
     def __str__(self):
         return '{}'.format(self.id)

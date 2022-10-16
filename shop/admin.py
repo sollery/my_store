@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product, Favorites, \
-    CategoryImage,ProductAccessories
+    CategoryImage, ProductRecommendations
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -18,9 +18,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name',  'price', 'count', 'created', 'updated','end_price']
+    list_display = ['name',  'price', 'created', 'updated','end_price']
     list_filter = ['created', 'updated']
-    list_editable = ['price', 'count']
+    list_editable = ['price']
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -58,8 +58,8 @@ class Discount_productAdmin(admin.ModelAdmin):
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = ['product','user']
 
-@admin.register(ProductAccessories)
-class ProductAccessoriesAdmin(admin.ModelAdmin):
+@admin.register(ProductRecommendations)
+class ProductRecommendations(admin.ModelAdmin):
     list_display = ['parent','childer']
 
 

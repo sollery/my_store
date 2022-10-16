@@ -78,10 +78,12 @@ class CategoryForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
 
+
 class CategoryImgForm(forms.ModelForm):
     class Meta:
         model = CategoryImage
         fields = ('image',)
+
     def __init__(self, *args, **kwargs):
         super(CategoryImgForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():

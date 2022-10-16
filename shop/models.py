@@ -9,25 +9,28 @@ from shop.managers import DiscountActiveManager, ProductImageMainManager
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=200, db_index=True)
+    name = models.CharField('Название',max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
         ordering = ('name',)
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
+        unique_together = ('name',)
+        db_table = 'Category'
 
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('category_detail', args=[str(self.id), self.slug])
 
 class Product(models.Model):
-    slug = models.SlugField(max_length=200, db_index=True)
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, db_index=True)
-    description = models.TextField(blank=True)
-    price = models.IntegerField(default=1)
-    count = models.PositiveIntegerField('Кол-во товара', default=1)
+    slug = models.SlugField(max_length=200)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, verbose_name="Категория")
+    name = models.CharField('Название',max_length=200)
+    description = models.TextField('Описание',blank=True)
+    price = models.IntegerField('Цена')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
@@ -40,6 +43,7 @@ class Product(models.Model):
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
         unique_together = ('name',)
+        db_table = 'Product'
 
     def __str__(self):
         return self.name
@@ -107,6 +111,14 @@ class Product(models.Model):
             count_rating = 0
         return count_rating
 
+    @property
+    def get_count_reviews(self):
+        try:
+            count_reviews = Review.objects.filter(product__id=self.pk).count()
+        except Rating.DoesNotExist:
+            count_reviews = 0
+        return count_reviews
+
 
 
 
@@ -141,6 +153,7 @@ class Review(models.Model):
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
         ordering = ['-created_rew']
+        db_table = 'Review'
 
     def __str__(self):
         return 'Отзыв от {} о {}'.format(self.author, self.product)
@@ -166,6 +179,7 @@ class Discount(models.Model):
         ordering = ('value',)
         verbose_name = 'Скидка'
         verbose_name_plural = 'Скидки'
+        db_table = 'Discount'
 
     def __str__(self):
         return f"{self.value}%"
@@ -200,6 +214,7 @@ class Favorites(models.Model):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
         unique_together = ('product', 'user',)
+        db_table = 'Favorites'
 
     def __str__(self):
         return f"Товар:{self.product}"
@@ -237,6 +252,7 @@ class CategoryImage(AbstractImage):
     class Meta:
         verbose_name = 'Фотография категории'
         verbose_name_plural = 'Фотографии категории'
+        db_table = 'CategoryImage'
 
 
 class ProductImage(AbstractImage):
@@ -251,13 +267,14 @@ class ProductImage(AbstractImage):
     class Meta:
         verbose_name = 'Фотография продукта'
         verbose_name_plural = 'Фотографии продуктов'
+        db_table = 'ProductImage'
 
 
     objects = models.Manager()
     image_main_objects = ProductImageMainManager()
 
 
-class ProductAccessories(models.Model):
+class ProductRecommendations(models.Model):
     parent = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='parent')
     childer = models.ForeignKey(Product, on_delete=models.CASCADE,related_name='childer')
 
@@ -265,6 +282,7 @@ class ProductAccessories(models.Model):
         return f"Аксесуар {self.childer} для {self.parent}"
 
     class Meta:
-        verbose_name = 'Аксесуар'
-        verbose_name_plural = 'Аксесуары'
+        verbose_name = 'Рекомендация'
+        verbose_name_plural = 'Рекомендации'
+        db_table = 'ProductRecommendations'
 

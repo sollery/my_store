@@ -9,7 +9,7 @@
             {% with total_items=cart|length %}
               {% if cart|length > 0 %}
     <div class="col-lg-6 reg-o">
-        <h3>Заполните форму:</h3>
+        <h3>Форма клиента</h3>
             <form action="." method="post" class="">
                 <div class = "reg">
                     <div class="item">
@@ -29,10 +29,6 @@
                         {{ form.address }}
                     </div>
                     <div class="item">
-                        {{form.postal_code.label}}
-                        {{ form.postal_code }}
-                    </div>
-                    <div class="item">
                         {{form.city.label}}
                         {{ form.city }}
                      </div>
@@ -49,13 +45,13 @@
                     {% csrf_token %}
 
                 </div>
-                <div>
-                    <input class="item-but" type="submit" value="Подтвердить">
+                <div class="order_item-but">
+                    <input class="item-but" type="submit" onclick="document.body.style.cursor='wait'; return true;" value="Подтвердить">
                 </div>
             </form>
         </div>
         <div class="order-info col-lg-6">
-            <h3>Ваш заказ:</h3>
+            <h3>Товары в заказе</h3>
             <table class="table">
         <thead>
             <tr>
@@ -97,4 +93,10 @@
 {% endwith %}
         </div>
         </div>
+    <script>
+<!--        const btn_form = document.querySelector('.item-but');-->
+<!--        btn_form.addEventListener('click', () => {-->
+<!--            btn_form.style.display = 'none';-->
+<!--        });-->
+    </script>
 {% endblock %}

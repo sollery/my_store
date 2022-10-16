@@ -8,16 +8,15 @@ from django.forms import TextInput, EmailInput, NumberInput, Select, RadioSelect
 class OrderCreateForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['first_name', 'last_name', 'email', 'address', 'postal_code', 'city', 'payment_method','delivery_method']
+        fields = ['first_name', 'last_name', 'email', 'address', 'city', 'payment_method','delivery_method']
         labels = {
-            'first_name': 'Имя',
-            'last_name': 'Фамилия',
-            'email': 'Емейл',
-            'address': 'Адрес',
-            'postal_code': 'Почтовый индекс',
-            'city': 'Город',
-            'payment_method': 'Способ оплаты',
-            'delivery_method': 'Способ доставки',
+            'first_name': 'Имя:',
+            'last_name': 'Фамилия:',
+            'email': 'Емейл:',
+            'address': 'Адрес:',
+            'city': 'Город:',
+            'payment_method': 'Способ оплаты:',
+            'delivery_method': 'Способ доставки:',
         }
 
         widgets = {
@@ -35,10 +34,6 @@ class OrderCreateForm(forms.ModelForm):
             "address": TextInput(attrs={
                 'class': 'myfield',
                 'placeholder': 'Ваше адрес'
-            }),
-            "postal_code": TextInput(attrs={
-                'class': 'myfield',
-                'placeholder': 'Ваш почтовый индекс'
             }),
             "city": TextInput(attrs={
                 'class': 'myfield',

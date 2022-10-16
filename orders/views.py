@@ -63,8 +63,8 @@ def proof_of_payment_page(request,order_id):
                 order.save()
                 send_email_client(order)
                 cart.clear()
-                return render(request, 'created.html',
-                              {'order': order, 'o': os})
+                order_id = int(order.id)
+                return redirect(f'http://127.0.0.1:8000/orders/created_order/{order_id}/')
             else:
                 error = 'Сумма не верна'
                 return render(request, 'paid_click.html',
@@ -72,12 +72,20 @@ def proof_of_payment_page(request,order_id):
     return render(request,'paid_click.html',
                           {'order': order,'sum_order': sum_order,'form':form})
 
+
+def created_order(request,order_id):
+    order = Order.objects.get(pk=order_id)
+    o = order.get_total_cost
+    client_name = order.first_name
+    return render(request, 'created.html',{order:'order',o:'o',client_name:'client_name'})
+
+
+
 def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
         print(request.POST)
         form = OrderCreateForm(request.POST)
-
         user_p = request.user
         if form.is_valid():
             order = form.save()
@@ -88,14 +96,16 @@ def order_create(request):
                                          quantity=item['quantity'])
             # if met == 'Курьером'
             # очистка корзины
-            os = order.get_total_cost
+            order_id = int(order.id)
+            o = order.get_total_cost
             # запуск асинхронной задачи
             if not order.check_payment_method():
                 print(order.check_payment_method)
                 send_email_client(order)
                 cart.clear()
-            return render(request, 'created.html',
-                          {'order': order,'user_p': user_p,'o': os})
+                return redirect(f'http://127.0.0.1:8000/orders/created_order/{order_id}/')
+            else:
+                return render(request, 'created.html',{'order': order,'user_p': user_p,'o': o})
     else:
         # frm = OrderCreateForm()
         # initial_data = {
