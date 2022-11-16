@@ -1,0 +1,49 @@
+{% extends '_base.html' %}
+{% load static %}
+{%block title %}
+{% endblock title %}
+{% block content %}
+    <h1 class = "title-page">Обращение № {{message.id}}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 answer_message">
+                <table class="table">
+                    <tr>
+                        <th>Тема</th>
+                        <th>Текст</th>
+                        <th>Дата</th>
+                        <th>Отправитель</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>
+                                {{message.title}}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                {{message.text}}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                {{message.created}}
+                            </div>
+                        </td>
+                        </td>
+                            <td>
+                            <div>
+                                {{message.email}}
+                               </div>
+                        </td>
+                    </tr>
+                </table>
+                {%if not message.status%}
+                <div class="wramp_answer_but">
+                    <a class ="answer_but" href="http://127.0.0.1:8000/shop/message_answer/{{message.id}}/">Ответить</a>
+                </div>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+{%endblock content%}
