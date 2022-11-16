@@ -1,30 +1,19 @@
-const goTopBtn = document.getElementById('goTop')
-             // Изначально высота верхнего содержимого, загружаемого браузером, равна 0
-          let scrollTop = 0
-             // слушаем события прокрутки страницы
-          window.onscroll = () => {
-                 // Получаем высоту верхнего содержимого, которое отображается в браузере
-            scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                 // Если высота свернутого содержимого больше 50, отобразить кнопку для возврата наверх;
-                 // Если высота сворачиваемого содержимого меньше 50, скройте кнопку, чтобы вернуться наверх.
-            scrollTop > 50 ? (goTopBtn.style.display = 'block') : (goTopBtn.style.display = 'none')
-          }
-          goTopBtn.onclick = () => {
-                 // Очищаем последний таймер
-            let timer = null;
-            clearInterval(timer);
-                 // Создаем таймер и выполняем стрелочную функцию каждые 15 мсек.
-            timer = setInterval(()=>{
-                     // Каждый раз, когда функция выполняется, scrollTop уменьшается на одну десятую
-              scrollTop -= scrollTop / 10;
-              window.scrollTo(0,scrollTop)
-                     // Когда scrollTop меньше 2, напрямую устанавливаем scrollTop на 0 и очищаем таймер.
-              if(scrollTop<2){
-                window.scrollTo(0,0);
-                clearInterval(timer);
-              }
-            },15)
-          }
+ $(function(){
+         if ($(window).scrollTop()>="250") $("#ToTop").fadeIn("slow")
+         $(window).scroll(function(){
+          if ($(window).scrollTop()<="250") $("#ToTop").fadeOut("slow")
+          else $("#ToTop").fadeIn("slow")
+         });
+
+         if ($(window).scrollTop()<=$(document).height()-"999") $("#OnBottom").fadeIn("slow")
+         $(window).scroll(function(){
+          if ($(window).scrollTop()>=$(document).height()-"999") $("#OnBottom").fadeOut("slow")
+          else $("#OnBottom").fadeIn("slow")
+         });
+
+         $("#ToTop").click(function(){$("html,body").animate({scrollTop:0},"slow")})
+         $("#OnBottom").click(function(){$("html,body").animate({scrollTop:$(document).height()},"slow")})
+        });
 var addss = document.querySelectorAll('.add')
 
 addss.forEach(function(btn) {
@@ -803,3 +792,38 @@ var favorite_buts = document.querySelectorAll('.favorite_but');
 //
 //}
 //})
+
+//Отправка формы сообщений пользователя
+//var add_rew = document.querySelector('.add_rew');
+//add_rew.onclick = function () {
+//    const postForm = document.querySelector("#formReview");
+//    formData = new FormData(postForm);
+//    fetch('http://127.0.0.1:8000/shop/data_review/', {
+//            method: 'POST',
+//            body: formData,
+//        })
+//        .then(response => response.json())
+//        .then(data => {
+//            postForm.reset();
+//            console.log(data)
+//            var parent_rew = document.querySelector('.lst_rew')
+//            var child_rew = document.createElement("div");
+//            var child_rew_info = document.createElement("p");
+//            var child_rew_text_com = document.createElement("p");
+//            child_rew.classList.add('_rew')
+//            child_rew_info.classList.add('info')
+//            child_rew_text_com.classList.add('text_com')
+//            child_rew_info.innerText = 'от ' + data.author + ' дата: ' + data.date
+//            child_rew_text_com.innerText = 'отзыв ' + data.text
+//            child_rew.appendChild(child_rew_info)
+//            child_rew.appendChild(child_rew_text_com)
+//            parent_rew.prepend(child_rew)
+//            let count_ratings = document.querySelector('.count_reviews');
+//            count_ratings.innerText = String(Number(count_ratings.innerText) + 1)
+//            console.log(count_ratings)
+//            get_text('Отзыв добавлен')
+//        })
+//        .catch((error) => {
+//            console.error('Error:', error);
+//        })
+//        }

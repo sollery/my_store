@@ -1,4 +1,6 @@
 import json
+import random
+import string
 
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
@@ -12,6 +14,8 @@ from shop.models import Product, ProductImage, Rating, Favorites
 from cart.forms import CartAddProductForm
 from shop.models import Category
 from cart.cart import Cart
+from alert_admin_bot.send_message_bot import send_alert_bot
+
 
 def home(request):
     products = Product.objects.all().order_by('-created')[:4]
@@ -33,6 +37,13 @@ def home(request):
     print(fav_product)
     for product in products:
         print(product.id)
+
+    # random_list = list(string.ascii_uppercase) + list(string.digits) + list(string.ascii_lowercase)
+    # thepassword = ""
+    # length = 6
+    # for i in range(length):
+    #     thepassword += random.choice(random_list)
+    # print(thepassword)
 
     return render(request, 'home.html', locals())
 
@@ -99,3 +110,7 @@ def change_favorites(request):
                           'favorites_count': favorites_all
                           }
         return JsonResponse(favorites_info)
+
+
+def main_shop(request):
+    return render(request,'main.html')

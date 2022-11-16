@@ -7,5 +7,3 @@
 # app.autodiscover_tasks()
 #
 # @app.task
-# def add(x, y):
-#     return x / y

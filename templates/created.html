@@ -1,23 +1,12 @@
 {% extends "_base.html" %}
-{% block title %}Thank you{% endblock %}
+{% block title %}Благодарность{% endblock %}
 {% block content %}
     <div class="container">
         <div class="row">
              <div class="col-lg-12 text-center finish_order">
-                 {% if order.check_payment_method%}
-                    {% if order.paid %}
-                        Ваш заказ зарегистрирован
-                        Спасибо, {{client_name}}, ждем вас снова!
-                        <p>Заказ оплачен, письмо отправлено на указанную почту</p>
-                    {%else%}
-                        Сумма заказа к оплате: {{o}} руб.
-                     <a class="btn btn-dark" href="{{order.get_absolute_url}}">Оплатить</a>
-                    {%endif%}
-                {%else%}
-                Спасибо, {{client_name}}, ждем вас снова!
-                <p>Оплата при доставке, письмо отправлено на указанную почту</p>
-                {%endif%}
+                 <h1>Письмо с информацией по заказу, отправлено на почту!</h1>
+                 <h1>Спасибо за покупку, ждем вас снова!{{code}}</h1>
+             </div>
         </div>
-            </div>
-                </div>
+    </div>
 {% endblock %}

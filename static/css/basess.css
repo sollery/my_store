@@ -2,7 +2,27 @@
     padding-top: 100px;
 }
 
+html{
+    height: 100%;
+}
+body {
+    position:relative;
+    min-height: 100%;
+    background-color: #F5F5F5;
+}
+.container {
+    padding-bottom: 150px;
+}
+footer {
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    color:white;
+    height: 80px;
 
+}
 .col-lg-6 {
     padding-bottom: 30px;
 }
@@ -34,12 +54,12 @@ input[type=button] {
     cursor: pointer;
 }
 #div_id_username input{
-    width: 400px;
+    width: 300px;
     padding: 10px;
     border:0;
     box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
     border-radius:10px;
-    margin-left: 5%;
+    margin-left: 2%;
 }
 .my_radio {
 }
@@ -401,12 +421,10 @@ body{
   display: block;
 }
 ._rew, .answer_rew {
-
     text-align: center;
     margin-top: 5%;
     border-radius:15px;
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%);
-
 }
 
 .add_rew {
@@ -427,10 +445,44 @@ body{
     margin-top:20px;
     pointer:cursor !important;
 }
+.answer_but {
+    color:black;
+}
+.answer_but:hover {
+    text-decoration: none;
+    color:black;
 
-#goTop {
-    text-align: center;
-    font-size:50px;
+}
+.go-up,
+.go-down {
+  display:none;
+  position: fixed; /*позиционируем*/
+  right: 5px; /*указываем положение, если слева - left*/
+  z-index: 9999; /*показываем поверх все элементов на странице*/
+  background: white;
+  border: 2px solid black; /*толщина, стиль, цвет рамки*/
+  box-shadow: 0 10px 0.3em -0.1em rgba(0,0,6,0.5); /*тень*/
+  border-radius: 10px;
+  cursor: pointer;
+  color: black; /*цвет стрелок*/
+  text-align: center; /*выравнивание*/
+  font-size: 38px; /*размер стралок*/
+  opacity: .7; /*прозрачность*/
+  padding: 0 3px 3px 3px; /*отступы внутри*/
+  margin-bottom: 5px; /*отступ снизу (можно не указывать)*/
+  width: 48px; /*ширина кнопки*/
+  height: 60px; /*высота кнопки*/
+}
+.go-up {
+  bottom: 70px; /*положение от низа окна браузера*/
+}
+.go-down {
+  bottom: 10px;
+}
+/*стили при наведении курсора*/
+.go-down:hover,
+.go-up:hover {
+  opacity: 1;
 }
 ._rew_new {
     border: 1px solid black;
@@ -439,7 +491,7 @@ body{
     border-radius:15px;
     background-color:white;
 }
-.cart_but_zakaz{
+.cart_but_zakaz , .answer_but{
     cursor: pointer;
 	border: 1px solid #cecece;
 	border-radius: 12px;
@@ -454,12 +506,17 @@ body{
     color:white;
     font-size:20px;
 }
-.cart_but_zakaz:hover{
+.cart_but_zakaz:hover, .answer_but:hover{
     text-decoration: none;
     color:white;
 }
 .cart_wrp {
     margin-bottom: 30px;
+    text-align: center;
+}
+
+.wramp_answer_but {
+    margin-top:2%;
     text-align: center;
 }
 
@@ -516,9 +573,6 @@ body{
     width:150px;
 }
 
-.nav-link:hover {
-  transform: scale(1.2);
-  }
 .goods-img-min {
     display: flex;
     margin-top: 20px;
@@ -632,7 +686,7 @@ body{
 .logo{
     border: 4px solid black;
     border-radius: 30px;
-    width: 200px;
+    width: 250px;
     height:55px;
 }
 .login_but {
@@ -725,14 +779,6 @@ body{
     justify-content: center;
     align-items: center;
 }
-footer {
-    background-color:black;
-    color: white;
-    margin-top: 10%;
-}
-footer a {
-    color: white;
-}
 
 a {
     text-decoration: none;
@@ -742,8 +788,13 @@ a {
 .mypagination {
     margin-top: 3%;
     display:flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center
+}
+
+.mypagination a {
+    text-decoration: none;
+    color:black
 }
 
 .count_rows {
@@ -903,6 +954,151 @@ td {
 }
 
 .finish_order {
-    margin-top:25%;
-    font-size: 50px;
+    margin-top:20%;
+}
+.paid_wramp {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.paid_wramp input[type=number] {
+    max-width: 100%;
+    border:0;
+    box-shadow:0 0 20px 4px rgba(0,0,0,0.2);
+    border-radius:10px;
+
+}
+
+.btn_paid {
+    width: 200px;
+    margin-top:20px;
+    border-radius: 20px;
+    color: white;
+    background-color:green;
+    border:none;
+    font-size: 30px;
+    cursor: pointer;
+}
+.arrow-left {
+    margin-left:1%;
+}
+.arrow-right {
+    margin-right:1%;
+}
+
+
+.paid_proof {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    font-size:30px;
+}
+.paid_order img {
+    max-width: 60%
+
+}
+.paid_row {
+    display:flex;
+    align-items: center;
+}
+.paid_order {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+.wrap_paid_order {
+    text-align: center;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.create_massage input[type=text], input[type=email],input[type=textarea] {
+    width: 300px;
+    padding: 10px;
+    border:0;
+    box-shadow:0 0 20px 4px rgba(0,0,0,0.06);
+    border-radius:10px;
+    margin-left: 3%;
+}
+
+.create_massage {
+    margin-top: 50px;
+}
+
+
+.message_detail {
+    text-align: center;
+    font-size: 18px;
+}
+
+.message_detail a {
+    cursor:pointer;
+}
+.answer_wramp {
+    font-size: 15px;
+}
+
+.answer_message{
+    margin-top: 4%;
+}
+.message_list_a:hover {
+    text-decoration: none;
+    color: blue;
+}
+
+.pag {
+    font-size: 24px;
+}
+.cont {
+  position: relative;
+}
+
+.cont .perehod-magazine {
+    font-family: 'Montserrat', sans-serif;
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    text-decoration: none;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: black;
+    color: white;
+    font-size: 40px;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.cont .perehod-magazine:before {
+	content:'';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 100%;
+	background: rgba(255,255,255,0.3);
+	border-radius: 5px;
+	transition: all 2s ease;
+}
+.cont .perehod-magazine:hover:before {
+	width: 100%;
+}
+@media screen and (max-width: 850px) {
+    .cont .perehod-magazine {
+        font-size: 14px;
+        left: 25%;
+    }
+    h1 img {
+        width:30%;
+    }
+  }
+
+.cont img {
+    width: 100%;
+    height: 100vh;
 }

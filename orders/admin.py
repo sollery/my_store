@@ -14,7 +14,7 @@ class OrderItemInline(admin.TabularInline):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'first_name', 'last_name', 'email',
                     'address', 'city', 'paid',
-                    'created', 'updated','order_pdf']
+                    'created', 'updated','code']
     list_filter = ['paid', 'created', 'updated']
 
     inlines = [OrderItemInline]
@@ -33,3 +33,5 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Order, OrderAdmin)
 # Register your models here.
+
+

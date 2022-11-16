@@ -13,3 +13,6 @@ def read_pgpass():
             'USER': words[3],
             'PASSWORD': words[4],
             }
+
+
+password = 'retrymaks2022'

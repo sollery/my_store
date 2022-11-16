@@ -79,9 +79,11 @@
                     </div>
                 </div>
                 {% endfor %}
+                 {% if products|length > 1 %}
                  <button class="show-more-btn">
                      Показать еще
                  </button>
+                 {%endif%}
 <!--             <nav aria-label="Page navigation example">-->
 <!--                    <ul class="mypagination">-->
 <!--                        {% if page_obj.has_previous %}-->

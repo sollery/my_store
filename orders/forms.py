@@ -51,7 +51,8 @@ class OrderCreateForm(forms.ModelForm):
         print(self.fields['delivery_method'].help_text)
 
 class Oplata(forms.Form):
-    paid_order_sum = forms.IntegerField(label='Введите сумму к оплате')
+    paid_order_sum = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),label='Введите сумму:')
+
     def clean_renewal_date(self):
         data = self.cleaned_data['paid_order_sum']
         #Проверка того, что дата не выходит за "нижнюю" границу (не в прошлом).

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, Review, ProductImage, Rating, Discount, Discount_product, Favorites, \
-    CategoryImage, ProductRecommendations
+    CategoryImage, ProductRecommendations, MessageFromUser, MessageAnswerForUser
 
 
 class ReviewAdmin(admin.ModelAdmin):
@@ -58,6 +58,7 @@ class Discount_productAdmin(admin.ModelAdmin):
 class FavoritesAdmin(admin.ModelAdmin):
     list_display = ['product','user']
 
+
 @admin.register(ProductRecommendations)
 class ProductRecommendations(admin.ModelAdmin):
     list_display = ['parent','childer']
@@ -67,10 +68,21 @@ class CategoryImageInline(admin.TabularInline):
     model = CategoryImage
     extra = 0
 
+
 class CategoryImageAdmin (admin.ModelAdmin):
     list_display = [field.name for field in CategoryImage._meta.fields]
 
     class Meta:
         model = CategoryImage
 
+
 admin.site.register(CategoryImage, CategoryImageAdmin)
+
+
+@admin.register(MessageFromUser)
+class MessageFromUserAdmin(admin.ModelAdmin):
+    list_display = ['title','email','text','created','status']
+
+@admin.register(MessageAnswerForUser)
+class MessageAnswerForUserAdmin(admin.ModelAdmin):
+    list_display = ['text', 'created']

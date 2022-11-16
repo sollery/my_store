@@ -1,12 +1,12 @@
 from django import forms
-from .models import Review, Product, ProductImage, Category, CategoryImage
+from .models import Review, Product, ProductImage, Category, CategoryImage, MessageFromUser, MessageAnswerForUser
 
 SORT_CHOICES = [
     ('empty','Выберите фильтр'),
     ('price', 'по возрастанию цен'),
     ('-price', 'по убыванию цен'),
     ('created', 'старые товары'),
-    ('-created', 'новый товары'),
+    ('-created', 'новые товары'),
     ('avg', 'по рейтингу'),
     ('reviews_count','по кол-ву отзывов')
     ]
@@ -88,3 +88,15 @@ class CategoryImgForm(forms.ModelForm):
         super(CategoryImgForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
+
+
+class MessageForUserForm(forms.ModelForm):
+    class Meta:
+        model = MessageFromUser
+        fields = ('title','email', 'text',)
+
+
+class MessageAnswerForUserForm(forms.ModelForm):
+    class Meta:
+        model = MessageAnswerForUser
+        fields = ('text',)

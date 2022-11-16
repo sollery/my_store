@@ -1,8 +1,13 @@
+import random
+import string
+
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from shop.models import Product
+
+
 
 
 class DeliveryMethod(models.Model):
@@ -30,6 +35,22 @@ class PaymentMethod(models.Model):
         return self.title
 
 
+def create_code():
+    random_list = list(string.ascii_uppercase) + list(string.digits) + list(string.ascii_lowercase)
+    thepassword = ""
+    length = 6
+    for i in range(length):
+        thepassword += random.choice(random_list)
+    # order_code = None
+    # try:
+    #     order_code = Order.objects.get(code=order_code)
+    # except Order.DoesNotExist:
+    #     pass
+    # if order_code is not None:
+    return thepassword
+
+
+
 class Order(models.Model):
     first_name = models.CharField('Имя', max_length=50)
     last_name = models.CharField('Фамилия', max_length=50)
@@ -41,6 +62,8 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     payment_method = models.ForeignKey(PaymentMethod,on_delete=models.CASCADE)
     delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.CASCADE)
+    code = models.CharField('Cекретный ключ',max_length=6, default=create_code())
+
 
     class Meta:
         ordering = ('-created',)
@@ -70,8 +93,6 @@ class Order(models.Model):
             return True
         return False
 
-    def get_absolute_url(self):
-        return reverse('proof_of_payment_page', args=[self.id])
 
 
 class OrderItem(models.Model):

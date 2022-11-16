@@ -2,7 +2,7 @@
   <button class="navbar-toggler test" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon test">==</span>
   </button>
-  <a class="navbar-brand" href="{% url 'about' %}">Z-SHOP</a>
+  <a class="navbar-brand" href="{% url 'about' %}">MY-SHOP</a>
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item ">
@@ -11,9 +11,15 @@
       <li class="nav-item">
         <a class="nav-link" data-toggle="modal" data-target="#exampleModalCenter">Каталог</a>
       </li>
+       <li class="nav-item">
+        <a class="nav-link" href="{% url 'create_message_from_user' %}">Обратная связь</a>
+       </li>
         {% if user.is_superuser %}
         <li class="nav-item">
             <a class="nav-link" href ="http://127.0.0.1:8000/admin/">Админка</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href ="{% url 'message_list' %}">Обращения</a>
         </li>
          <li class="nav-item">
             <a class="nav-link" href ="{% url 'create_product' %}">Создать продукт</a>

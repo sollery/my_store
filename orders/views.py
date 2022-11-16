@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 
 from store import settings
+from alert_admin_bot.send_message_bot import send_alert_bot
+
 from .models import OrderItem, Order, DeliveryMethod, PaymentMethod
 from .forms import OrderCreateForm, Oplata
 from cart.cart import Cart
@@ -58,12 +60,13 @@ def proof_of_payment_page(request,order_id):
             print(sum_order)
             sum_form = int(form.cleaned_data.get('paid_order_sum'))
             if sum_form == sum_order:
-                # print(sum_order)
                 order.paid = True
                 order.save()
                 send_email_client(order)
                 cart.clear()
                 order_id = int(order.id)
+                print('Заказ оплачен')
+                send_alert_bot(f'http://127.0.0.1:8000/admin/orders/order/{order.id}/change/','Заказ')
                 return redirect(f'http://127.0.0.1:8000/orders/created_order/{order_id}/')
             else:
                 error = 'Сумма не верна'
@@ -75,9 +78,10 @@ def proof_of_payment_page(request,order_id):
 
 def created_order(request,order_id):
     order = Order.objects.get(pk=order_id)
-    o = order.get_total_cost
-    client_name = order.first_name
-    return render(request, 'created.html',{order:'order',o:'o',client_name:'client_name'})
+    code = order.code
+    print('*****')
+    print(code)
+    return render(request, 'created.html',{order:'order',code:'code'})
 
 
 
@@ -94,18 +98,14 @@ def order_create(request):
                                          product=item['product'],
                                          price=item['price'],
                                          quantity=item['quantity'])
-            # if met == 'Курьером'
-            # очистка корзины
             order_id = int(order.id)
-            o = order.get_total_cost
-            # запуск асинхронной задачи
             if not order.check_payment_method():
                 print(order.check_payment_method)
                 send_email_client(order)
                 cart.clear()
-                return redirect(f'http://127.0.0.1:8000/orders/created_order/{order_id}/')
-            else:
-                return render(request, 'created.html',{'order': order,'user_p': user_p,'o': o})
+                send_alert_bot(f'http://127.0.0.1:8000/admin/orders/order/{order.id}/change/','Заказ')
+                return redirect('created_order',order_id=order_id)
+            return redirect('proof_of_payment_page',order_id=order_id)
     else:
         # frm = OrderCreateForm()
         # initial_data = {

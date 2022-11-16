@@ -19,12 +19,13 @@
                 {% endfor %}
                 </div>
                  <div class="rating_p" data-total-value="{{product.get_avg_rating}}">
-                            )<span class="count_ratings">{{product.get_count_rating}}</span>(
+                            ({{product.get_count_rating}})
                             <div class="rating_item_p" data-item-value="5">★</div>
                             <div class="rating_item_p" data-item-value="4">★</div>
                             <div class="rating_item_p" data-item-value="3">★</div>
                             <div class="rating_item_p" data-item-value="2">★</div>
                             <div class="rating_item_p" data-item-value="1">★</div>
+
                      <h3 class="rating_stat">Рейтинг: {{product.get_avg_rating}}</h3>
                  </div>
                 <button class = "hide_rew" id="click-to-hide-2">Показать отзывы(<span class="count_reviews">{{product.get_count_reviews}}</span>)</button>
@@ -167,6 +168,7 @@
                 <div class="block_rec_title"><span class="rec_title">Рекомендации</span></div>
                 <hr>
                 <div class="recomend_body row">
+                {% if recommends|length %}
                 {%for rec in recommends%}
                     <div class="col-lg-4 recomend_product">
                         <a href="{{rec.url}}">
@@ -175,6 +177,9 @@
                         </a>
                     </div>
                 {%endfor%}
+                {%else%}
+                    <p class="col-lg-12">Для этого товара рекомендаций еще нет</p>
+                    {%endif%}
                 </div>
             </div>
 

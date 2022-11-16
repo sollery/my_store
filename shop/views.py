@@ -2,10 +2,12 @@ import json
 from datetime import datetime
 from django.contrib.admin.views.decorators import staff_member_required
 from django.core import paginator
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.forms import model_to_dict, formset_factory
 from django.template.loader import render_to_string
 from django.views import View
+from alert_admin_bot.send_message_bot import send_alert_bot
 from tzlocal import get_localzone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Avg, Count
@@ -14,8 +16,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from cart.forms import CartAddProductForm
 # Create your views here.
 from django.views.generic import DetailView, ListView
-from .forms import ChoiceSort, ReviewForm, ProductForm, ProductImgForm, CategoryForm, CategoryImgForm
-from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductRecommendations,CategoryImage
+from .forms import ChoiceSort, ReviewForm, ProductForm, ProductImgForm, CategoryForm, CategoryImgForm, \
+    MessageForUserForm, MessageAnswerForUserForm
+from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductRecommendations,CategoryImage,MessageFromUser
 
 
 def check_parent_or_children(product):
@@ -144,7 +147,7 @@ def add_review(request):
         # temp = json.load(request)
         # product = get_object_or_404(Product, pk=temp['product_id'])
         tz = get_localzone()  # local timezone
-        d = datetime.now(tz)
+        d = datetime.today().strftime("%d-%b-%Y %H:%M")
         author = request.user
         if request.method == "POST":
             print(request.POST)
@@ -160,7 +163,7 @@ def add_review(request):
                 print(form.text)
             return JsonResponse(
                     dict(author=str(author),
-                         date=d.strftime("%d-%b-%Y %H:%M"),
+                         date=d,
                          text=form.text,
                          ))
 
@@ -398,5 +401,78 @@ def upl_img_category(request,pk):
         if form.is_valid():
             img = form.cleaned_data.get('image')
             CategoryImage.objects.create(image=img,category=category)
-            return redirect(f'/shop/category/{pk}/')
+            return redirect(category.get_absolute_url())
     return render(request, 'upl_img_category.html', {'form': form})
+
+
+
+def create_massage_from_user(request):
+    form = MessageForUserForm()
+    if request.method == "POST":
+        print('10')
+        form = MessageForUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print(request.POST)
+            text = form.cleaned_data.get('text')
+            email = form.cleaned_data.get('email')
+            mes = MessageFromUser.objects.get(text=text,email=email)
+            link_mes = f'http://127.0.0.1:8000{mes.get_absolute_url()}'
+            send_alert_bot(link_mes,'Обращение')
+            return redirect('home')
+    return render(request, 'create_user_massage.html', {'form': form})
+
+@staff_member_required
+def user_message_list(request):
+    message_list = MessageFromUser.objects.all()
+    paginator = Paginator(message_list,6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'massage_list.html', {'page_obj': page_obj})
+
+@staff_member_required
+def user_message_detail(request,pk):
+    message = MessageFromUser.objects.get(id=pk)
+    return render(request, 'message_detail.html', {'message': message})
+
+
+@staff_member_required
+def create_answer_message_for_user(request,pk):
+    form = MessageAnswerForUserForm()
+    if request.method == "POST":
+        print('10')
+        form = MessageAnswerForUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            message_user = MessageFromUser.objects.get(id=pk)
+            message_user.status = True
+            message_user.save()
+            subject = 'My-shop - Ответ на ваше обращение'
+            message = form.cleaned_data.get('text')
+
+            email = EmailMessage(subject,
+                                 message,
+                                 'ilushamdmaa@yandex.ru',
+                                 [message_user.email])
+            email.send()
+
+            return redirect('message_list')
+    return render(request, 'message_answer.html', {'form': form})
+
+        # if request.method == "POST":
+        #     print(request.POST)
+        #     form = ReviewForm(request.POST)
+        #     product = Product.objects.get(id=int(request.POST.get("product_id")))
+        #     if form.is_valid():
+        #         form = form.save(commit=False)
+        #         if request.POST.get("parent", None):
+        #             form.parent_id = int(request.POST.get("parent"))
+        #         form.product = product
+        #         form.author = author
+        #         form.save()
+        #         print(form.text)
+        #     return JsonResponse(
+        #             dict(author=str(author),
+        #                  date=d.strftime("%d-%b-%Y %H:%M"),
+        #                  text=form.text,
+        #                  ))

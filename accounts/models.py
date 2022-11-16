@@ -6,6 +6,8 @@ class CustomUser(AbstractUser):
 
     class Meta:
         db_table = 'CustomUser'
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
 # Create your models here.
 
 

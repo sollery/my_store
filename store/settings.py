@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-from .data_secret import SECRET_KEY
+from .data_secret import SECRET_KEY, password
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-TELEGRAM_BOT_API_KEY = '5569016474:AAHJ-rDgDY_hNAwa_6ga9bNpsSErPTImu4Y'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,10 +43,15 @@ INSTALLED_APPS = [
     'crispy_forms',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'shop',
     'cart',
     'orders',
+    'alert_admin_bot'
 ]
+# ACCOUNT_FORMS = {'login': 'accounts.forms.CoreLoginForm'}
+SITE_ID = 2
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -54,12 +59,12 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -152,16 +157,19 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 CART_SESSION_ID = 'cart'
 FAVORITES_SESSION_ID = 'favorites'
 EMAIL_SUBJECT_PREFIX = '[Zeh-shop]'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 EMAIL_PORT = 465
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_HOST_USER = 'ilushamdmaa@Yandex.ru'
-EMAIL_HOST_PASSWORD = 'retrymaks2021'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = password
 EMAIL_USE_SSL = True
 ADMINS = [
     ('ilya_adm', 'ilushamdmaa@yandex.ru')
 ]
 SERVER_EMAIL = 'ilushamdmaa@yandex.ru'
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 STATICFILES_FINDERS = [
  "django.contrib.staticfiles.finders.FileSystemFinder",
  "django.contrib.staticfiles.finders.AppDirectoriesFinder",
@@ -175,3 +183,17 @@ STATICFILES_FINDERS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
+
+TELEGRAM_BOT_API_KEY = '5425865705:AAGRV2G_qHKHyhyAkXykhX7XhC_xD8n5vcQ'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}

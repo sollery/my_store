@@ -286,3 +286,27 @@ class ProductRecommendations(models.Model):
         verbose_name_plural = 'Рекомендации'
         db_table = 'ProductRecommendations'
 
+
+class MessageFromUser(models.Model):
+    title = models.CharField('Тема',max_length=200,null=False)
+    text = models.TextField('Сообщение', null=False)
+    email = models.EmailField('Эл.адрес обратной связи',null=False)
+    created = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Отправил {self.email}"
+
+    class Meta:
+        verbose_name = 'Сообщения от пользователей'
+        verbose_name_plural = 'Сообщения от пользователей'
+        db_table = 'MessageFromUser'
+
+    def get_absolute_url(self):
+        return reverse('message_detail', args=[str(self.id)])
+
+
+class MessageAnswerForUser(models.Model):
+    text = models.TextField('Текст ответа', null=False)
+    created = models.DateTimeField(auto_now_add=True)
+
