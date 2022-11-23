@@ -34,7 +34,15 @@
                         <img class ="block{{product.id}}" src="/media/{{product.get_image_main}}"  height="150" width="200">
                     </div>
                         <div class = "info_item_name">
-                            <h4>{{ product.name }}</h4>
+                            {%if product.active%}
+                              <h4>
+                                  {{ product.name }}
+                              </h4>
+                            {%else%}
+                              <h4 style="color:red;">
+                               {{ product.name }}(не активен)
+                              </h4>
+                            {%endif%}
                         </div>
                         <div class = "info_item_price">
                             <span id = "product_price{{product.id}}">{{ product.price }}</span> руб.
@@ -116,7 +124,7 @@
 <script>
     jQuery(document).ready(function($){
         $(".show-more-btn").click(function(e){
-            $(".inf_p:hidden").slice(0,1).fadeIn();
+            $(".inf_p:hidden").slice(0,2).fadeIn();
             if ($(".inf_p:hidden").length < 1) $(this).fadeOut();
         })
     })

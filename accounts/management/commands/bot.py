@@ -9,12 +9,7 @@ from telebot import TeleBot, types
 
 # Объявление переменной бота
 bot = TeleBot(settings.TELEGRAM_BOT_API_KEY)
-chat_id = 835866403
-markup = types.InlineKeyboardMarkup()
-btn1 = types.InlineKeyboardButton(text="Старт",callback_data='Старт')
-markup.add(btn1)
-bot.send_message(chat_id, text='Нажмите на кнопку старт', reply_markup=markup)
-# Название класса обязательно - "Command"
+
 class Command(BaseCommand):
     help = 'Implemented to Django application telegram bot setup command'
 
@@ -24,20 +19,10 @@ class Command(BaseCommand):
         bot.infinity_polling()
 
 
-# def check_info(code):
-#     code = code.replace('/info ', '')
-#     order = None
-#     try:
-#         order = Order.objects.get(code=code)
-#     except Order.DoesNotExist:
-#         pass
-#     if order is None:
-#         return False
-#     return True
 
-@bot.callback_query_handler(func=lambda callback: callback.data)
-def check_callback(callback):
-    if callback.data == 'Старт':
+
+@bot.message_handler(commands=['start'])
+def start_message(message):
         # markup = types.InlineKeyboardMarkup()
         # # btn1 = types.InlineKeyboardButton(text="Информация о заказе")
         # btn2 = types.InlineKeyboardButton(text="Пока",callback_data='Пока')
@@ -49,35 +34,20 @@ def check_callback(callback):
         btn3 = types.KeyboardButton(text="Категории")
         btn4 = types.KeyboardButton(text="Обратная связь")
         btn1 = types.KeyboardButton(text="Пока")
-        markup.add(btn1, btn2, btn3, btn4)
+        btn5 = types.KeyboardButton(text="Информация по заказу")
+        markup.add(btn1, btn2, btn3, btn4,btn5)
         # markup.add(btn1, btn2, btn3, btn4, btn5,)
-        bot.send_message(callback.message.chat.id,
-                         "Привет, {0.first_name}!".format(callback.from_user),reply_markup=markup)
-        bot.send_sticker(callback.message.chat.id,"CAACAgIAAxkBAAEV7fRizoJdJUEQNtJ6Gp_zbs4_th8mGwACgA8AAph0iEsEu1XOvtkOmSkE")
-        print(callback)
-
-@bot.message_handler(commands=['products'])
-def get_products(message):
-    products = Product.objects.all()
-    bot.send_message(message.chat.id, text='Список продуктов на сайте')
-    for i in products:
-        file = open(f"C:/proj_z/store/media/{ProductImage.image_main_objects.get(product_id=i.pk)}",'rb')
-        bot.send_photo(message.chat.id,file,i.name)
+        bot.send_message(message.chat.id,
+                         "Привет, {0.first_name}!".format(message.from_user),reply_markup=markup)
+        bot.send_sticker(message.chat.id,"CAACAgIAAxkBAAEV7fRizoJdJUEQNtJ6Gp_zbs4_th8mGwACgA8AAph0iEsEu1XOvtkOmSkE")
 
 
-# @bot.callback_query_handler(func= lambda callback: callback.data)
-# def check_callback(callback):
-#     # bot.send_message(message.chat.id, text='Список продуктов на сайте')
-#     if callback.data == 'Пока':
-#         bot.send_message(callback.message.chat.id,text='Пока {}, возвращайся!'.format(callback.message.chat.first_name))
-#         print(callback.message)
-#     if callback.data == 'Категории':
-#         categories = Category.objects.all()
-#         for i in categories:
-#             file = open(f"C:/proj_z/store/media/{CategoryImage.objects.get(category_id=i.pk)}", 'rb')
-#             print(CategoryImage.objects.get(category_id=i.pk))
-#             bot.send_photo(callback.message.chat.id, file)
-#             bot.send_message(callback.message.chat.id,f'[{i.name}](http://127.0.0.1:8000{i.get_absolute_url()})',parse_mode='Markdown')
+def message_parse(string):
+    email = string[string.find(' ') + 1:string.rfind(' ')]
+    number = string[string.rfind(' ') + 1:]
+    return email,number
+
+
 @bot.message_handler(content_types=['text'])
 def check_message(message):
     # bot.send_message(message.chat.id, text='Список продуктов на сайте')
@@ -96,19 +66,34 @@ def check_message(message):
         # bot.send_message(message.chat.id,'[перейти](http://127.0.0.1:8000)',parse_mode='Markdown')
         markup.add(btn1)
         bot.send_message(message.chat.id, text='перейти на сайт', reply_markup=markup)
+
     elif message.text == 'Обратная связь':
         markup = types.InlineKeyboardMarkup()
-        btn1 = types.InlineKeyboardButton(text='обратная связь', url='http://127.0.0.1:8000/shop/message_from_user_create/')
+        btn1 = types.InlineKeyboardButton(text='обратная связь', url='http://127.0.0.1:8000/message_from_user_create/')
         # bot.send_message(message.chat.id,'[перейти](http://127.0.0.1:8000)',parse_mode='Markdown')
         markup.add(btn1)
         bot.send_message(message.chat.id, text='написать', reply_markup=markup)
-
+    elif message.text == 'Информация по заказу':
+        bot.send_message(message.chat.id, text='Чтобы узнать информацию о заказе, напишите /заказ емейл, который '
+                                               'вы указали при оформлении заказа и номер заказа (/заказ mymail@mail.ru 123)')
+    elif '/заказ' in message.text:
+        email = message_parse(message.text)[0]
+        number = message_parse(message.text)[1]
+        try:
+            order = Order.objects.get(pk=int(number), email=email)
+            data = f'{order.status}'
+        except Order.DoesNotExist:
+            data = 'Информация не верна'
+        except ValueError:
+            data = 'Информация не верна'
+        bot.send_message(message.chat.id, text=data)
     else:
         bot.send_message(message.chat.id,'не понимаю')
         markup = types.InlineKeyboardMarkup()
         btn1 = types.InlineKeyboardButton(text="Старт", callback_data='Старт')
         markup.add(btn1)
-        bot.send_message(chat_id, text='Нажмите на кнопку старт, чтобы узнать о возможностях', reply_markup=markup)
+        bot.send_message(message.chat_id, text='Нажмите на кнопку старт, чтобы узнать о возможностях', reply_markup=markup)
+
 
 
 
@@ -143,3 +128,27 @@ def check_message(message):
 #     categories = Category.objects.all()
 #     for i in categories:
 #         bot.send_message(message.chat.id, i.name)
+        # print(callback)
+
+# @bot.message_handler(commands=['products'])
+# def get_products(message):
+#     products = Product.objects.all()
+#     bot.send_message(message.chat.id, text='Список продуктов на сайте')
+#     for i in products:
+#         file = open(f"C:/proj_z/store/media/{ProductImage.image_main_objects.get(product_id=i.pk)}",'rb')
+#         bot.send_photo(message.chat.id,file,i.name)
+
+
+# @bot.callback_query_handler(func= lambda callback: callback.data)
+# def check_callback(callback):
+#     # bot.send_message(message.chat.id, text='Список продуктов на сайте')
+#     if callback.data == 'Пока':
+#         bot.send_message(callback.message.chat.id,text='Пока {}, возвращайся!'.format(callback.message.chat.first_name))
+#         print(callback.message)
+#     if callback.data == 'Категории':
+#         categories = Category.objects.all()
+#         for i in categories:
+#             file = open(f"C:/proj_z/store/media/{CategoryImage.objects.get(category_id=i.pk)}", 'rb')
+#             print(CategoryImage.objects.get(category_id=i.pk))
+#             bot.send_photo(callback.message.chat.id, file)
+#             bot.send_message(callback.message.chat.id,f'[{i.name}](http://127.0.0.1:8000{i.get_absolute_url()})',parse_mode='Markdown')

@@ -1,16 +1,17 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 import datetime
 from django.db.models import Q, Avg
 from django.utils import timezone
+from shop.managers import DiscountActiveManager, ProductImageMainManager,ProductManager
 
-from shop.managers import DiscountActiveManager, ProductImageMainManager
 
 
 class Category(models.Model):
     name = models.CharField('Название',max_length=200)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField('URL',max_length=200, unique=True)
 
     class Meta:
         ordering = ('name',)
@@ -26,24 +27,25 @@ class Category(models.Model):
         return reverse('category_detail', args=[str(self.id), self.slug])
 
 class Product(models.Model):
-    slug = models.SlugField(max_length=200)
+    slug = models.SlugField('URL',max_length=200)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, verbose_name="Категория")
     name = models.CharField('Название',max_length=200)
     description = models.TextField('Описание',blank=True)
-    price = models.IntegerField('Цена')
+    price = models.IntegerField('Цена', validators=[MinValueValidator(1)])
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    # discount = models.IntegerField('Скидка в процентах', blank=True, default=0)
+    active = models.BooleanField(default=True)
     end_price = models.IntegerField('Итоговая цена', default=0)
-    # parent = models.ManyToManyField("self", blank=True, default=None)
 
     class Meta:
         ordering = ('name',)
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
-        unique_together = ('name',)
+        unique_together = ('name','slug')
         db_table = 'Product'
+
+    objects = models.Manager()  # Менеджер по умолчанию
+    products_is_user = ProductManager()  # Собственный менеджер
 
     def __str__(self):
         return self.name
@@ -162,7 +164,7 @@ class Review(models.Model):
 
 
 class Rating(models.Model):
-    value = models.SmallIntegerField()
+    value = models.SmallIntegerField(default=0)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="ratings")
     voted_on = models.DateTimeField(auto_now=True)
@@ -306,7 +308,19 @@ class MessageFromUser(models.Model):
         return reverse('message_detail', args=[str(self.id)])
 
 
+    def color_status(self):
+        if self.status:
+            return "success"
+        return "warning"
+
+
 class MessageAnswerForUser(models.Model):
     text = models.TextField('Текст ответа', null=False)
     created = models.DateTimeField(auto_now_add=True)
+    message_user = models.ForeignKey(MessageFromUser, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name = 'Сообщения для пользователей'
+        verbose_name_plural = 'Сообщения для пользователей'
+        db_table = 'MessageAnswerForUser'
+        unique_together = ('message_user',)

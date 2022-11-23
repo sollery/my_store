@@ -1,0 +1,18 @@
+{% extends '_base.html' %}
+{% load static %}
+{%block title %}
+Обратная связь
+{% endblock title %}
+{% block content %}
+<h1 class = "title-page">Создание обращения</h1>
+<div class="container">
+    <div class="row">
+<form class="create_massage" action="" method="post">
+            {% csrf_token %}
+            <h4>{{form.as_p}}</h4>
+            <input type="submit" class="btn_mes btn_paid" value="Отправить">
+        </form>
+    </div>
+</div>
+
+{%endblock content%}

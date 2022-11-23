@@ -12,6 +12,7 @@ body {
 }
 .container {
     padding-bottom: 150px;
+    margin-bottom: 3%;
 }
 footer {
     position:absolute;
@@ -21,6 +22,10 @@ footer {
     background-color: black;
     color:white;
     height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
 }
 .col-lg-6 {
@@ -40,15 +45,13 @@ footer {
   width: 400px;
   align-items: center;
   justify-content: space-between;
-  font-size: 18px;
 }
-.item input[type=text], input[type=email],input[type=password] {
+input[type=text], input[type=email], input[type=password], input[type=number] {
     width: 300px;
     padding: 10px;
     border:0;
     box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
     border-radius:10px;
-    margin-left: 3%;
 }
 input[type=button] {
     cursor: pointer;
@@ -447,6 +450,7 @@ body{
 }
 .answer_but {
     color:black;
+    font-size:20px;
 }
 .answer_but:hover {
     text-decoration: none;
@@ -491,7 +495,7 @@ body{
     border-radius:15px;
     background-color:white;
 }
-.cart_but_zakaz , .answer_but{
+.cart_but_zakaz {
     cursor: pointer;
 	border: 1px solid #cecece;
 	border-radius: 12px;
@@ -506,7 +510,7 @@ body{
     color:white;
     font-size:20px;
 }
-.cart_but_zakaz:hover, .answer_but:hover{
+.cart_but_zakaz:hover{
     text-decoration: none;
     color:white;
 }
@@ -596,11 +600,9 @@ body{
     cursor:pointer;
 
 }
-.btn-success {
-    border-color:white;
-}
+
 .btn-success:hover {
-    border-color:black;
+    cursor:pointer;
 
 }
 .rating {
@@ -658,6 +660,7 @@ body{
 }
 .answer_rew {
     width:80%;
+    margin-left: 20%;
 }
 .del {
     font-size: 30px;
@@ -721,6 +724,7 @@ body{
     color:black;
     border: 1px solid grey;
     transform: scale(1.2);
+    text-decoration: none;
 }
 .favorites_div {
     margin-bottom:10%;
@@ -1020,7 +1024,6 @@ td {
     border:0;
     box-shadow:0 0 20px 4px rgba(0,0,0,0.06);
     border-radius:10px;
-    margin-left: 3%;
 }
 
 .create_massage {
@@ -1101,4 +1104,89 @@ td {
 .cont img {
     width: 100%;
     height: 100vh;
+}
+
+tr {
+    height:auto;
+}
+td {
+height:100%
+}
+
+.my_table th{
+  background-color: black;
+  color:white;
+}
+.my_table a{
+  color:black;
+}
+
+.my_table {
+    width: 100%;
+    margin: auto;
+    font-size: 18px;
+}
+
+.my_table td{
+    height: 50px;;
+}
+#heart {
+    color:red;
+}
+#money {
+    color: yellow;
+}
+
+#cart_svg {
+    color: rgb(52, 235, 186);
+}
+.div_panel {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    color:black;
+    padding-top:10px;
+    font-size: 20px;
+    margin: 10px;
+}
+.wrap_panel {
+    margin-top:10%;
+}
+.div_panel:hover {
+    color:black;
+}
+#check_from input[type=number], input[type=email] {
+    max-width: 100%;
+    border:0;
+    box-shadow:0 0 20px 4px rgba(0,0,0,0.2);
+    border-radius:10px;
+}
+.check_inp {
+    width: 300px;
+    height: 40px;
+    border:0;
+    box-shadow:0 0 20px 4px rgba(0,0,0,0.2);
+    border-radius:10px;
+}
+
+
+.check_div {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10%;
+}
+
+.check_div {
+    font-size:24px;
+}
+.text {
+    display:none;
+}
+.status {
+    margin-top: 20px;
+    width:100%;
+}
+.mes_detail {
+    margin-top:5%;
 }

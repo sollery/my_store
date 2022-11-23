@@ -1,0 +1,44 @@
+
+{% extends '_base.html' %}
+{% load static %}
+{%block title %}
+Информация о заказе № {{order_id}}
+{% endblock title %}
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-lg-12">
+<h1 class ="title-page">Информация о заказе № {{order_id}}</h1>
+<table class="my_table table-bordered">
+        <thead>
+            <tr align="center">
+                <th>Товар</th>
+                <th>Кол-во</th>
+                <th>Цена товара</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order %}
+            <tr align="center">
+                <td>
+                    {{ item.product__name }}
+                </td>
+                <td>
+                    {{ item.quantity }}
+                </td>
+                <td>
+                    {{ item.price }} руб.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tr align="center">
+            <td colspan="2"><h5>Общая сумма заказа:</h5></td>
+            <td>{{sum}} руб.</td>
+        </tr>
+    </table>
+
+</div>
+    </div>
+    </div>
+{%endblock content %}

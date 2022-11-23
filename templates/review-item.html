@@ -11,7 +11,9 @@
                 <p class = "text_com">
                     отзыв: {{ review.text}}
                 </p>
+                {%if review.review_set.all|length > 0%}
                 <input  type="button" class="hide_answer_rew" value="показать ответы" data-review_id = "{{ review.id }}">
+                {%endif%}
                 {% if user.is_authenticated %}
                 <a class="answer_but" href="#formReview" onclick="addReview('{{ review.author }}', '{{ review.id }}')">ответить</a>
                 {%else%}
@@ -22,7 +24,9 @@
                     <div class="answer_com{{review.id}} hide-element " >
                     {% for rew in review.review_set.all %}
                         <div class="answer_rew" id="{{rew.id}}">
+                            {% if user.is_superuser or user.email  == rew.author.email%}
                             <span class="change_rew del_rew" data-change="del" data-review_id = "{{ rew.id }}" data-product_id ="{{ product.id }}" data-parent = {{review.parent}}>×</span>
+                            {% endif %}
                                 <p class="info">
                                     от {{ rew.author }}
                                     дата {{ rew.created_rew }}

@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% block title %}Статус заказа{% endblock %}
+
+{% block content %}
+<h1 class = "title-page">Статус заказа</h1>
+<div class="container">
+    <div class="row">
+    <div class="col-lg-12 outer">
+        <form method="post" id="check_form" class="check_div">
+            {% csrf_token %}
+                    {{form.email.label}}
+                    {{ form.email }}
+                    {{form.number.label}}
+                    {{ form.number }}
+    <button class="btn_paid" type="submit" >Узнать</button>
+     <h3 class="status">Статус: <span class="status_order"></span></h3>
+</form>
+    </div>
+      </div>
+  </div>
+{%endblock%}

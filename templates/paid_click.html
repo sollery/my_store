@@ -17,12 +17,24 @@
                         <div class="paid_wramp">
                             <h4>Сумма к оплате: {{sum_order}} руб.</h4>
                             <h5>{{form.paid_order_sum.label}}</h5>{{form.paid_order_sum}}
-                            <input type="submit" class="btn_paid" value="Оплатить">
+                            <input type="submit" class="btn_paid" value="Оплатить" onclick="document.body.style.cursor='wait'; return true;">
                             <h3 class="error">{{error}}</h3>
+                            <h3 class="text">Форма отправляется</h3>
                          </div>
                     </form>
                 </div>
              </div>
         </div>
     </div>
+
+<script>
+const btn_form = document.querySelector('.btn_paid');
+const text = document.querySelector('.text');
+
+btn_form.addEventListener('click', () => {
+    btn_form.style.display = 'none';
+    text.style.display = 'block';
+    console.log(123)
+});
+</script>
 {% endblock content %}

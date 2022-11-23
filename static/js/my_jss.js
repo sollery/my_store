@@ -727,7 +727,10 @@ var favorite_buts = document.querySelectorAll('.favorite_but');
                             fav_div.remove()
                             }
                         if (data.change == 'clear') {
-                            favorite_div.innerText = ' '
+                            favorite_div.innerText = ''
+                            var p = document.createElement('p')
+                            p.innerText = 'Пусто'
+                            favorite_div.appendChild(p)
                         }
                         get_text(temp.text)
                     })
@@ -827,3 +830,33 @@ var favorite_buts = document.querySelectorAll('.favorite_but');
 //            console.error('Error:', error);
 //        })
 //        }
+
+
+document.getElementById("check_form").addEventListener("submit", function(e){
+    e.preventDefault();
+    email = document.querySelector('input[name="email"]').value
+    number = document.querySelector('input[name="number"]').value
+    csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    data = {
+            'email': email,
+             'number' : number
+    };
+    console.log(data)
+  fetch('/status_data/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+            'X-CSRFToken': csrftoken,
+            'Accept': 'text/html',
+            'Content-Type': 'application/json',
+  }})
+  .then(response => response.text())
+  .then(data => {
+    console.log('Success:', data);
+    var status_order = document.querySelector('.status_order')
+    status_order.innerHTML = data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+  });

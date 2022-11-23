@@ -8,30 +8,36 @@ from django.forms import model_to_dict, formset_factory
 from django.template.loader import render_to_string
 from django.views import View
 from alert_admin_bot.send_message_bot import send_alert_bot
+from orders.models import Order
 from tzlocal import get_localzone
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q, Avg, Count
+from django.db.models import Q, Avg, Count, When, Case, Value
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from cart.forms import CartAddProductForm
+
 # Create your views here.
-from django.views.generic import DetailView, ListView
-from .forms import ChoiceSort, ReviewForm, ProductForm, ProductImgForm, CategoryForm, CategoryImgForm, \
-    MessageForUserForm, MessageAnswerForUserForm
-from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductRecommendations,CategoryImage,MessageFromUser
+from django.views.generic import DetailView, ListView, UpdateView
+from .forms import ChoiceSort, ReviewForm
+from shop.models import Product, Category, Review, ProductImage, Rating, Discount_product,ProductRecommendations
 
 
 def check_parent_or_children(product):
-    if ProductRecommendations.objects.filter(parent_id=product.pk):
+    if ProductRecommendations.objects.filter(Q(parent_id=product.pk) & Q(parent__active=True)):
         return True
     else:
         return False
 
 
 def product_detail(request, pk, slug):
+    """Функция отображения информации конкретного товара"""
     # reviews = Review.objects.filter(Product_id=pk)
     # print(reviews)
-    product = get_object_or_404(Product, id=pk, slug=slug)
+    product = None
+
+    if request.user.is_superuser:
+        product = get_object_or_404(Product, id=pk, slug=slug)
+    else:
+        product = get_object_or_404(Product, id=pk, slug=slug, active=True)
     # reviews = product.reviews.filter(active=True)
     # print(reviews)
     review_form = ReviewForm()
@@ -67,12 +73,19 @@ def product_detail(request, pk, slug):
     # 'review_form': review_form
     recommends = None
     if check_parent_or_children(product):
-        recommends = ProductRecommendations.objects.filter(parent_id=product.pk)
-        recommends = [{'name': i.childer.name, 'url': i.childer.get_absolute_url,'img':i.childer.get_image_main}for i in recommends]
+        if request.user.is_superuser:
+            recommends = ProductRecommendations.objects.filter(parent_id=product.pk)
+        else:
+            recommends = ProductRecommendations.objects.filter(Q(parent_id=product.pk) & Q(parent__active=True))
+        recommends = [{'name': i.childer.name, 'url': i.childer.get_absolute_url,'img':i.childer.get_image_main,'active':i.childer.active}for i in recommends]
 
     else:
-        recommends = ProductRecommendations.objects.filter(childer_id=product.pk)
-        recommends = [{'name': i.parent.name, 'url': i.parent.get_absolute_url,'img':i.parent.get_image_main} for i in recommends]
+        if request.user.is_superuser:
+            recommends = ProductRecommendations.objects.filter(childer_id=product.pk)
+        else:
+            recommends = ProductRecommendations.objects.filter(Q(childer_id=product.pk) & Q(childer__active=True))
+
+        recommends = [{'name': i.parent.name, 'url': i.parent.get_absolute_url,'img':i.parent.get_image_main,'active':i.parent.active} for i in recommends]
     # abc = [i for i in accessories]
     # print(abc)
     # recommends = [{'name':'test_1','url':'lalalal'},{'name':'test_1','url':'lalalal'},{'name':'test_1','url':'lalalal'},
@@ -103,8 +116,7 @@ def product_detail(request, pk, slug):
     print('рейтинг:')
     print(p_test)
     # print(product_img)
-    s_p = str(product.id)
-    cart_product_form = CartAddProductForm()
+    # s_p = str(product.id)
     # NEWS_COUNT_PER_PAGE = 2
     # page = int(request.GET.get('page', 1))
     # p = paginator.Paginator(reviews,
@@ -116,8 +128,7 @@ def product_detail(request, pk, slug):
     # if not request.is_ajax():
     return render(request, 'product_detail.html',
                       {'product': product,
-                       'cart_product_form': cart_product_form,
-                       'sp': s_p,
+                       # 'sp': s_p,
                        'review_form': review_form,
                        'rating_product': rating_product,
                        'check_fav': check_fav,
@@ -135,7 +146,11 @@ def product_detail(request, pk, slug):
     #     })
 
 
+
+
+
 def del_review(request):
+    """Функция добавления комментария"""
     if request.method == "POST":
         temp = json.load(request)
         review = Review.objects.filter(product_id=temp.get('product_id'),id=temp.get('rew_id'))
@@ -144,28 +159,29 @@ def del_review(request):
 
 
 def add_review(request):
-        # temp = json.load(request)
-        # product = get_object_or_404(Product, pk=temp['product_id'])
-        tz = get_localzone()  # local timezone
-        d = datetime.today().strftime("%d-%b-%Y %H:%M")
-        author = request.user
-        if request.method == "POST":
-            print(request.POST)
-            form = ReviewForm(request.POST)
-            product = Product.objects.get(id=int(request.POST.get("product_id")))
-            if form.is_valid():
-                form = form.save(commit=False)
-                if request.POST.get("parent", None):
-                    form.parent_id = int(request.POST.get("parent"))
-                form.product = product
-                form.author = author
-                form.save()
-                print(form.text)
-            return JsonResponse(
-                    dict(author=str(author),
-                         date=d,
-                         text=form.text,
-                         ))
+    """Функция удаления комментария"""
+    # temp = json.load(request)
+    # product = get_object_or_404(Product, pk=temp['product_id'])
+    tz = get_localzone()  # local timezone
+    d = datetime.today().strftime("%d-%b-%Y %H:%M")
+    author = request.user
+    if request.method == "POST":
+        print(request.POST)
+        form = ReviewForm(request.POST)
+        product = Product.objects.get(id=int(request.POST.get("product_id")))
+        if form.is_valid():
+            form = form.save(commit=False)
+            if request.POST.get("parent", None):
+                form.parent_id = int(request.POST.get("parent"))
+            form.product = product
+            form.author = author
+            form.save()
+            print(form.text)
+        return JsonResponse(
+                dict(author=str(author),
+                     date=d,
+                     text=form.text,
+                     ))
 
         # if len(temp['txt_rew']) > 0:
         #     print(temp['txt_rew'])
@@ -180,6 +196,7 @@ def add_review(request):
 
 
 def add_rating(request):
+    """Функция добавления рейтинга"""
     if request.method == 'POST':
         data = json.load(request)
         product = get_object_or_404(
@@ -218,10 +235,14 @@ class ProductListView(ListView):
 #                                       | Q(category__name__icontains=query))
 
 def search_result(request):
-    products_list = Product.objects.all()
+    """Функция поиска по сайту"""
+    if request.user.is_superuser:
+        products_list = Product.objects.all()
+    else:
+        products_list = Product.products_is_user.get_users()
     query = request.GET.get('q')
     if query:
-        products_list = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)
+        products_list = products_list.filter(Q(name__icontains=query) | Q(description__icontains=query)
                                       | Q(category__name__icontains=query))
     paginator = Paginator(products_list, 3) # 6 posts per page
     page = request.GET.get('page')
@@ -242,27 +263,42 @@ def search_result(request):
 
 
 def show_category_detail(request, id,slug):
+    """Функция отображения продуктов выбранной категории + сортировка по выбранному фильтру"""
     category = get_object_or_404(Category, id=id, slug=slug)
     form = ChoiceSort()
-    products = Product.objects.filter(category_id=id)
+    if request.user.is_superuser:
+        products = Product.objects.filter(category_id=id)
+    else:
+        products = Product.products_is_user.get_users().filter(category_id=id)
     error = ''
     if request.method == 'POST':
         form = ChoiceSort(request.POST)
         if request.POST["filter_form_val"] == 'empty':
             error = 'Ошибка, Вы не выбрали фильтр!!!'
-            return render(request,'category_detail.html',{'category':category,'products':products,'form':form,'error':error})
-        if request.POST["filter_form_val"] == 'avg':
-            products = Product.objects.filter(category_id=id).annotate(avg=Avg('ratings__value')).order_by('-avg')
+        elif request.POST["filter_form_val"] == 'avg':
+            # products = Product.objects.filter(Q(category_id=id) & Q(active=True)).annotate(avg=Avg('ratings__value'))
+            products = products.annotate(avg=Avg('ratings__value'))
             print(products)
-            return render(request, 'category_detail.html',
-                          {'category': category, 'products': products, 'form': form, 'error': error})
-        if request.POST["filter_form_val"] == 'reviews_count':
-            products = Product.objects.filter(category_id=id).annotate(cnt=Count('reviews')).order_by('-cnt')
-            print(products)
-            return render(request, 'category_detail.html',
-                          {'category': category, 'products': products, 'form': form, 'error': error})
+            # for product in products:
+            #     if product.avg is None:
+            #         product.avg = 0.0
+            #     print(product.avg)
 
-        products = Product.objects.filter(category_id=id).order_by(request.POST["filter_form_val"])
+            products = products.annotate(avg=Case(When(avg=None,then=Value(0.0)), default=Avg('ratings__value'))).order_by('-avg')
+            for product in products:
+                print(product.avg)
+            # products.order_by('-avg')
+
+        elif request.POST["filter_form_val"] == 'reviews_count':
+            # products = Product.objects.filter(Q(category_id=id) & Q(active=True)).annotate(cnt=Count('reviews')).order_by('-cnt')
+            products = products.annotate(cnt=Count('reviews')).order_by('-cnt')
+            print(products)
+        elif request.POST["filter_form_val"] == 'popular':
+            # products = Product.objects.filter(Q(category_id=id) & Q(active=True)).annotate(cnt=Count('order_items')).order_by('-cnt')
+            products = products.annotate(cnt=Count('order_items')).order_by('-cnt')
+            print(products)
+        else:
+            products = products.order_by(request.POST["filter_form_val"])
 
     # paginator = Paginator(products, 2)
     # page_number = request.GET.get('page')
@@ -310,6 +346,7 @@ def show_category_detail(request, id,slug):
 
 
 class CategoryListView(ListView):
+    """Функция отображения всех категорий"""
     model = Category
     context_object_name = 'category_list'
     template_name = 'category_list.html'
@@ -341,123 +378,10 @@ class CategoryListView(ListView):
 
 
 
-@staff_member_required
-def create_product(request):
-    form = ProductForm()
-    if request.method == "POST":
-        print('10')
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            form.save()
-            product_name = form.cleaned_data.get('name')
-            product_id = Product.objects.get(name=product_name)
-            print(product_id)
-            # return redirect('home')
-            return redirect(f'/shop/upl_img_product/{int(product_id.id)}/')
-    return render(request,'create_product.html',{'form':form})
 
 
 
-@staff_member_required
-def create_category(request):
-    form = CategoryForm()
-    if request.method == "POST":
-        print('10')
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            category_name = form.cleaned_data.get('name')
-            category = Category.objects.get(name=category_name)
-            return redirect(f'/shop/upl_img_category/{int(category.id)}/')
-    return render(request,'create_category.html',{'form':form})
 
-
-@staff_member_required
-def upl_img_product(request,pk):
-    ProductImgFormFormset = formset_factory(ProductImgForm, extra=3)
-    formset = ProductImgFormFormset()
-    if request.method == 'POST':
-        ProductImgFormFormset = formset_factory(ProductImgForm)
-        formset = ProductImgFormFormset(request.POST, request.FILES)
-        product = Product.objects.get(id=pk)
-        product_slug = product.slug
-        if formset.is_valid():
-            for form in formset:
-                print(form)
-                main = form.cleaned_data.get('main')
-                img = form.cleaned_data.get('image')
-
-                ProductImage.objects.create(main=main,image=img,product=product)
-            return redirect(f'/shop/products/{pk}/{product_slug}/')
-    return render(request,'upl_img_product.html',{'formset':formset})
-
-
-@staff_member_required
-def upl_img_category(request,pk):
-    form = CategoryImgForm()
-    if request.method == 'POST':
-        form = CategoryImgForm(request.POST, request.FILES)
-        category = Category.objects.get(id=pk)
-        if form.is_valid():
-            img = form.cleaned_data.get('image')
-            CategoryImage.objects.create(image=img,category=category)
-            return redirect(category.get_absolute_url())
-    return render(request, 'upl_img_category.html', {'form': form})
-
-
-
-def create_massage_from_user(request):
-    form = MessageForUserForm()
-    if request.method == "POST":
-        print('10')
-        form = MessageForUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            print(request.POST)
-            text = form.cleaned_data.get('text')
-            email = form.cleaned_data.get('email')
-            mes = MessageFromUser.objects.get(text=text,email=email)
-            link_mes = f'http://127.0.0.1:8000{mes.get_absolute_url()}'
-            send_alert_bot(link_mes,'Обращение')
-            return redirect('home')
-    return render(request, 'create_user_massage.html', {'form': form})
-
-@staff_member_required
-def user_message_list(request):
-    message_list = MessageFromUser.objects.all()
-    paginator = Paginator(message_list,6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'massage_list.html', {'page_obj': page_obj})
-
-@staff_member_required
-def user_message_detail(request,pk):
-    message = MessageFromUser.objects.get(id=pk)
-    return render(request, 'message_detail.html', {'message': message})
-
-
-@staff_member_required
-def create_answer_message_for_user(request,pk):
-    form = MessageAnswerForUserForm()
-    if request.method == "POST":
-        print('10')
-        form = MessageAnswerForUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            message_user = MessageFromUser.objects.get(id=pk)
-            message_user.status = True
-            message_user.save()
-            subject = 'My-shop - Ответ на ваше обращение'
-            message = form.cleaned_data.get('text')
-
-            email = EmailMessage(subject,
-                                 message,
-                                 'ilushamdmaa@yandex.ru',
-                                 [message_user.email])
-            email.send()
-
-            return redirect('message_list')
-    return render(request, 'message_answer.html', {'form': form})
 
         # if request.method == "POST":
         #     print(request.POST)
@@ -476,3 +400,4 @@ def create_answer_message_for_user(request,pk):
         #                  date=d.strftime("%d-%b-%Y %H:%M"),
         #                  text=form.text,
         #                  ))
+

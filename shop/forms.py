@@ -2,13 +2,14 @@ from django import forms
 from .models import Review, Product, ProductImage, Category, CategoryImage, MessageFromUser, MessageAnswerForUser
 
 SORT_CHOICES = [
-    ('empty','Выберите фильтр'),
-    ('price', 'по возрастанию цен'),
-    ('-price', 'по убыванию цен'),
+    ('empty','Выберите фильтр сортировки'),
+    ('price', 'по возрастанию цены'),
+    ('-price', 'по убыванию цены'),
     ('created', 'старые товары'),
     ('-created', 'новые товары'),
     ('avg', 'по рейтингу'),
-    ('reviews_count','по кол-ву отзывов')
+    ('reviews_count','по кол-ву отзывов'),
+    ('popular', 'по популярности')
     ]
 
 # rating_stars = [
@@ -46,57 +47,3 @@ class ReviewForm(forms.ModelForm):
 #         fields = ("star",)
 
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ('category','name','slug','description','price')
-
-    def __init__(self, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
-class ProductImgForm(forms.ModelForm):
-    class Meta:
-        model = ProductImage
-        fields = ('image', 'main')
-
-    def __init__(self, *args, **kwargs):
-        super(ProductImgForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
-class CategoryForm(forms.ModelForm):
-    class Meta:
-        model = Category
-        fields = ('name','slug')
-
-    def __init__(self, *args, **kwargs):
-        super(CategoryForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
-class CategoryImgForm(forms.ModelForm):
-    class Meta:
-        model = CategoryImage
-        fields = ('image',)
-
-    def __init__(self, *args, **kwargs):
-        super(CategoryImgForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control'
-
-
-class MessageForUserForm(forms.ModelForm):
-    class Meta:
-        model = MessageFromUser
-        fields = ('title','email', 'text',)
-
-
-class MessageAnswerForUserForm(forms.ModelForm):
-    class Meta:
-        model = MessageAnswerForUser
-        fields = ('text',)

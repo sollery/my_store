@@ -16,12 +16,6 @@ urlpatterns = [
     path('search/', views.search_result, name='search_results'),
     path('data_review/', views.add_review, name='data_review'),
     path('del_review/', views.del_review, name='del_review'),
-    path('create_product/', views.create_product,name='create_product'),
-    path('create_category/', views.create_category,name='create_category'),
-    path('upl_img_product/<int:pk>/', views.upl_img_product,name='upl_img_product'),
-    path('upl_img_category/<int:pk>/',views.upl_img_category,name='upl_img_category'),
-    path('message_from_user_create/',views.create_massage_from_user,name='create_message_from_user'),
-    path('message_list/', views.user_message_list, name='message_list'),
-    path('message_detail/<int:pk>/', views.user_message_detail, name='message_detail'),
-    path('message_answer/<int:pk>/', views.create_answer_message_for_user, name='message_answer'),
-    ]
+
+
+]

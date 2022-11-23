@@ -50,14 +50,6 @@ class OrderCreateForm(forms.ModelForm):
 
         print(self.fields['delivery_method'].help_text)
 
-class Oplata(forms.Form):
-    paid_order_sum = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),label='Введите сумму:')
 
-    def clean_renewal_date(self):
-        data = self.cleaned_data['paid_order_sum']
-        #Проверка того, что дата не выходит за "нижнюю" границу (не в прошлом).
-        if data < 0:
-            raise ValidationError('Invalid date - renewal in past')
-        #Проверка того, то дата не выходит за "верхнюю" границу (+4 недели).
-        # Помните, что всегда надо возвращать "очищенные" данные.
-        return data
+class Oplata(forms.Form):
+    paid_order_sum = forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),label='Введите сумму:',min_value=1)

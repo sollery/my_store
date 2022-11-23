@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.conf import settings
+from django.contrib.sessions.models import Session
 
 class CustomUser(AbstractUser):
 
@@ -12,3 +13,6 @@ class CustomUser(AbstractUser):
 
 
 
+class UserSession(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    session = models.ForeignKey(Session,models.CASCADE)

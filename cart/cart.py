@@ -5,12 +5,17 @@ from shop.models import Product
 
 class Cart:
     def __init__(self, request):
-        """Инициализация объекта корзины."""
+        """Инициализация объекта корзина."""
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
+
+    def save(self):
+        """Сохранение изменений в корзине"""
+        # Помечаем сессию как измененную
+        self.session.modified = True
 
     def add(self, product):
         """Добавление товара в корзину"""
@@ -19,9 +24,31 @@ class Cart:
             self.cart[product_id] = {'quantity': 1, 'price': str(product.price), 'name': product.name}
         self.save()
 
-    def save(self):
-        # Помечаем сессию как измененную
-        self.session.modified = True
+    def plus(self, product):
+        """Увеличивает количество товара"""
+        # добавление товара в корзине
+        product_id = str(product.id)
+        self.cart[product_id]['quantity'] += 1
+        self.save()
+
+    def minus(self,product):
+        """Уменьшает количество товара"""
+        # удаление товара в корзине
+        product_id = str(product.id)
+        if self.cart[product_id]['quantity'] > 1:
+            self.cart[product_id]['quantity'] -= 1
+            self.save()
+        else:
+            del self.cart[product_id]
+            self.save()
+
+    def clear(self):
+        """Очищает корзину"""
+        # Очистка корзины.
+        del self.session[settings.CART_SESSION_ID]
+        self.save()
+
+
 
     def remove(self, product):
         """Удаление товара из корзины."""
@@ -53,28 +80,6 @@ class Cart:
             int(float(item['price'])) * item['quantity'] for item in self.cart.values()
         )
 
-    def clear(self):
-        """Возвращает"""
-        # Очистка корзины.
-        del self.session[settings.CART_SESSION_ID]
-        self.save()
 
-    def plus(self, product):
-        """Увеличивает количество товара"""
-        # добавление товара в корзине
-        product_id = str(product.id)
-        self.cart[product_id]['quantity'] += 1
-        self.save()
-
-    def minus(self,product):
-        """Уменьшает количество товара"""
-        # удаление товара в корзине
-        product_id = str(product.id)
-        if self.cart[product_id]['quantity'] > 1:
-            self.cart[product_id]['quantity'] -= 1
-            self.save()
-        else:
-            del self.cart[product_id]
-            self.save()
 
 

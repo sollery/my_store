@@ -66,7 +66,7 @@ def proof_of_payment_page(request,order_id):
                 cart.clear()
                 order_id = int(order.id)
                 print('Заказ оплачен')
-                send_alert_bot(f'http://127.0.0.1:8000/admin/orders/order/{order.id}/change/','Заказ')
+                send_alert_bot( f' http://127.0.0.1:8000{order.get_absolute_url()}','Заказ')
                 return redirect(f'http://127.0.0.1:8000/orders/created_order/{order_id}/')
             else:
                 error = 'Сумма не верна'
@@ -103,7 +103,7 @@ def order_create(request):
                 print(order.check_payment_method)
                 send_email_client(order)
                 cart.clear()
-                send_alert_bot(f'http://127.0.0.1:8000/admin/orders/order/{order.id}/change/','Заказ')
+                send_alert_bot( f' http://127.0.0.1:8000 {order.get_absolute_url()}','Заказ')
                 return redirect('created_order',order_id=order_id)
             return redirect('proof_of_payment_page',order_id=order_id)
     else:
@@ -118,68 +118,6 @@ def order_create(request):
         form = OrderCreateForm(initial={'delivery_method': default_delivery,'payment_method':default_paid})
     return render(request, 'create.html',
                   {'cart': cart, 'form': form})
-# Create your views here.
 
 
-# def fetch_pdf_resources(uri, rel):
-#     if uri.find(settings.MEDIA_URL) != -1:
-#         path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ''))
-#     elif uri.find(settings.STATIC_URL) != -1:
-#         path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ''))
-#     else:
-#         path = None
-#     return path
-#
-#
-# def render_to_pdf(template_src, context_dict={}):
-#     template = get_template(template_src)
-#     html = template.render(context_dict)
-#     result = BytesIO()
-#     pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), result,
-#                             encoding='utf-8',
-#                             link_callback=fetch_pdf_resources)
-#     if not pdf.err:
-#         return HttpResponse(result.getvalue(), content_type='application/pdf')
-#     return None
-#
-#
-# data = {
-#     "company": "Dennnis Ivanov Company",
-#     "address": "123 Street name",
-#     "city": "Vancouver",
-#     "state": "WA",
-#     "zipcode": "98663",
-#
-#     "phone": "555-555-2345",
-#     "email": "youremail@dennisivy.com",
-#     "website": "dennisivy.com",
-# }
-#
-#
-# # Opens up page as PDF
-# class ViewPDF(View):
-#     def get(self, request, *args, **kwargs):
-#         pdf = render_to_pdf('pdf.html', data)
-#         return HttpResponse(pdf, content_type='application/pdf')
-#
-#
-# # Automaticly downloads to PDF file
-# class DownloadPDF(View):
-#     def get(self, request, *args, **kwargs):
-#         pdf = render_to_pdf('pdf.html', data)
-#         response = HttpResponse(pdf, content_type='application/pdf')
-#         filename = "Invoice_%s.pdf" % ("12341231")
-#         content = "attachment; filename='%s'" % (filename)
-#         response['Content-Disposition'] = content
-#         return response
 
-
-@staff_member_required
-def admin_order_pdf(request, order_id):
-     order = get_object_or_404(Order, id=order_id)
-     html = render_to_string('pdf.html', {'order': order})
-     response = HttpResponse(content_type='application/pdf')
-     response['Content-Disposition'] = 'filename=\
-     "order_{}.pdf"'.format(order.id)
-     weasyprint.HTML(string=html).write_pdf(response)
-     return response

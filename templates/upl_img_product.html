@@ -1,6 +1,7 @@
 {% extends '_base.html' %}
 {% load static %}
 {%block title %}
+Загрузка фото для товара
 {% endblock title %}
 {% block content %}
 <div class="container">
@@ -8,7 +9,7 @@
 <form class="div_form" enctype="multipart/form-data" method="post">
     {% csrf_token %}
             {{formset.as_p }}
-            <input type="submit" class="btn btn-dark" value="создать">
+            <input type="submit" class="btn btn-dark" value="Добавить фотографии товара">
         </form>
     </div>
 </div>

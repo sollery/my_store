@@ -52,6 +52,12 @@ def create_code():
 
 
 class Order(models.Model):
+    choices = (('В обработке', 'В обработке'),
+               ('В магазине', 'В магазине'),
+               ('На складе', 'На складе'),
+               ('В пути', 'В пути'),
+               ('Получен', 'Получен'),
+               )
     first_name = models.CharField('Имя', max_length=50)
     last_name = models.CharField('Фамилия', max_length=50)
     email = models.EmailField('Эл.адрес')
@@ -63,6 +69,7 @@ class Order(models.Model):
     payment_method = models.ForeignKey(PaymentMethod,on_delete=models.CASCADE)
     delivery_method = models.ForeignKey(DeliveryMethod, on_delete=models.CASCADE)
     code = models.CharField('Cекретный ключ',max_length=6, default=create_code())
+    status = models.CharField(max_length=100, choices=choices, default = "В обработке")
 
 
     class Meta:
@@ -93,6 +100,14 @@ class Order(models.Model):
             return True
         return False
 
+    def color_status(self):
+        if self.paid:
+            return "success"
+        return "warning"
+
+
+    def get_absolute_url(self):
+        return reverse('order_detail', args=[str(self.id)])
 
 
 class OrderItem(models.Model):

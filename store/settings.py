@@ -48,14 +48,14 @@ INSTALLED_APPS = [
     'shop',
     'cart',
     'orders',
-    'alert_admin_bot'
+    'alert_admin_bot',
 ]
 # ACCOUNT_FORMS = {'login': 'accounts.forms.CoreLoginForm'}
 SITE_ID = 2
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-AUTH_USER_MODEL = 'accounts.CustomUser'
+
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -100,11 +100,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'store.wsgi.application'
 
-LOGIN_REDIRECT_URL = 'home'
-ACCOUNT_LOGOUT_REDIRECT = 'home'
+
+AUTH_USER_MODEL = 'accounts.CustomUser'
+LOGIN_REDIRECT_URL = '/main/'
+ACCOUNT_LOGOUT_REDIRECT = '/main/'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_MIN_LENGTH = 6
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -155,9 +162,8 @@ STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 CART_SESSION_ID = 'cart'
-FAVORITES_SESSION_ID = 'favorites'
-EMAIL_SUBJECT_PREFIX = '[Zeh-shop]'
 
+EMAIL_SUBJECT_PREFIX = '[My-shop]'
 EMAIL_PORT = 465
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_HOST_USER = 'ilushamdmaa@Yandex.ru'
@@ -169,7 +175,7 @@ ADMINS = [
 ]
 SERVER_EMAIL = 'ilushamdmaa@yandex.ru'
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+
 STATICFILES_FINDERS = [
  "django.contrib.staticfiles.finders.FileSystemFinder",
  "django.contrib.staticfiles.finders.AppDirectoriesFinder",
